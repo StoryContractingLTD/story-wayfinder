@@ -7,7 +7,459 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Story Wayfinder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Story Wayfinder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; min-height: 100vh; background: #EAF4FB; font-family: 'Barlow', system-ui, sans-serif; }
+    #root { min-height: 100vh; }
+
+    /* ── Page transitions ── */
+    .page { min-height: 100vh; animation: fadeSlideIn 0.3s ease both; }
+    .page-exit { animation: fadeSlideOut 0.25s ease both; }
+    @keyframes fadeSlideIn  { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeSlideOut { from { opacity: 1; transform: translateX(0); }   to { opacity: 0; transform: translateX(-30px); } }
+    .page-home { animation: fadein 0.3s ease both; }
+    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ── Wheel wedge dimming ── */
+    .wedge-g { transition: opacity 0.22s ease; }
+    .wedge-g.dimmed { opacity: 0.38; }
+
+    /* ── Hover tooltip ── */
+    .hover-card { transition: opacity 0.16s ease, transform 0.16s ease; }
+    .hover-card.hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
+    .hover-card.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Back button ── */
+    .back-btn { display: flex; align-items: center; gap: 8px; background: white; border: none; border-radius: 20px;
+      padding: 10px 18px; cursor: pointer; font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px;
+      color: #004B86; box-shadow: 0 4px 16px rgba(0,97,173,0.12); transition: transform 0.15s ease; }
+    .back-btn:hover { transform: translateY(-2px); }
+    .back-btn:active { transform: translateY(0) scale(0.97); }
+
+    /* ── Detail page fade-ins ── */
+    .detail-hero  { animation: slideUp 0.36s 0.04s ease both; }
+    .detail-model { animation: slideUp 0.36s 0.12s ease both; }
+    .detail-right1 { animation: slideUp 0.36s 0.18s ease both; }
+    .detail-right2 { animation: slideUp 0.36s 0.24s ease both; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Johari cells ── */
+    .johari-cell { animation: springIn 0.4s ease both; transform-origin: center; }
+    @keyframes springIn { 0% { opacity: 0; transform: scale(0.84); } 70% { transform: scale(1.04); } 100% { opacity: 1; transform: scale(1); } }
+
+    /* ── GROW rows ── */
+    .grow-row { animation: slideInLeft 0.38s ease both; }
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
+
+    /* ── Tuckman bars ── */
+    .tuck-bar { width: 0; transition: width 0.68s ease; }
+
+    /* ── Change curve ── */
+    .curve-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawCurve 1.6s 0.2s ease both; }
+    @keyframes drawCurve { to { stroke-dashoffset: 0; } }
+    .curve-fill { animation: fadein 0.7s 0.7s ease both; opacity: 0; animation-fill-mode: forwards; }
+    .curve-dot { animation: popIn 0.3s ease both; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    const C = {
+      blue:     "#0061AD", blueDark: "#004B86", blueDeep: "#1A3A5C",
+      orange:   "#F26522", teal:     "#009FA0", grey:     "#666666",
+      greyMid:  "#8A8E91", bg:       "#EAF4FB", wheel:    "#1A5CB0", wheelHub: "#154F9E",
+    };
+
+    const SECTIONS = [
+      { id:"self",   label:"Leading Self",   short:"Self",   color:C.blue,     tagline:"Developing your inner leader",
+        desc:"Developing your ability to lead yourself effectively is the foundation of everything else in the Liberator Programme.",
+        bullets:["Personal effectiveness","Self-awareness","Intentional leadership habits"],
+        modelTitle:"The Johari Window",
+        modelDesc:"A framework for understanding self-awareness and how others perceive us. Effective leaders actively work to expand the Open area through feedback and honest disclosure." },
+      { id:"others", label:"Leading Others", short:"Others", color:C.orange,   tagline:"Building powerful one-to-one relationships",
+        desc:"Great leadership is built one relationship at a time. This section focuses on how you show up with the individuals you lead.",
+        bullets:["Communication","Coaching and support","Building trust"],
+        modelTitle:"The GROW Model",
+        modelDesc:"A structured coaching conversation model used by leaders to help their people set goals, explore current reality, generate options, and commit to action." },
+      { id:"teams",  label:"Leading Teams",  short:"Teams",  color:C.teal,     tagline:"Creating high-performing team environments",
+        desc:"Teams do not become high-performing by accident. This section explores how you shape the conditions for collective success.",
+        bullets:["Team alignment","Decision-making","Shared accountability"],
+        modelTitle:"Tuckman's Stages",
+        modelDesc:"Every team travels through four key stages on its journey to high performance. Leaders who understand where their team sits can adapt their style accordingly." },
+      { id:"change", label:"Leading Change", short:"Change", color:C.blueDeep, tagline:"Navigating and sustaining transformation",
+        desc:"Leading change well means understanding both the technical and human sides of transformation and meeting people where they are.",
+        bullets:["Direction and momentum","Adapting well","Sustaining progress"],
+        modelTitle:"The Change Curve",
+        modelDesc:"Based on the work of Elisabeth Kübler-Ross, this model maps the emotional journey people travel during change. Knowing where people are helps leaders provide the right support at the right time." },
+    ];
+
+    // ── Geometry ──
+    function polar(cx,cy,r,deg){ const rad=((deg-90)*Math.PI)/180; return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)}; }
+    function wedgePath(cx,cy,r0,r1,a0,a1){
+      const s0=polar(cx,cy,r1,a0),e0=polar(cx,cy,r1,a1),s1=polar(cx,cy,r0,a1),e1=polar(cx,cy,r0,a0);
+      const lg=a1-a0>180?1:0;
+      return [`M ${s0.x} ${s0.y}`,`A ${r1} ${r1} 0 ${lg} 1 ${e0.x} ${e0.y}`,`L ${s1.x} ${s1.y}`,`A ${r0} ${r0} 0 ${lg} 0 ${e1.x} ${e1.y}`,"Z"].join(" ");
+    }
+
+    // ── Logo ──
+    function StoryLogo({height=44}){
+      return <div style={{display:"inline-flex",alignItems:"center",justifyContent:"center",background:C.blue,borderRadius:5,height,padding:"0 10px",lineHeight:1}}>
+        <span style={{fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif",fontWeight:800,fontStyle:"italic",fontSize:height*0.72,color:"white",letterSpacing:"-0.02em",lineHeight:1,userSelect:"none"}}>STORY</span>
+      </div>;
+    }
+
+    // ── Icons ──
+    function IconSelf({cx,cy,s=12}){
+      return <g transform={`translate(${cx},${cy})`} style={{pointerEvents:"none"}}>
+        <circle cy={-s*0.44} r={s*0.3} fill="white" fillOpacity={0.95}/>
+        <path d={`M ${-s*.52} ${s*.52} Q ${-s*.52} 0 0 0 Q ${s*.52} 0 ${s*.52} ${s*.52}`} fill="white" fillOpacity={0.95}/>
+      </g>;
+    }
+    function IconOthers({cx,cy,s=12}){
+      return <g transform={`translate(${cx},${cy})`} style={{pointerEvents:"none"}}>
+        <circle cx={s*.22} cy={-s*.44} r={s*.26} fill="white" fillOpacity={0.65}/>
+        <path d={`M ${-s*.18} ${s*.52} Q ${-s*.18} ${s*.04} ${s*.22} ${s*.04} Q ${s*.62} ${s*.04} ${s*.62} ${s*.52}`} fill="white" fillOpacity={0.65}/>
+        <circle cx={-s*.22} cy={-s*.44} r={s*.26} fill="white" fillOpacity={0.97}/>
+        <path d={`M ${-s*.62} ${s*.52} Q ${-s*.62} ${s*.04} ${-s*.22} ${s*.04} Q ${s*.18} ${s*.04} ${s*.18} ${s*.52}`} fill="white" fillOpacity={0.97}/>
+      </g>;
+    }
+    function IconTeams({cx,cy,s=12}){
+      const nodes=[{x:0,y:-s*.62},{x:-s*.54,y:s*.42},{x:s*.54,y:s*.42}];
+      return <g transform={`translate(${cx},${cy})`} style={{pointerEvents:"none"}}>
+        {[[0,1],[0,2],[1,2]].map(([a,b])=><line key={`${a}${b}`} x1={nodes[a].x} y1={nodes[a].y} x2={nodes[b].x} y2={nodes[b].y} stroke="white" strokeOpacity={0.88} strokeWidth={1.8}/>)}
+        {nodes.map((n,i)=><circle key={i} cx={n.x} cy={n.y} r={s*.22} fill="white" fillOpacity={0.97}/>)}
+      </g>;
+    }
+    function IconChange({cx,cy,s=12}){
+      return <g transform={`translate(${cx},${cy})`} style={{pointerEvents:"none"}}>
+        <path d={`M ${-s*.5} ${-s*.08} A ${s*.48} ${s*.48} 0 0 1 ${s*.5} ${-s*.08}`} fill="none" stroke="white" strokeOpacity={0.95} strokeWidth={2.1} strokeLinecap="round"/>
+        <path d={`M ${s*.26} ${-s*.33} L ${s*.5} ${-s*.08} L ${s*.2} ${s*.04}`} fill="none" stroke="white" strokeOpacity={0.95} strokeWidth={2.1} strokeLinecap="round" strokeLinejoin="round"/>
+        <path d={`M ${s*.5} ${s*.08} A ${s*.48} ${s*.48} 0 0 1 ${-s*.5} ${s*.08}`} fill="none" stroke="white" strokeOpacity={0.95} strokeWidth={2.1} strokeLinecap="round"/>
+        <path d={`M ${-s*.26} ${s*.33} L ${-s*.5} ${s*.08} L ${-s*.2} ${-s*.04}`} fill="none" stroke="white" strokeOpacity={0.95} strokeWidth={2.1} strokeLinecap="round" strokeLinejoin="round"/>
+      </g>;
+    }
+    const ICONS=[IconSelf,IconOthers,IconTeams,IconChange];
+
+    // ── Models ──
+    function JohariWindow(){
+      const cells=[
+        {label:"Open / Arena",    sub:"Known to self\nKnown to others",     color:C.blue,   d:"0.08s"},
+        {label:"Blind Spot",      sub:"Unknown to self\nKnown to others",   color:C.orange, d:"0.2s"},
+        {label:"Hidden / Façade", sub:"Known to self\nUnknown to others",   color:C.teal,   d:"0.32s"},
+        {label:"Unknown",         sub:"Unknown to self\nUnknown to others", color:C.grey,   d:"0.44s"},
+      ];
+      return <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,minHeight:220}}>
+        {cells.map(cell=><div key={cell.label} className="johari-cell" style={{background:cell.color,borderRadius:16,padding:"14px 16px",display:"flex",flexDirection:"column",justifyContent:"space-between",animationDelay:cell.d}}>
+          <p style={{color:"white",fontWeight:700,fontSize:13,lineHeight:1.3,margin:0}}>{cell.label}</p>
+          <p style={{color:"rgba(255,255,255,0.75)",fontSize:11,lineHeight:1.55,margin:"8px 0 0",whiteSpace:"pre-line"}}>{cell.sub}</p>
+        </div>)}
+      </div>;
+    }
+
+    function GrowModel(){
+      const steps=[
+        {letter:"G",word:"Goal",        desc:"What do you want to achieve?", color:C.blue,    d:"0.05s"},
+        {letter:"R",word:"Reality",     desc:"Where are you right now?",      color:C.orange,  d:"0.15s"},
+        {letter:"O",word:"Options",     desc:"What could you do about it?",   color:C.teal,    d:"0.25s"},
+        {letter:"W",word:"Way Forward", desc:"What will you commit to?",      color:C.blueDeep,d:"0.35s"},
+      ];
+      return <div style={{display:"flex",flexDirection:"column",gap:10,minHeight:220}}>
+        {steps.map(s=><div key={s.letter} className="grow-row" style={{display:"flex",alignItems:"center",gap:14,background:"white",borderRadius:14,padding:"10px 14px",boxShadow:"0 2px 8px rgba(0,0,0,0.06)",borderLeft:`4px solid ${s.color}`,animationDelay:s.d}}>
+          <div style={{width:38,height:38,background:s.color,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontWeight:800,fontSize:18,flexShrink:0}}>{s.letter}</div>
+          <div>
+            <p style={{fontWeight:700,fontSize:13,color:"#1a2a3a",margin:0}}>{s.word}</p>
+            <p style={{fontSize:12,color:C.grey,margin:"2px 0 0"}}>{s.desc}</p>
+          </div>
+        </div>)}
+      </div>;
+    }
+
+    function TuckmanModel(){
+      const stages=[
+        {name:"Forming",   perf:26,color:C.blue,    d:"0.05s"},
+        {name:"Storming",  perf:11,color:C.orange,  d:"0.16s"},
+        {name:"Norming",   perf:54,color:"#1874C4", d:"0.27s"},
+        {name:"Performing",perf:91,color:C.teal,    d:"0.38s"},
+        {name:"Adjourning",perf:55,color:C.blueDeep,d:"0.49s"},
+      ];
+      useEffect(()=>{
+        const bars=document.querySelectorAll(".tuck-bar");
+        bars.forEach(bar=>{
+          const target=bar.dataset.target;
+          setTimeout(()=>{ bar.style.width=target+"%"; },100);
+        });
+      },[]);
+      return <div style={{display:"flex",flexDirection:"column",gap:13,minHeight:220,justifyContent:"center"}}>
+        <p style={{fontSize:11,color:C.greyMid,letterSpacing:"0.12em",textTransform:"uppercase",fontWeight:600,margin:"0 0 2px"}}>Team performance</p>
+        {stages.map(s=><div key={s.name} style={{display:"flex",alignItems:"center",gap:12}}>
+          <p style={{width:80,fontSize:12,fontWeight:600,color:"#2a3a4a",margin:0,flexShrink:0}}>{s.name}</p>
+          <div style={{flex:1,background:"#EEF2F6",borderRadius:6,height:18,overflow:"hidden"}}>
+            <div className="tuck-bar" data-target={s.perf} style={{height:"100%",borderRadius:6,background:s.color,transitionDelay:s.d}}></div>
+          </div>
+        </div>)}
+        <p style={{fontSize:11,color:"#aaa",margin:"6px 0 0",lineHeight:1.5}}>Note: Storming is a natural dip, not a failure. Great leaders navigate this stage with empathy and clarity.</p>
+      </div>;
+    }
+
+    function ChangeCurveModel(){
+      const W=430,H=195;
+      const pts=[
+        {nx:0.03,ny:0.14,label:"Shock"},
+        {nx:0.17,ny:0.36,label:"Denial"},
+        {nx:0.32,ny:0.69,label:"Frustration"},
+        {nx:0.48,ny:0.86,label:"Depression"},
+        {nx:0.63,ny:0.57,label:"Experiment"},
+        {nx:0.79,ny:0.26,label:"Decision"},
+        {nx:0.96,ny:0.09,label:"Integration"},
+      ].map(p=>({x:p.nx*W,y:p.ny*H,label:p.label}));
+      const curve=pts.reduce((acc,pt,i)=>{
+        if(i===0) return `M ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`;
+        const prev=pts[i-1],cpx=((prev.x+pt.x)/2).toFixed(1);
+        return acc+` C ${cpx} ${prev.y.toFixed(1)} ${cpx} ${pt.y.toFixed(1)} ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`;
+      },"");
+      const fill=curve+` L ${pts[pts.length-1].x} ${H} L ${pts[0].x} ${H} Z`;
+      return <div style={{width:"100%",minHeight:220}}>
+        <svg viewBox={`0 0 ${W} ${H+30}`} style={{width:"100%",height:"auto"}}>
+          <line x1={0} y1={H} x2={W} y2={H} stroke="#d8e4ee" strokeWidth="1"/>
+          <path d={fill} fill={`${C.blue}13`} className="curve-fill"/>
+          <path d={curve} fill="none" stroke={C.blue} strokeWidth="2.6" strokeLinecap="round" className="curve-path"/>
+          {pts.map((pt,i)=>{
+            const low=pt.y>H*0.55;
+            return <g key={pt.label} className="curve-dot" style={{animationDelay:`${0.35+i*0.13}s`,transformOrigin:`${pt.x}px ${pt.y}px`}}>
+              <circle cx={pt.x} cy={pt.y} r={5} fill={C.blue}/>
+              <circle cx={pt.x} cy={pt.y} r={3} fill="white"/>
+              <text x={pt.x} y={low?pt.y+14:pt.y-10} textAnchor="middle" fontSize="9.5" fill={C.grey} fontFamily="Barlow,sans-serif" fontWeight="500">{pt.label}</text>
+            </g>;
+          })}
+          <text x={pts[3].x} y={H+20} textAnchor="middle" fontSize="9" fill="#b0c0cc" fontFamily="Barlow,sans-serif">Emotional valley</text>
+        </svg>
+      </div>;
+    }
+
+    const MODELS={self:JohariWindow,others:GrowModel,teams:TuckmanModel,change:ChangeCurveModel};
+
+    // ── Audio ──
+    function makeAudioCtx(ref){
+      const Ctx=window.AudioContext||window.webkitAudioContext;
+      if(!Ctx) return null;
+      if(!ref.current) ref.current=new Ctx();
+      if(ref.current.state==="suspended") ref.current.resume();
+      return ref.current;
+    }
+    function playShush(audioRef){
+      try{
+        const ctx=makeAudioCtx(audioRef); if(!ctx) return;
+        const now=ctx.currentTime;
+        const bufSize=Math.floor(ctx.sampleRate*0.09);
+        const buffer=ctx.createBuffer(1,bufSize,ctx.sampleRate);
+        const data=buffer.getChannelData(0);
+        for(let i=0;i<bufSize;i++) data[i]=Math.random()*2-1;
+        const src=ctx.createBufferSource(); src.buffer=buffer;
+        const flt=ctx.createBiquadFilter(); flt.type="bandpass"; flt.frequency.value=3800; flt.Q.value=0.7;
+        const gain=ctx.createGain();
+        gain.gain.setValueAtTime(0,now); gain.gain.linearRampToValueAtTime(0.055,now+0.008); gain.gain.exponentialRampToValueAtTime(0.0001,now+0.09);
+        src.connect(flt); flt.connect(gain); gain.connect(ctx.destination);
+        src.start(now); src.stop(now+0.1);
+      }catch(_){}
+    }
+    function playChime(audioRef){
+      try{
+        const ctx=makeAudioCtx(audioRef); if(!ctx) return;
+        const now=ctx.currentTime;
+        [523.25,783.99].forEach((freq,i)=>{
+          const osc=ctx.createOscillator(),gain=ctx.createGain();
+          osc.type="sine"; osc.frequency.setValueAtTime(freq,now);
+          gain.gain.setValueAtTime(0,now); gain.gain.linearRampToValueAtTime(0.07-i*0.015,now+0.01); gain.gain.exponentialRampToValueAtTime(0.0001,now+0.7);
+          osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now+0.75);
+        });
+      }catch(_){}
+    }
+    function playReturn(audioRef){
+      try{
+        const ctx=makeAudioCtx(audioRef); if(!ctx) return;
+        const now=ctx.currentTime;
+        [{freq:783.99,delay:0},{freq:523.25,delay:0.09}].forEach(({freq,delay})=>{
+          const osc=ctx.createOscillator(),gain=ctx.createGain();
+          osc.type="sine"; osc.frequency.setValueAtTime(freq,now+delay);
+          gain.gain.setValueAtTime(0,now+delay); gain.gain.linearRampToValueAtTime(0.06,now+delay+0.01); gain.gain.exponentialRampToValueAtTime(0.0001,now+delay+0.55);
+          osc.connect(gain); gain.connect(ctx.destination); osc.start(now+delay); osc.stop(now+delay+0.6);
+        });
+      }catch(_){}
+    }
+
+    // ── Header ──
+    function Header({right}){
+      return <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 32px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:16}}>
+          <StoryLogo height={40}/>
+          <div style={{width:1,height:28,background:"#c8d8e8"}}/>
+          <span style={{fontSize:12,fontWeight:600,color:"#8fa0b0",letterSpacing:"0.2em",textTransform:"uppercase"}}>Concept Demo</span>
+        </div>
+        {right}
+      </div>;
+    }
+
+    // ── Wheel page ──
+    function WheelPage({onOpen}){
+      const [hovered,setHovered]=useState(null);
+      const audioRef=useRef(null);
+      const CX=200,CY=200,R0=58,R1=154;
+
+      const wedges=useMemo(()=>SECTIONS.map((sec,i)=>{
+        const a0=i*90,a1=(i+1)*90,span=R1-R0,mid=i*90+45;
+        return{...sec,d:wedgePath(CX,CY,R0,R1,a0,a1),iconPt:polar(CX,CY,R0+span*0.28,mid),labelPt:polar(CX,CY,R0+span*0.7,mid)};
+      }),[]);
+
+      const hovSec=SECTIONS.find(s=>s.id===hovered);
+
+      return <div className="page page-home" style={{background:C.bg}}>
+        <Header/>
+        <div style={{maxWidth:1100,margin:"0 auto",padding:"8px 32px 48px",display:"flex",flexDirection:"column",alignItems:"center",gap:28}}>
+          <div style={{textAlign:"center",maxWidth:580}}>
+            <h1 style={{fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif",fontSize:48,fontWeight:800,color:C.blueDark,letterSpacing:"-0.02em",margin:0}}>Story Wayfinder</h1>
+            <p style={{color:C.grey,fontSize:16,lineHeight:1.75,marginTop:12,marginBottom:0}}>
+              This is a simple concept to show how Story Wayfinder could work as an interactive navigation experience. Hovering over a section highlights it while the others fade back. Clicking takes the user through to a dedicated page.
+            </p>
+          </div>
+
+          <div style={{display:"grid",gridTemplateColumns:"min(480px,100%) 1fr",gap:28,width:"100%",alignItems:"start"}}>
+            <div style={{background:"white",borderRadius:28,padding:"22px 22px 14px",boxShadow:"0 16px 48px rgba(0,97,173,0.13),0 2px 12px rgba(0,0,0,0.05)"}}>
+              <svg viewBox="0 0 400 400" style={{width:"100%",height:"auto"}}>
+                {wedges.map((w,i)=>{
+                  const Icon=ICONS[i];
+                  const dimmed=hovered!==null&&hovered!==w.id;
+                  return <g key={w.id} className={`wedge-g${dimmed?" dimmed":""}`}>
+                    <path d={w.d} fill={C.wheel} style={{cursor:"pointer"}}
+                      onMouseEnter={()=>{if(hovered!==w.id)playShush(audioRef);setHovered(w.id);}}
+                      onMouseLeave={()=>setHovered(null)}
+                      onClick={()=>{playChime(audioRef);onOpen(w.id);}}/>
+                    <Icon cx={w.iconPt.x} cy={w.iconPt.y}/>
+                    <text x={w.labelPt.x} y={w.labelPt.y} textAnchor="middle" dominantBaseline="middle"
+                      fill="white" fontSize="13.5" fontFamily="'Barlow Condensed','Arial Narrow',sans-serif"
+                      fontWeight="700" style={{pointerEvents:"none",letterSpacing:"0.04em"}}>{w.short}</text>
+                  </g>;
+                })}
+                <line x1={CX} y1={CY-R1} x2={CX} y2={CY+R1} stroke="white" strokeWidth="3"/>
+                <line x1={CX-R1} y1={CY} x2={CX+R1} y2={CY} stroke="white" strokeWidth="3"/>
+                <circle cx={CX} cy={CY} r={R1} fill="none" stroke="white" strokeWidth="3"/>
+                <circle cx={CX} cy={CY} r={R0} fill={C.wheelHub}/>
+                <circle cx={CX} cy={CY} r={R0-8} fill="none" stroke="white" strokeOpacity="0.18" strokeWidth="1.5"/>
+                <text x={CX} y={CY-9} textAnchor="middle" fontFamily="'Barlow Condensed','Arial Narrow',sans-serif" fontWeight="800" fontStyle="italic" fontSize="16" fill="white" letterSpacing="0.5">STORY</text>
+                <text x={CX} y={CY+12} textAnchor="middle" fontFamily="'Barlow',sans-serif" fontWeight="500" fontSize="9" fill="white" fillOpacity="0.6" letterSpacing="2">WAYFINDER</text>
+              </svg>
+
+              <div style={{minHeight:74,marginTop:4}}>
+                <div className={`hover-card${hovSec?" visible":" hidden"}`}
+                  style={{background:hovSec?hovSec.color:"transparent",borderRadius:16,padding:"12px 16px",textAlign:"center"}}>
+                  {hovSec&&<>
+                    <p style={{color:"white",fontWeight:700,fontSize:14,margin:0}}>{hovSec.label}</p>
+                    <p style={{color:"rgba(255,255,255,0.8)",fontSize:12,margin:"4px 0 0",lineHeight:1.5}}>{hovSec.tagline}</p>
+                    <p style={{color:"rgba(255,255,255,0.55)",fontSize:10,margin:"6px 0 0",letterSpacing:"0.16em",textTransform:"uppercase"}}>Click to explore</p>
+                  </>}
+                </div>
+              </div>
+            </div>
+
+            <div style={{display:"flex",flexDirection:"column",gap:20}}>
+              <div style={{background:"white",borderRadius:28,padding:28,boxShadow:"0 6px 24px rgba(0,97,173,0.07)"}}>
+                <h2 style={{fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif",fontSize:21,fontWeight:800,color:C.blueDark,margin:"0 0 12px"}}>What this demonstrates</h2>
+                <p style={{color:C.grey,lineHeight:1.75,fontSize:14.5,margin:0}}>This concept uses a single-page app that behaves like a multi-page experience. It shows how a wheel on the intranet could act as a visual navigation tool, taking colleagues to separate pages with different content while keeping the interaction smooth and intuitive.</p>
+              </div>
+              <div style={{background:"white",borderRadius:28,padding:28,boxShadow:"0 6px 24px rgba(0,97,173,0.07)"}}>
+                <h2 style={{fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif",fontSize:21,fontWeight:800,color:C.blueDark,margin:"0 0 12px"}}>Potential next steps</h2>
+                <ul style={{margin:0,paddingLeft:18,color:C.grey,lineHeight:1.8,fontSize:14.5}}>
+                  <li>Replace the placeholder section names with the final Story Wayfinder themes or modules.</li>
+                  <li>Add the actual diagrams, models, or programme content to each destination page.</li>
+                  <li>Refine the motion, colours, and typography to match the Story brand and intranet style.</li>
+                  <li>Add proper routing so each section has its own shareable link within the intranet.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>;
+    }
+
+    // ── Detail page ──
+    function DetailPage({section,onBack}){
+      const Model=MODELS[section.id];
+      const audioRef=useRef(null);
+      return <div className="page" style={{background:C.bg}}>
+        <Header right={
+          <button className="back-btn" onClick={()=>{playReturn(audioRef);onBack();}}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back to wheel
+          </button>
+        }/>
+        <div style={{maxWidth:1100,margin:"0 auto",padding:"4px 32px 48px"}}>
+          <div className="detail-hero" style={{background:section.color,borderRadius:28,padding:"30px 36px",marginBottom:24,position:"relative",overflow:"hidden"}}>
+            <div style={{position:"absolute",top:-40,right:-20,width:200,height:200,borderRadius:"50%",background:"white",opacity:0.055,pointerEvents:"none"}}/>
+            <div style={{position:"absolute",bottom:-30,right:80,width:110,height:110,borderRadius:"50%",background:"white",opacity:0.04,pointerEvents:"none"}}/>
+            <p style={{color:"rgba(255,255,255,0.7)",fontSize:11,fontWeight:600,letterSpacing:"0.22em",textTransform:"uppercase",margin:"0 0 8px"}}>Selected section</p>
+            <h1 style={{color:"white",margin:0,fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif",fontSize:42,fontWeight:800,letterSpacing:"-0.01em"}}>{section.label}</h1>
+            <p style={{color:"rgba(255,255,255,0.82)",fontSize:15,margin:"8px 0 0",lineHeight:1.65,maxWidth:620}}>{section.desc}</p>
+          </div>
+
+          <div style={{display:"grid",gridTemplateColumns:"1.2fr 0.8fr",gap:24}}>
+            <div className="detail-model" style={{background:"white",borderRadius:28,padding:28,boxShadow:"0 8px 28px rgba(0,97,173,0.08)"}}>
+              <p style={{fontSize:11,fontWeight:600,letterSpacing:"0.2em",textTransform:"uppercase",color:C.greyMid,margin:"0 0 4px"}}>Model</p>
+              <h2 style={{fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif",fontSize:24,fontWeight:800,color:C.blueDark,margin:"0 0 8px"}}>{section.modelTitle}</h2>
+              <p style={{color:C.grey,fontSize:14,lineHeight:1.65,margin:"0 0 20px"}}>{section.modelDesc}</p>
+              <Model/>
+            </div>
+
+            <div style={{display:"flex",flexDirection:"column",gap:20}}>
+              <div className="detail-right1" style={{background:"white",borderRadius:28,padding:24,boxShadow:"0 8px 28px rgba(0,97,173,0.08)"}}>
+                <h2 style={{fontFamily:"'Barlow Condensed','Arial Narrow',sans-serif",fontSize:20,fontWeight:800,color:C.blueDark,margin:"0 0 14px"}}>Illustrative content</h2>
+                <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                  {section.bullets.map(b=><div key={b} style={{background:C.bg,borderRadius:14,padding:"10px 14px",fontSize:14,color:C.blueDark,fontWeight:500,borderLeft:`3px solid ${section.color}`}}>{b}</div>)}
+                </div>
+              </div>
+              <div className="detail-right2" style={{background:C.blueDark,borderRadius:28,padding:24,boxShadow:"0 8px 28px rgba(0,97,173,0.12)"}}>
+                <p style={{fontSize:11,fontWeight:600,letterSpacing:"0.2em",textTransform:"uppercase",color:"rgba(255,255,255,0.42)",margin:"0 0 8px"}}>Intranet note</p>
+                <p style={{color:"rgba(255,255,255,0.88)",fontSize:14,lineHeight:1.72,margin:0}}>Once we are happy with the motion and layout, this could be adapted for our intranet with separate pages, navigation, and branded assets.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>;
+    }
+
+    // ── Root ──
+    function App(){
+      const [active,setActive]=useState(null);
+      const [leaving,setLeaving]=useState(false);
+      const section=SECTIONS.find(s=>s.id===active);
+
+      return <div style={{minHeight:"100vh"}}>
+        {section
+          ? <DetailPage key={section.id} section={section} onBack={()=>setActive(null)}/>
+          : <WheelPage key="home" onOpen={setActive}/>
+        }
+      </div>;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+  </script>
+</body>
+</html>/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&display=swap" rel="stylesheet" />
   <style>
