@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Story Wayfinder</title>
+<title>Story Liberator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -137,6 +137,19 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 }
 
 /* Responsive */
+
+/* Thread banner */
+.thread-banner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#004B86,#0061AD);border-radius:16px;padding:14px 22px;margin-bottom:24px}
+.thread-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.thread-text{display:flex;flex-direction:column;gap:2px}
+.thread-main{color:white;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.02em}
+.thread-sub{color:rgba(255,255,255,.7);font-size:13px;font-weight:500}
+
+/* Worksheet section divider */
+.ws-divider{display:flex;align-items:center;gap:16px;margin:40px 0 24px;padding:0 4px}
+.ws-divider-line{flex:1;height:2px;background:linear-gradient(90deg,transparent,#0061AD33,transparent)}
+.ws-divider-label{display:flex;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:#004B86;white-space:nowrap;letter-spacing:.02em}
+
 /* Worksheet button */
 .hero-ws-callout{display:flex;align-items:center;gap:8px;margin-top:16px;padding:10px 16px;background:rgba(255,255,255,.14);border-radius:12px;font-size:13px;font-weight:500;color:rgba(255,255,255,.9);line-height:1.5;backdrop-filter:blur(4px)}
 .hero-ws-callout svg{flex-shrink:0}
@@ -189,7 +202,7 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 <div class="welcome-overlay" id="welcome">
   <div class="welcome-inner">
     <div class="welcome-logo"><svg viewBox="0 0 2081 472" xmlns="http://www.w3.org/2000/svg" style="height:44px;width:auto"><path fill="#0061AD" d="M1392,473C928,473,464.6,473,1.1,473C1.1,315.7,1.1,158.5,1.1,1.1C694.7,1.1,1388.3,1.1,2082,1.1C2082,158.4,2082,315.7,2082,473C1852.1,473,1622.3,473,1392,473M1552.1,236.6C1558.3,230.1,1565.3,224.2,1570.5,217C1587.8,192.6,1593.4,164.9,1588.7,135.6C1585,112.6,1574.7,92.8,1555.2,78.8C1537.1,65.8,1516.2,62.3,1494.8,62.2C1430.1,61.9,1365.4,62.1,1300.8,62.1C1299,62.1,1297.2,62.1,1295.6,62.1C1271,177.8,1246.7,292.7,1222.2,408C1257.2,408,1291.8,408,1326.5,407.9C1327.6,407.9,1329.5,406,1329.8,404.8C1332.7,392,1335.3,379.2,1338,366.4C1344.7,334.3,1351.3,302.2,1358.2,270.2C1358.4,269,1360.2,267.3,1361.3,267.2C1374.9,266.4,1386.8,269.8,1394.3,282.2C1398.8,289.6,1403.4,297,1406.8,304.8C1420.9,337.5,1434.6,370.4,1448.2,403.2C1449.7,406.7,1451.2,408.1,1455.3,408.1C1489.5,407.9,1523.6,408,1557.8,408C1559.4,408,1561,408,1563.4,408C1555.7,389.3,1548.5,371.1,1540.8,353.3C1529.2,326.6,1516.8,300.3,1498.9,277.2C1495,272.1,1490.5,267.6,1486.1,262.5C1510,258.5,1532.4,252,1552.1,236.6M1064.4,404.9C1103,392.3,1134.2,369.2,1158.9,337.3C1180.5,309.4,1193.6,277.7,1200.1,243C1206.2,210.3,1206,177.8,1194.8,146.2C1179.7,103.6,1151,74.7,1106.8,62.9C1073.5,54.1,1039.6,54.6,1005.8,59.9C960.6,67,923.1,88.7,894.3,123.8C850.5,177.1,833.9,238.8,845.4,306.8C852.4,348.4,876,378.9,914.6,397.1C945.4,411.6,978.2,415,1011.7,413.6C1029.3,412.8,1046.7,410.6,1064.4,404.9M373.3,145.4C374.8,151.2,376.4,157.1,378,163.4C410.7,161.7,443.8,159.9,477.3,158.1C476.4,152.6,475.8,148,474.9,143.5C470.7,122.5,461.7,103.9,445.4,89.4C427.4,73.4,405.6,65.5,382.3,61.1C358.7,56.5,334.8,55.7,310.8,57C286.9,58.4,263.9,63.4,242.4,74.3C200.5,95.6,179.7,138,189.1,183.4C193.8,206.7,208.6,222.5,227.9,234.8C251,249.4,276.6,258.6,302.1,268C315.5,272.9,329.2,277.1,340.8,285.7C347.1,290.4,351.9,296.2,353,304.3C354.9,317.9,348,330.6,334.8,337.9C320.9,345.6,305.9,346.3,290.7,344.9C268.5,342.7,254.3,330.2,249.5,308.6C247.9,301.6,247.7,294.2,246.8,286.6C213.7,288.8,180.6,291,146.2,293.3C147.2,303.9,147.2,314.2,149.2,324.2C154.7,351.6,168.1,374.4,191.7,390.2C215.1,405.8,241.9,410.5,269.1,412.8C293.2,414.9,317.3,414.3,341.3,411.1C371,407.1,397.5,396.4,419.1,375.5C450.7,345,461.4,308.4,448.8,266C442,242.9,425.6,227,405.9,214.2C382.8,199.3,357.1,190,331.7,179.9C319.9,175.2,308.3,169.6,297.4,163.2C289.3,158.5,285.1,150.7,287.9,140.7C290.5,131.2,297.1,125.5,305.8,122C315.1,118.4,324.9,118.1,334.7,119C352.2,120.5,365.8,127.8,373.3,145.4M1696.5,408C1722.3,408,1748.2,408,1774,408.1C1777.1,408.1,1778.5,407.5,1779.2,403.9C1786.3,369.2,1793.5,334.6,1801.2,300C1803.4,289.6,1803.3,278.3,1811.6,270C1813.5,268.1,1815,265.8,1816.6,263.7C1864.7,201.5,1912.9,139.3,1961,77.1C1964.7,72.4,1968.3,67.5,1972.1,62.5C1971.2,62.2,1970.9,62.1,1970.6,62.1C1931.4,62.1,1892.3,62,1853.1,62.2C1851.4,62.2,1849.1,63.6,1848,65.1C1824.1,99.1,1800.4,133.1,1776.6,167.2C1771.4,174.7,1766.1,182.2,1760.5,190.1C1759.4,187.7,1758.6,186,1757.9,184.4C1741.6,144.9,1725.2,105.5,1709,66.1C1707.7,62.9,1706.1,62,1702.8,62C1668.3,62.1,1633.8,62.1,1599.3,62.1C1598.2,62.1,1597.1,62.2,1595.7,62.3C1596.2,63.6,1596.5,64.5,1596.9,65.4C1609.5,91.2,1622.2,117.1,1634.8,143C1655.6,185.5,1676.4,228.1,1697.1,270.7C1698.1,272.8,1699,275.5,1698.5,277.7C1690.9,313.8,1683.1,349.9,1675.3,386C1673.8,393.2,1672.4,400.4,1670.9,408C1679.5,408,1687.5,408,1696.5,408M829.5,62.1C810,62.1,790.5,62.1,771,62.1C693.4,62.1,615.7,62.1,538.1,62C534.5,62,532.6,62.3,531.8,66.7C529,81.8,525.5,96.8,522.3,111.9C519.9,123.5,517.5,135.1,515.1,147.1C551,147.1,586.4,147.1,622.3,147.1C612.9,191,603.4,234.3,594.1,277.7C584.8,321,575.6,364.3,566.3,408C601.3,408,636,408,670.6,407.8C671.8,407.8,673.6,405.7,673.9,404.3C681.3,371.2,688.6,338,695.7,304.9C704.9,262.7,713.9,220.4,723,178.2C725.2,167.8,727.6,157.5,730,147C767.4,147,804.5,147,842,147C848,118.6,853.9,90.5,859.9,62.1C849.8,62.1,840.2,62.1,829.5,62.1z"/><path fill="#FFF" d="M1551.8,236.8C1532.4,252,1510,258.5,1486.1,262.5C1490.5,267.6,1495,272.1,1498.9,277.2C1516.8,300.3,1529.2,326.6,1540.8,353.3C1548.5,371.1,1555.7,389.3,1563.4,408C1561,408,1559.4,408,1557.8,408C1523.6,408,1489.5,407.9,1455.3,408.1C1451.2,408.1,1449.7,406.7,1448.2,403.2C1434.6,370.4,1420.9,337.5,1406.8,304.8C1403.4,297,1398.8,289.6,1394.3,282.2C1386.8,269.8,1374.9,266.4,1361.3,267.2C1360.2,267.3,1358.4,269,1358.2,270.2C1351.3,302.2,1344.7,334.3,1338,366.4C1335.3,379.2,1332.7,392,1329.8,404.8C1329.5,406,1327.6,407.9,1326.5,407.9C1291.8,408,1257.2,408,1222.2,408C1246.7,292.7,1271,177.8,1295.6,62.1C1297.2,62.1,1299,62.1,1300.8,62.1C1365.4,62.1,1430.1,61.9,1494.8,62.2C1516.2,62.3,1537.1,65.8,1555.2,78.8C1574.7,92.8,1585,112.6,1588.7,135.6C1593.4,164.9,1587.8,192.6,1570.5,217C1565.3,224.2,1558.3,230.1,1551.8,236.8M1402.5,202.9C1417.4,202.2,1432.4,202.2,1447.3,200.8C1461.3,199.5,1473.4,193.2,1481.9,181.6C1493.4,165.6,1493.9,136.1,1463,133.4C1438.2,131.3,1413.1,132,1387.9,131.5C1382.8,155.6,1377.8,179,1372.7,202.9C1382.6,202.9,1392.1,202.9,1402.5,202.9z"/><path fill="#FFF" d="M1064,405C1046.7,410.6,1029.3,412.8,1011.7,413.6C978.2,415,945.4,411.6,914.6,397.1C876,378.9,852.4,348.4,845.4,306.8C833.9,238.8,850.5,177.1,894.3,123.8C923.1,88.7,960.6,67,1005.8,59.9C1039.6,54.6,1073.5,54.1,1106.8,62.9C1151,74.7,1179.7,103.6,1194.8,146.2C1206,177.8,1206.2,210.3,1200.1,243C1193.6,277.7,1180.5,309.4,1158.9,337.3C1134.2,369.2,1103,392.3,1064,405M978.7,330C1007.1,341.4,1038.2,334,1058.6,311.4C1075.1,293.2,1084.6,271.5,1091,248.3C1096.6,227.8,1101.2,207.1,1098.1,185.5C1093.8,155.3,1071,135.2,1040.5,135C1014,134.8,993.9,146.9,979.2,167.9C956.5,200.4,947.1,237.3,946.8,276.3C946.6,299.5,956.3,318.5,978.7,330z"/><path fill="#FEFEFF" d="M373.2,145C365.8,127.8,352.2,120.5,334.7,119C324.9,118.1,315.1,118.4,305.8,122C297.1,125.5,290.5,131.2,287.9,140.7C285.1,150.7,289.3,158.5,297.4,163.2C308.3,169.6,319.9,175.2,331.7,179.9C357.1,190,382.8,199.3,405.9,214.2C425.6,227,442,242.9,448.8,266C461.4,308.4,450.7,345,419.1,375.5C397.5,396.4,371,407.1,341.3,411.1C317.3,414.3,293.2,414.9,269.1,412.8C241.9,410.5,215.1,405.8,191.7,390.2C168.1,374.4,154.7,351.6,149.2,324.2C147.2,314.2,147.2,303.9,146.2,293.3C180.6,291,213.7,288.8,246.8,286.6C247.7,294.2,247.9,301.6,249.5,308.6C254.3,330.2,268.5,342.7,290.7,344.9C305.9,346.3,320.9,345.6,334.8,337.9C348,330.6,354.9,317.9,353,304.3C351.9,296.2,347.1,290.4,340.8,285.7C329.2,277.1,315.5,272.9,302.1,268C276.6,258.6,251,249.4,227.9,234.8C208.6,222.5,193.8,206.7,189.1,183.4C179.7,138,200.5,95.6,242.4,74.3C263.9,63.4,286.9,58.4,310.8,57C334.8,55.7,358.7,56.5,382.3,61.1C405.6,65.5,427.4,73.4,445.4,89.4C461.7,103.9,470.7,122.5,474.9,143.5C475.8,148,476.4,152.6,477.3,158.1C443.8,159.9,410.7,161.7,378,163.4C376.4,157.1,374.8,151.2,373.2,145z"/><path fill="#FEFEFF" d="M1696,408C1687.5,408,1679.5,408,1670.9,408C1672.4,400.4,1673.8,393.2,1675.3,386C1683.1,349.9,1690.9,313.8,1698.5,277.7C1699,275.5,1698.1,272.8,1697.1,270.7C1676.4,228.1,1655.6,185.5,1634.8,143C1622.2,117.1,1609.5,91.2,1596.9,65.4C1596.5,64.5,1596.2,63.6,1595.7,62.3C1597.1,62.2,1598.2,62.1,1599.3,62.1C1633.8,62.1,1668.3,62.1,1702.8,62C1706.1,62,1707.7,62.9,1709,66.1C1725.2,105.5,1741.6,144.9,1757.9,184.4C1758.6,186,1759.4,187.7,1760.5,190.1C1766.1,182.2,1771.4,174.7,1776.6,167.2C1800.4,133.1,1824.1,99.1,1848,65.1C1849.1,63.6,1851.4,62.2,1853.1,62.2C1892.3,62,1931.4,62.1,1970.6,62.1C1970.9,62.1,1971.2,62.2,1972.1,62.5C1968.3,67.5,1964.7,72.4,1961,77.1C1912.9,139.3,1864.7,201.5,1816.6,263.7C1815,265.8,1813.5,268.1,1811.6,270C1803.3,278.3,1803.4,289.6,1801.2,300C1793.5,334.6,1786.3,369.2,1779.2,403.9C1778.5,407.5,1777.1,408.1,1774,408.1C1748.2,408,1722.3,408,1696,408z"/><path fill="#FFF" d="M829.5,62.1C840.2,62.1,849.8,62.1,859.9,62.1C853.9,90.5,848,118.6,842,147C804.5,147,767.4,147,730,147C727.6,157.5,725.2,167.8,723,178.2C713.9,220.4,704.9,262.7,695.7,304.9C688.6,338,681.3,371.2,673.9,404.3C673.6,405.7,671.8,407.8,670.6,407.8C636,408,601.3,408,566.3,408C575.6,364.3,584.8,321,594.1,277.7C603.4,234.3,612.9,191,622.3,147.1C586.4,147.1,551,147.1,515.1,147.1C517.5,135.1,519.9,123.5,522.3,111.9C525.5,96.8,529,81.8,531.8,66.7C532.6,62.3,534.5,62,538.1,62C615.7,62.1,693.4,62.1,771,62.1C790.5,62.1,810,62.1,829.5,62.1z"/><path fill="#0161AD" d="M1402,202.9C1392.1,202.9,1382.6,202.9,1372.7,202.9C1377.8,179,1382.8,155.6,1387.9,131.5C1413.1,132,1438.2,131.3,1463,133.4C1493.9,136.1,1493.4,165.6,1481.9,181.6C1473.4,193.2,1461.3,199.5,1447.3,200.8C1432.4,202.2,1417.4,202.2,1402,202.9z"/><path fill="#0161AD" d="M978.4,329.8C956.3,318.5,946.6,299.5,946.8,276.3C947.1,237.3,956.5,200.4,979.2,167.9C993.9,146.9,1014,134.8,1040.5,135C1071,135.2,1093.8,155.3,1098.1,185.5C1101.2,207.1,1096.6,227.8,1091,248.3C1084.6,271.5,1075.1,293.2,1058.6,311.4C1038.2,334,1007.1,341.4,978.4,329.8z"/></svg></div>
-    <h1 class="welcome-title">Story Wayfinder</h1>
+    <h1 class="welcome-title">Story Liberator</h1>
     <p class="welcome-sub">Your interactive guide to the leadership models and frameworks in the Liberator Programme. Explore the wheel to discover approaches that will support your growth as a leader at Story.</p>
     <button class="welcome-btn" id="welcome-btn"><span class="welcome-pulse"></span> Begin exploring</button>
   </div>
@@ -995,7 +1008,7 @@ function buildWheelPage(onOpen) {
 
   const c1 = document.createElement('div');
   c1.className = 'card';
-  c1.innerHTML = '<h2>Story Wayfinder</h2><p>This interactive tool supports the Liberator Programme. The wheel maps 15 leadership behaviours across four quadrants: Enabling, Visioning, Mobilising, and Developing. Click any segment to explore the model and guidance behind it.</p>';
+  c1.innerHTML = '<h2>Story Liberator</h2><p>This interactive tool supports the Liberator Programme. The wheel maps 15 leadership behaviours across four quadrants: Enabling, Visioning, Mobilising, and Developing. Click any segment to explore the model and guidance behind it.</p>';
 
   const c2 = document.createElement('div');
   c2.className = 'card';
@@ -1011,7 +1024,7 @@ function buildWheelPage(onOpen) {
 
   const centerBlock = document.createElement('div');
   centerBlock.className = 'center-block';
-  centerBlock.innerHTML = '<h1 class="title">Story Wayfinder</h1><p class="subtitle">An interactive leadership toolkit for the Liberator Programme. Explore the wheel to discover models, frameworks, and approaches that will support your growth as a leader at Story.</p>';
+  centerBlock.innerHTML = '<h1 class="title">Story Liberator</h1><p class="subtitle">An interactive leadership toolkit for the Liberator Programme. Explore the wheel to discover models, frameworks, and approaches that will support your growth as a leader at Story.</p>';
 
   const cont = document.createElement('div');
   cont.className = 'container';
@@ -1041,7 +1054,7 @@ function buildDetailPage(seg, onBack) {
   const hero = document.createElement('div');
   hero.className = 'hero slide-up delay1';
   hero.style.background = qColour;
-  const worksheetCallout = seg.hasWorksheet ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> This section includes an interactive Change Sheet you can complete and download. Look for the button below.</div>' : '';
+  const worksheetCallout = seg.hasWorksheet ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> This section includes an interactive Change Sheet below. Complete it and download as a PDF.</div>' : '';
   hero.innerHTML = `
     <div class="hero-blob1"></div><div class="hero-blob2"></div>
     <p class="hero-eyebrow">${seg.quadrant}</p>
@@ -1102,13 +1115,7 @@ function buildDetailPage(seg, onBack) {
   rightCol.appendChild(bookCard);
 
   // Worksheet button (if segment has one)
-  if (seg.hasWorksheet) {
-    const wsBtn = document.createElement('button');
-    wsBtn.className = 'worksheet-btn slide-up delay4';
-    wsBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Open Change Sheet`;
-    wsBtn.addEventListener('click', () => { playChime(); goWorksheet(seg.id); });
-    rightCol.appendChild(wsBtn);
-  }
+
 
   const detailGrid = document.createElement('div');
   detailGrid.className = 'detail-grid';
@@ -1117,8 +1124,80 @@ function buildDetailPage(seg, onBack) {
 
   const cont = document.createElement('div');
   cont.className = 'container';
+  // Thread banner - High Challenge & High Support
+  const threadBanner = document.createElement('div');
+  threadBanner.className = 'thread-banner slide-up delay3';
+  threadBanner.innerHTML = '<div class="thread-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="thread-text"><span class="thread-main">High Challenge &amp; High Support</span><span class="thread-sub">with Positive Regard &amp; Genuineness</span></div>';
+
   cont.appendChild(hero);
+  cont.appendChild(threadBanner);
   cont.appendChild(detailGrid);
+
+  // Inline Change Sheet (only for sections that have one)
+  if (seg.hasWorksheet) {
+    const wsDivider = document.createElement('div');
+    wsDivider.className = 'ws-divider slide-up delay4';
+    wsDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Change Sheet</div><div class="ws-divider-line"></div>';
+
+    const wsCard = document.createElement('div');
+    wsCard.className = 'ws-card slide-up delay4';
+    wsCard.innerHTML = `
+      <h2>Change Sheet</h2>
+      <p class="ws-subtitle">Use this sheet to prepare for a conversation about change. Identify the issue, note the behaviours you are currently seeing, and define the behaviours you would like to see going forward. See page 126 of the Liberator book.</p>
+      <div class="ws-field-label">Issue</div>
+      <textarea class="ws-input" id="ws-issue" rows="3" placeholder="Describe the issue here..."></textarea>
+      <div class="ws-columns">
+        <div>
+          <div class="ws-col-header" style="background:${qColour}">Present Undesirable Behaviours<br>(Less of required)</div>
+          <div class="ws-col-body">
+            <textarea id="ws-less" placeholder="What behaviours are you currently seeing that need to change?"></textarea>
+          </div>
+        </div>
+        <div>
+          <div class="ws-col-header" style="background:${qColour}">Future Desirable Behaviours<br>(More of required)</div>
+          <div class="ws-col-body">
+            <textarea id="ws-more" placeholder="What behaviours would you like to see instead?"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="ws-actions">
+        <button class="ws-download-btn" id="ws-pdf-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download as PDF
+        </button>
+      </div>
+    `;
+
+    const wsBookCard = document.createElement('div');
+    wsBookCard.className = 'book-card slide-up delay4';
+    wsBookCard.style.maxWidth = '800px';
+    wsBookCard.style.margin = '20px auto 0';
+    const wsBookIcon = document.createElement('div');
+    wsBookIcon.className = 'book-icon';
+    wsBookIcon.innerHTML = `<div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+    const wsBookInfo = document.createElement('div');
+    wsBookInfo.className = 'book-info';
+    wsBookInfo.innerHTML = `<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 126</div>`;
+    wsBookCard.appendChild(wsBookIcon);
+    wsBookCard.appendChild(wsBookInfo);
+
+    cont.appendChild(wsDivider);
+    cont.appendChild(wsCard);
+    cont.appendChild(wsBookCard);
+
+    // Wire up PDF download
+    setTimeout(() => {
+      const pdfBtn = cont.querySelector('#ws-pdf-btn');
+      if (pdfBtn) {
+        pdfBtn.addEventListener('click', () => {
+          const issue = cont.querySelector('#ws-issue')?.value || '';
+          const less = cont.querySelector('#ws-less')?.value || '';
+          const more = cont.querySelector('#ws-more')?.value || '';
+          downloadChangeSheetPDF(issue, less, more);
+        });
+      }
+    }, 100);
+  }
 
   page.appendChild(buildHeader(backBtn));
   page.appendChild(cont);
@@ -1554,7 +1633,7 @@ function downloadChangeSheetPDF(issue, less, more) {
   s += `${blue} rg\n`;
   s += `${M} ${H - M - 40} ${W - 2*M} 40 re f\n`;
   s += `${white} rg\n`;
-  s += `BT /F1 16 Tf ${M + 12} ${H - M - 27} Td (${escPDF('Story Wayfinder - Change Sheet')}) Tj ET\n`;
+  s += `BT /F1 16 Tf ${M + 12} ${H - M - 27} Td (${escPDF('Story Liberator - Change Sheet')}) Tj ET\n`;
   s += `BT /F2 9 Tf ${W - M - 120} ${H - M - 27} Td (${escPDF('Liberator Programme - p.126')}) Tj ET\n`;
 
   y = H - M - 60;
