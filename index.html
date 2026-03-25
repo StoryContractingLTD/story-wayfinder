@@ -37,6 +37,11 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .header-left{display:flex;align-items:center;gap:16px}
 .divider{width:1px;height:28px;background:#c8d8e8}
 .tag{font-size:12px;font-weight:600;color:#8fa0b0;letter-spacing:.2em;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}
+.as-logo{height:34px;position:relative;overflow:hidden;border-radius:3px}
+.as-logo::before{content:'';position:absolute;top:-50%;left:-75%;width:50%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-20deg);animation:asShimmer 4.5s 2s ease-in-out infinite;z-index:1}
+@keyframes asShimmer{0%{left:-75%}100%{left:150%}}
+.as-logo svg{height:34px;width:auto;border-radius:3px;display:block}
 .logo{display:inline-flex;align-items:center;justify-content:center;height:40px}
 .logo svg{height:36px;width:auto}
 
@@ -138,8 +143,39 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 
 /* Responsive */
 
+/* Performance Navigator */
+.nav-wrap{background:#f8fbfe;border-radius:16px;padding:20px;border:2px solid #e4edf5}
+.nav-trail{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.nav-step{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:12px;border:2px solid #e4edf5;background:white;transition:all .3s ease}
+.nav-step.visited{border-color:#fa6b02;background:#fff8f2}
+.nav-step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0;background:#e4edf5;color:#666;transition:all .3s ease}
+.nav-step.visited .nav-step-num{background:#fa6b02;color:white}
+.nav-step-text{font-size:12px;color:#666;line-height:1.4}
+.nav-step.visited .nav-step-text{color:#333}
+.nav-step-answer{font-weight:700;color:#fa6b02;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.nav-current{background:white;border-radius:16px;padding:24px;border:2px solid #0061AD;margin-bottom:12px;animation:slideUp .3s ease both}
+.nav-current.decision{border-color:#0061AD}
+.nav-current.outcome{border-color:#fa6b02;background:#fff8f2}
+.nav-q-label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8A8E91;margin-bottom:6px}
+.nav-q-text{font-size:15px;font-weight:600;color:#004B86;line-height:1.5;margin-bottom:16px}
+.nav-outcome-text{font-size:15px;font-weight:600;color:#fa6b02;line-height:1.5;margin-bottom:12px}
+.nav-outcome-note{font-size:13px;color:#666;line-height:1.6}
+.nav-btns{display:flex;gap:10px}
+.nav-yn{flex:1;padding:12px;border:2px solid #d0dce8;border-radius:12px;background:white;font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease;text-align:center}
+.nav-yn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.nav-yn.yes{color:#0061AD;border-color:#0061AD}
+.nav-yn.yes:hover{background:#0061AD;color:white}
+.nav-yn.no{color:#1A3A5C;border-color:#1A3A5C}
+.nav-yn.no:hover{background:#1A3A5C;color:white}
+.nav-reset{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:20px;background:#e4edf5;font-family:'Barlow',sans-serif;font-weight:600;font-size:13px;color:#666;cursor:pointer;transition:all .15s ease;margin-top:8px}
+.nav-reset:hover{background:#d0dce8;color:#333}
+.nav-footer{text-align:center;padding:12px;background:linear-gradient(135deg,#004B86,#0061AD);border-radius:12px;margin-top:12px}
+.nav-footer p{color:rgba(255,255,255,.9);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+
 /* Thread banner */
-.thread-banner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#004B86,#0061AD);border-radius:16px;padding:14px 22px;margin-bottom:24px}
+.thread-banner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#004B86,#0061AD);border-radius:16px;padding:14px 22px;margin-bottom:24px;position:relative;overflow:hidden}
+.thread-banner::before{content:'';position:absolute;top:-50%;left:-75%;width:50%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);transform:skewX(-20deg);animation:threadShimmer 4s 1s ease-in-out infinite}
+@keyframes threadShimmer{0%{left:-75%}100%{left:150%}}
 .thread-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .thread-text{display:flex;flex-direction:column;gap:2px}
 .thread-main{color:white;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.02em}
@@ -314,10 +350,10 @@ const SEGMENTS = [
     quadrant:'Mobilising', startAngle:108, endAngle:126,
     tagline:'Looking below the surface',
     desc:'Surface-level fixes rarely solve deep problems. Getting to the root means asking better questions, resisting the urge to jump to solutions, and being willing to sit with discomfort while the real issue reveals itself.',
-    modelTitle:'The 5 Whys (Sakichi Toyoda)',
-    modelDesc:'This deceptively simple technique involves asking "Why?" repeatedly (typically five times) to peel back layers from a symptom to its root cause. It encourages leaders to resist quick fixes and instead follow the chain of causation to where the real problem lives.',
-    bullets:['Ask why at least five times before proposing a solution','Each answer should lead naturally to the next question','Document the chain so the root cause is visible to all'],
-    modelType:'fivewhys'
+    modelTitle:'The Performance Navigator',
+    modelDesc:'The Performance Navigator is a structured decision tool that helps leaders diagnose whether a performance issue is a skills gap (Can\'t Do) or an attitude issue (Won\'t Do). By working through a sequence of yes/no questions, it guides you to the right intervention rather than jumping to conclusions. Click through the navigator below to explore the process.',
+    bullets:['Start by defining the specific behaviours you are seeing','Use the Acid Test to distinguish Can\'t Do from Won\'t Do','Follow the path to the right intervention, then act on it and follow through consistently'],
+    modelType:'navigator'
   },
   {
     id:'assertive', label:'Be appropriately assertive',
@@ -476,6 +512,7 @@ function buildModelVisual(seg) {
     candor: buildCandorVisual,
     onion: buildOnionVisual,
     fivewhys: buildFiveWhysVisual,
+    navigator: buildNavigatorVisual,
     conflict: buildConflictVisual,
     sbi: buildSBIVisual,
     pdca: buildPDCAVisual,
@@ -725,6 +762,230 @@ function buildFiveWhysVisual() {
   return svg;
 }
 
+function buildNavigatorVisual() {
+  // Decision tree data
+  const nodes = {
+    start: {
+      type:'action', label:'Start',
+      text:'Define specific performance behaviours, including present undesirable ones and future desirable ones.',
+      next:'q1'
+    },
+    q1: {
+      type:'decision', label:'Question 1',
+      text:'Does the person clearly know what is expected?',
+      yes:'q2', no:'a1'
+    },
+    a1: {
+      type:'action', label:'Action needed',
+      text:'Describe what is required in explicit behavioural terms, and monitor subsequent performance closely.',
+      next:'q2'
+    },
+    q2: {
+      type:'decision', label:'Question 2',
+      text:'Is the person now performing well?',
+      yes:'end_reinforce', no:'q3'
+    },
+    end_reinforce: {
+      type:'outcome',
+      text:'Recognise and reinforce the new behaviour.',
+      note:'Positive reinforcement sustains improvement. Make it specific and timely.'
+    },
+    q3: {
+      type:'decision', label:'Question 3',
+      text:'Do these matter in terms of actual performance?',
+      yes:'q4_acid', no:'end_livewith'
+    },
+    end_livewith: {
+      type:'outcome',
+      text:'Live with the situation and concentrate on what matters.',
+      note:'Not every imperfection needs correcting. Focus your energy where it counts.'
+    },
+    q4_acid: {
+      type:'decision', label:'The Acid Test',
+      text:'Could the person do what was required if their life depended on it? (This separates Can\'t Do from Won\'t Do.)',
+      yes:'wont_q1', no:'cant_q1',
+      yesLabel:'YES (Won\'t Do)', noLabel:'NO (Can\'t Do)'
+    },
+    // CAN'T DO (Skills) path
+    cant_q1: {
+      type:'decision', label:'Can\'t Do: Question 1',
+      text:'Has the person done this work or activity successfully in the past?',
+      yes:'cant_q2', no:'cant_q3'
+    },
+    cant_q2: {
+      type:'decision', label:'Can\'t Do: Question 2',
+      text:'Does the person have the ability and experience to do it?',
+      yes:'cant_q4', no:'cant_q3'
+    },
+    cant_q3: {
+      type:'decision', label:'Can\'t Do: Question 3',
+      text:'Is the job, task, or body of work designed well, or could it be simplified?',
+      yes:'end_redesign', no:'cant_q4'
+    },
+    end_redesign: {
+      type:'outcome',
+      text:'Redesign the job to simplify. Provide specific practice, review methods, and reset expectations.',
+      note:'Sometimes the task itself is the barrier, not the person.'
+    },
+    cant_q4: {
+      type:'decision', label:'Can\'t Do: Question 4',
+      text:'Is the person well trained and knowledgeable?',
+      yes:'end_monitor', no:'end_train'
+    },
+    end_train: {
+      type:'outcome',
+      text:'Increase the amount of training, practice, and coaching.',
+      note:'Invest in building capability. Set clear milestones and review progress.'
+    },
+    end_monitor: {
+      type:'outcome',
+      text:'Provide specific, accountable results and monitor closely.',
+      note:'The skills may be there but need structure and accountability to surface consistently.'
+    },
+    // WON'T DO (Attitude) path
+    wont_q1: {
+      type:'decision', label:'Won\'t Do: Question 1',
+      text:'Does the person feel that it doesn\'t matter whether they perform well or not?',
+      yes:'end_feedback', no:'wont_q2'
+    },
+    end_feedback: {
+      type:'outcome',
+      text:'Give praise and create positive, frequent feedback and recognition.',
+      note:'People repeat what gets noticed. Make good performance visible and valued.'
+    },
+    wont_q2: {
+      type:'decision', label:'Won\'t Do: Question 2',
+      text:'Are there natural or automatic consequences if the person does the wrong thing?',
+      yes:'end_penalties', no:'wont_q3'
+    },
+    end_penalties: {
+      type:'outcome',
+      text:'Act to remove unintended penalties for good performance.',
+      note:'Sometimes doing the right thing is punished by extra workload or peer pressure. Remove those barriers.'
+    },
+    wont_q3: {
+      type:'decision', label:'Won\'t Do: Question 3',
+      text:'Are there any job design characteristics which prevent performance?',
+      yes:'end_remove', no:'wont_q4'
+    },
+    end_remove: {
+      type:'outcome',
+      text:'Remove such characteristics.',
+      note:'Environmental or structural factors can block even willing people.'
+    },
+    wont_q4: {
+      type:'decision', label:'Won\'t Do: Question 4',
+      text:'Does the person have a personal problem affecting this work?',
+      yes:'end_support', no:'end_formal'
+    },
+    end_support: {
+      type:'outcome',
+      text:'Refer to suitable support. Consider whether adjustments can be made while the issue is resolved.',
+      note:'Lead with compassion, but keep expectations clear.'
+    },
+    end_formal: {
+      type:'outcome',
+      text:'Consider the formal poor performance process, and ultimately, if necessary, dismissal.',
+      note:'When all other avenues are exhausted, formal processes protect everyone involved.'
+    }
+  };
+
+  const wrap = document.createElement('div');
+  wrap.className = 'nav-wrap';
+
+  let trail = [];
+  let currentId = 'start';
+
+  function render() {
+    wrap.innerHTML = '';
+    const node = nodes[currentId];
+
+    // Trail of visited steps
+    if (trail.length > 0) {
+      const trailEl = document.createElement('div');
+      trailEl.className = 'nav-trail';
+      trail.forEach((t, i) => {
+        const step = document.createElement('div');
+        step.className = 'nav-step visited';
+        const ansLabel = t.answer === 'yes' ? (nodes[t.id].yesLabel || 'Yes') : t.answer === 'no' ? (nodes[t.id].noLabel || 'No') : 'Continue';
+        step.innerHTML = `<div class="nav-step-num">${i+1}</div><div><div class="nav-step-text">${nodes[t.id].text}</div>${t.answer ? '<div class="nav-step-answer">' + ansLabel + '</div>' : ''}</div>`;
+        trailEl.appendChild(step);
+      });
+      wrap.appendChild(trailEl);
+    }
+
+    // Current node
+    const current = document.createElement('div');
+
+    if (node.type === 'action') {
+      current.className = 'nav-current decision';
+      current.innerHTML = `<div class="nav-q-label">${node.label}</div><div class="nav-q-text">${node.text}</div>`;
+      const btn = document.createElement('button');
+      btn.className = 'nav-yn yes';
+      btn.style.maxWidth = '200px';
+      btn.textContent = 'Continue';
+      btn.addEventListener('click', () => {
+        trail.push({ id: currentId, answer: null });
+        currentId = node.next;
+        render();
+      });
+      current.appendChild(btn);
+    } else if (node.type === 'decision') {
+      current.className = 'nav-current decision';
+      current.innerHTML = `<div class="nav-q-label">${node.label}</div><div class="nav-q-text">${node.text}</div>`;
+      const btns = document.createElement('div');
+      btns.className = 'nav-btns';
+      const yesBtn = document.createElement('button');
+      yesBtn.className = 'nav-yn yes';
+      yesBtn.textContent = node.yesLabel || 'Yes';
+      yesBtn.addEventListener('click', () => {
+        trail.push({ id: currentId, answer: 'yes' });
+        currentId = node.yes;
+        render();
+      });
+      const noBtn = document.createElement('button');
+      noBtn.className = 'nav-yn no';
+      noBtn.textContent = node.noLabel || 'No';
+      noBtn.addEventListener('click', () => {
+        trail.push({ id: currentId, answer: 'no' });
+        currentId = node.no;
+        render();
+      });
+      btns.appendChild(yesBtn);
+      btns.appendChild(noBtn);
+      current.appendChild(btns);
+    } else if (node.type === 'outcome') {
+      current.className = 'nav-current outcome';
+      current.innerHTML = `<div class="nav-q-label">Recommended Action</div><div class="nav-outcome-text">${node.text}</div><div class="nav-outcome-note">${node.note}</div>`;
+    }
+
+    wrap.appendChild(current);
+
+    // Footer + reset
+    const footer = document.createElement('div');
+    footer.className = 'nav-footer';
+    footer.innerHTML = '<p>Identify solution, act on it, and follow through consistently</p>';
+    wrap.appendChild(footer);
+
+    if (trail.length > 0) {
+      const reset = document.createElement('button');
+      reset.className = 'nav-reset';
+      reset.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Start again';
+      reset.addEventListener('click', () => {
+        trail = [];
+        currentId = 'start';
+        render();
+      });
+      wrap.appendChild(reset);
+    }
+
+    wrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+
+  render();
+  return wrap;
+}
+
 function buildConflictVisual() {
   const svg = createSVG(400, 250);
   const modes = [
@@ -894,7 +1155,15 @@ function buildHeader(rightEl) {
   left.className = 'header-left';
   left.innerHTML = '<div class="logo"><svg viewBox="0 0 2081 472" xmlns="http://www.w3.org/2000/svg"><path fill="#0061AD" d="M1392,473C928,473,464.6,473,1.1,473C1.1,315.7,1.1,158.5,1.1,1.1C694.7,1.1,1388.3,1.1,2082,1.1C2082,158.4,2082,315.7,2082,473C1852.1,473,1622.3,473,1392,473M1552.1,236.6C1558.3,230.1,1565.3,224.2,1570.5,217C1587.8,192.6,1593.4,164.9,1588.7,135.6C1585,112.6,1574.7,92.8,1555.2,78.8C1537.1,65.8,1516.2,62.3,1494.8,62.2C1430.1,61.9,1365.4,62.1,1300.8,62.1C1299,62.1,1297.2,62.1,1295.6,62.1C1271,177.8,1246.7,292.7,1222.2,408C1257.2,408,1291.8,408,1326.5,407.9C1327.6,407.9,1329.5,406,1329.8,404.8C1332.7,392,1335.3,379.2,1338,366.4C1344.7,334.3,1351.3,302.2,1358.2,270.2C1358.4,269,1360.2,267.3,1361.3,267.2C1374.9,266.4,1386.8,269.8,1394.3,282.2C1398.8,289.6,1403.4,297,1406.8,304.8C1420.9,337.5,1434.6,370.4,1448.2,403.2C1449.7,406.7,1451.2,408.1,1455.3,408.1C1489.5,407.9,1523.6,408,1557.8,408C1559.4,408,1561,408,1563.4,408C1555.7,389.3,1548.5,371.1,1540.8,353.3C1529.2,326.6,1516.8,300.3,1498.9,277.2C1495,272.1,1490.5,267.6,1486.1,262.5C1510,258.5,1532.4,252,1552.1,236.6M1064.4,404.9C1103,392.3,1134.2,369.2,1158.9,337.3C1180.5,309.4,1193.6,277.7,1200.1,243C1206.2,210.3,1206,177.8,1194.8,146.2C1179.7,103.6,1151,74.7,1106.8,62.9C1073.5,54.1,1039.6,54.6,1005.8,59.9C960.6,67,923.1,88.7,894.3,123.8C850.5,177.1,833.9,238.8,845.4,306.8C852.4,348.4,876,378.9,914.6,397.1C945.4,411.6,978.2,415,1011.7,413.6C1029.3,412.8,1046.7,410.6,1064.4,404.9M373.3,145.4C374.8,151.2,376.4,157.1,378,163.4C410.7,161.7,443.8,159.9,477.3,158.1C476.4,152.6,475.8,148,474.9,143.5C470.7,122.5,461.7,103.9,445.4,89.4C427.4,73.4,405.6,65.5,382.3,61.1C358.7,56.5,334.8,55.7,310.8,57C286.9,58.4,263.9,63.4,242.4,74.3C200.5,95.6,179.7,138,189.1,183.4C193.8,206.7,208.6,222.5,227.9,234.8C251,249.4,276.6,258.6,302.1,268C315.5,272.9,329.2,277.1,340.8,285.7C347.1,290.4,351.9,296.2,353,304.3C354.9,317.9,348,330.6,334.8,337.9C320.9,345.6,305.9,346.3,290.7,344.9C268.5,342.7,254.3,330.2,249.5,308.6C247.9,301.6,247.7,294.2,246.8,286.6C213.7,288.8,180.6,291,146.2,293.3C147.2,303.9,147.2,314.2,149.2,324.2C154.7,351.6,168.1,374.4,191.7,390.2C215.1,405.8,241.9,410.5,269.1,412.8C293.2,414.9,317.3,414.3,341.3,411.1C371,407.1,397.5,396.4,419.1,375.5C450.7,345,461.4,308.4,448.8,266C442,242.9,425.6,227,405.9,214.2C382.8,199.3,357.1,190,331.7,179.9C319.9,175.2,308.3,169.6,297.4,163.2C289.3,158.5,285.1,150.7,287.9,140.7C290.5,131.2,297.1,125.5,305.8,122C315.1,118.4,324.9,118.1,334.7,119C352.2,120.5,365.8,127.8,373.3,145.4M1696.5,408C1722.3,408,1748.2,408,1774,408.1C1777.1,408.1,1778.5,407.5,1779.2,403.9C1786.3,369.2,1793.5,334.6,1801.2,300C1803.4,289.6,1803.3,278.3,1811.6,270C1813.5,268.1,1815,265.8,1816.6,263.7C1864.7,201.5,1912.9,139.3,1961,77.1C1964.7,72.4,1968.3,67.5,1972.1,62.5C1971.2,62.2,1970.9,62.1,1970.6,62.1C1931.4,62.1,1892.3,62,1853.1,62.2C1851.4,62.2,1849.1,63.6,1848,65.1C1824.1,99.1,1800.4,133.1,1776.6,167.2C1771.4,174.7,1766.1,182.2,1760.5,190.1C1759.4,187.7,1758.6,186,1757.9,184.4C1741.6,144.9,1725.2,105.5,1709,66.1C1707.7,62.9,1706.1,62,1702.8,62C1668.3,62.1,1633.8,62.1,1599.3,62.1C1598.2,62.1,1597.1,62.2,1595.7,62.3C1596.2,63.6,1596.5,64.5,1596.9,65.4C1609.5,91.2,1622.2,117.1,1634.8,143C1655.6,185.5,1676.4,228.1,1697.1,270.7C1698.1,272.8,1699,275.5,1698.5,277.7C1690.9,313.8,1683.1,349.9,1675.3,386C1673.8,393.2,1672.4,400.4,1670.9,408C1679.5,408,1687.5,408,1696.5,408M829.5,62.1C810,62.1,790.5,62.1,771,62.1C693.4,62.1,615.7,62.1,538.1,62C534.5,62,532.6,62.3,531.8,66.7C529,81.8,525.5,96.8,522.3,111.9C519.9,123.5,517.5,135.1,515.1,147.1C551,147.1,586.4,147.1,622.3,147.1C612.9,191,603.4,234.3,594.1,277.7C584.8,321,575.6,364.3,566.3,408C601.3,408,636,408,670.6,407.8C671.8,407.8,673.6,405.7,673.9,404.3C681.3,371.2,688.6,338,695.7,304.9C704.9,262.7,713.9,220.4,723,178.2C725.2,167.8,727.6,157.5,730,147C767.4,147,804.5,147,842,147C848,118.6,853.9,90.5,859.9,62.1C849.8,62.1,840.2,62.1,829.5,62.1z"/><path fill="#FEFFFF" d="M1551.8,236.8C1532.4,252,1510,258.5,1486.1,262.5C1490.5,267.6,1495,272.1,1498.9,277.2C1516.8,300.3,1529.2,326.6,1540.8,353.3C1548.5,371.1,1555.7,389.3,1563.4,408C1561,408,1559.4,408,1557.8,408C1523.6,408,1489.5,407.9,1455.3,408.1C1451.2,408.1,1449.7,406.7,1448.2,403.2C1434.6,370.4,1420.9,337.5,1406.8,304.8C1403.4,297,1398.8,289.6,1394.3,282.2C1386.8,269.8,1374.9,266.4,1361.3,267.2C1360.2,267.3,1358.4,269,1358.2,270.2C1351.3,302.2,1344.7,334.3,1338,366.4C1335.3,379.2,1332.7,392,1329.8,404.8C1329.5,406,1327.6,407.9,1326.5,407.9C1291.8,408,1257.2,408,1222.2,408C1246.7,292.7,1271,177.8,1295.6,62.1C1297.2,62.1,1299,62.1,1300.8,62.1C1365.4,62.1,1430.1,61.9,1494.8,62.2C1516.2,62.3,1537.1,65.8,1555.2,78.8C1574.7,92.8,1585,112.6,1588.7,135.6C1593.4,164.9,1587.8,192.6,1570.5,217C1565.3,224.2,1558.3,230.1,1551.8,236.8M1402.5,202.9C1417.4,202.2,1432.4,202.2,1447.3,200.8C1461.3,199.5,1473.4,193.2,1481.9,181.6C1493.4,165.6,1493.9,136.1,1463,133.4C1438.2,131.3,1413.1,132,1387.9,131.5C1382.8,155.6,1377.8,179,1372.7,202.9C1382.6,202.9,1392.1,202.9,1402.5,202.9z"/><path fill="#FEFFFF" d="M1064,405C1046.7,410.6,1029.3,412.8,1011.7,413.6C978.2,415,945.4,411.6,914.6,397.1C876,378.9,852.4,348.4,845.4,306.8C833.9,238.8,850.5,177.1,894.3,123.8C923.1,88.7,960.6,67,1005.8,59.9C1039.6,54.6,1073.5,54.1,1106.8,62.9C1151,74.7,1179.7,103.6,1194.8,146.2C1206,177.8,1206.2,210.3,1200.1,243C1193.6,277.7,1180.5,309.4,1158.9,337.3C1134.2,369.2,1103,392.3,1064,405M978.7,330C1007.1,341.4,1038.2,334,1058.6,311.4C1075.1,293.2,1084.6,271.5,1091,248.3C1096.6,227.8,1101.2,207.1,1098.1,185.5C1093.8,155.3,1071,135.2,1040.5,135C1014,134.8,993.9,146.9,979.2,167.9C956.5,200.4,947.1,237.3,946.8,276.3C946.6,299.5,956.3,318.5,978.7,330z"/><path fill="#FEFEFF" d="M373.2,145C365.8,127.8,352.2,120.5,334.7,119C324.9,118.1,315.1,118.4,305.8,122C297.1,125.5,290.5,131.2,287.9,140.7C285.1,150.7,289.3,158.5,297.4,163.2C308.3,169.6,319.9,175.2,331.7,179.9C357.1,190,382.8,199.3,405.9,214.2C425.6,227,442,242.9,448.8,266C461.4,308.4,450.7,345,419.1,375.5C397.5,396.4,371,407.1,341.3,411.1C317.3,414.3,293.2,414.9,269.1,412.8C241.9,410.5,215.1,405.8,191.7,390.2C168.1,374.4,154.7,351.6,149.2,324.2C147.2,314.2,147.2,303.9,146.2,293.3C180.6,291,213.7,288.8,246.8,286.6C247.7,294.2,247.9,301.6,249.5,308.6C254.3,330.2,268.5,342.7,290.7,344.9C305.9,346.3,320.9,345.6,334.8,337.9C348,330.6,354.9,317.9,353,304.3C351.9,296.2,347.1,290.4,340.8,285.7C329.2,277.1,315.5,272.9,302.1,268C276.6,258.6,251,249.4,227.9,234.8C208.6,222.5,193.8,206.7,189.1,183.4C179.7,138,200.5,95.6,242.4,74.3C263.9,63.4,286.9,58.4,310.8,57C334.8,55.7,358.7,56.5,382.3,61.1C405.6,65.5,427.4,73.4,445.4,89.4C461.7,103.9,470.7,122.5,474.9,143.5C475.8,148,476.4,152.6,477.3,158.1C443.8,159.9,410.7,161.7,378,163.4C376.4,157.1,374.8,151.2,373.2,145z"/><path fill="#FEFEFF" d="M1696,408C1687.5,408,1679.5,408,1670.9,408C1672.4,400.4,1673.8,393.2,1675.3,386C1683.1,349.9,1690.9,313.8,1698.5,277.7C1699,275.5,1698.1,272.8,1697.1,270.7C1676.4,228.1,1655.6,185.5,1634.8,143C1622.2,117.1,1609.5,91.2,1596.9,65.4C1596.5,64.5,1596.2,63.6,1595.7,62.3C1597.1,62.2,1598.2,62.1,1599.3,62.1C1633.8,62.1,1668.3,62.1,1702.8,62C1706.1,62,1707.7,62.9,1709,66.1C1725.2,105.5,1741.6,144.9,1757.9,184.4C1758.6,186,1759.4,187.7,1760.5,190.1C1766.1,182.2,1771.4,174.7,1776.6,167.2C1800.4,133.1,1824.1,99.1,1848,65.1C1849.1,63.6,1851.4,62.2,1853.1,62.2C1892.3,62,1931.4,62.1,1970.6,62.1C1970.9,62.1,1971.2,62.2,1972.1,62.5C1968.3,67.5,1964.7,72.4,1961,77.1C1912.9,139.3,1864.7,201.5,1816.6,263.7C1815,265.8,1813.5,268.1,1811.6,270C1803.3,278.3,1803.4,289.6,1801.2,300C1793.5,334.6,1786.3,369.2,1779.2,403.9C1778.5,407.5,1777.1,408.1,1774,408.1C1748.2,408,1722.3,408,1696,408z"/><path fill="#FFF" d="M829.5,62.1C840.2,62.1,849.8,62.1,859.9,62.1C853.9,90.5,848,118.6,842,147C804.5,147,767.4,147,730,147C727.6,157.5,725.2,167.8,723,178.2C713.9,220.4,704.9,262.7,695.7,304.9C688.6,338,681.3,371.2,673.9,404.3C673.6,405.7,671.8,407.8,670.6,407.8C636,408,601.3,408,566.3,408C575.6,364.3,584.8,321,594.1,277.7C603.4,234.3,612.9,191,622.3,147.1C586.4,147.1,551,147.1,515.1,147.1C517.5,135.1,519.9,123.5,522.3,111.9C525.5,96.8,529,81.8,531.8,66.7C532.6,62.3,534.5,62,538.1,62C615.7,62.1,693.4,62.1,771,62.1C790.5,62.1,810,62.1,829.5,62.1z"/><path fill="#0161AD" d="M1402,202.9C1392.1,202.9,1382.6,202.9,1372.7,202.9C1377.8,179,1382.8,155.6,1387.9,131.5C1413.1,132,1438.2,131.3,1463,133.4C1493.9,136.1,1493.4,165.6,1481.9,181.6C1473.4,193.2,1461.3,199.5,1447.3,200.8C1432.4,202.2,1417.4,202.2,1402,202.9z"/><path fill="#0161AD" d="M978.4,329.8C956.3,318.5,946.6,299.5,946.8,276.3C947.1,237.3,956.5,200.4,979.2,167.9C993.9,146.9,1014,134.8,1040.5,135C1071,135.2,1093.8,155.3,1098.1,185.5C1101.2,207.1,1096.6,227.8,1091,248.3C1084.6,271.5,1075.1,293.2,1058.6,311.4C1038.2,334,1007.1,341.4,978.4,329.8z"/></svg></div><div class="divider"></div><span class="tag">Liberator Programme</span>';
   header.appendChild(left);
-  if (rightEl) header.appendChild(rightEl);
+  // Ali Stewart & Co logo (secondary, less prominent)
+  const asLogo = document.createElement('div');
+  asLogo.className = 'as-logo';
+  asLogo.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 484.53 163.01"><defs><linearGradient id="asg" x1="457.43" y1="205.41" x2="25.41" y2="-44.02" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1e2465"/><stop offset="1" stop-color="#33397a"/></linearGradient></defs><rect width="482.84" height="161.39" style="fill:url(#asg)"/><polygon points="124.26 8.58 96.77 8.58 83.03 32.39 96.77 56.19 124.26 56.19 138 32.39 124.26 8.58" style="fill:#51cdad"/><polygon points="76 53.02 34.5 53.02 13.75 88.96 34.5 124.9 76 124.9 96.75 88.96 76 53.02" style="fill:#0d1253"/><text transform="translate(27.46 103.69)" style="fill:#fff;font-family:sans-serif;font-size:46px"><tspan x="0" y="0">Ali Stewart &amp; Co</tspan></text></svg>';
+  const headerRight = document.createElement('div');
+  headerRight.className = 'header-right';
+  if (rightEl) headerRight.appendChild(rightEl);
+  headerRight.appendChild(asLogo);
+  header.appendChild(headerRight);
   return header;
 }
 
