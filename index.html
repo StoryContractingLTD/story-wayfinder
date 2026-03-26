@@ -400,12 +400,15 @@ const SEGMENTS = [
   {
     id:'adapt-style', label:'Flexibly adapt style',
     quadrant:'Developing', startAngle:210, endAngle:240,
-    tagline:'Meeting people where they are',
-    desc:'Flexible leadership means adjusting your communication, pace, and approach to suit the person in front of you. It requires self-awareness and a genuine interest in how others experience your leadership.',
-    modelTitle:'Insights Discovery Colour Energies',
-    modelDesc:'Insights Discovery uses four colour energies (Fiery Red, Sunshine Yellow, Earth Green, Cool Blue) to help people understand their communication preferences and those of others. Leaders who adapt their style to connect with all four energies build stronger relationships and more effective teams.',
-    bullets:['Recognise your own lead and least-preferred energies','Adapt your language and pace to the person you are with','Value the strengths each energy brings to the team'],
-    modelType:'insights'
+    tagline:'Match your style to the person and the moment',
+    desc:'Great leaders do not rely on one approach. They read the situation, understand what the person needs, and adapt accordingly. Situational consistency means bringing the same values to every interaction while being genuinely flexible in how you lead.',
+    modelTitle:'Leadership Styles & Situational Consistency',
+    modelDesc:'Based on Blanchard, Zigarmi and Zigarmi (1985), this model identifies four leadership styles: Directing, Coaching, Mentoring, and Delegating. Effective leaders choose the right style to match the team member\'s confidence and competence for a given task, always within a framework of High Challenge and High Support.',
+    bullets:['Match the style to the person\'s capability and confidence for that specific task','Directing gives clarity early; mentoring and coaching increase involvement as readiness grows','Delegating is not withdrawal: support, feedback and recognition still matter'],
+    modelType:'leadership-styles',
+    bookPages:'245',
+    noteTitle:'Flex the style, hold the standard',
+    noteText:'The four styles are not fixed labels but flexible responses to the situation. A person may need different levels of direction and support depending on the task, even within the same role. The leader\'s job is to adjust how much guidance they provide without lowering expectations or support. Used well, this helps people build confidence, judgement and independence over time.'
   },
   {
     id:'continuous-improvement', label:'Generate continuous improvement',
@@ -468,7 +471,7 @@ function playShush(){
     const src=ctx.createBufferSource(); src.buffer=buf;
     const flt=ctx.createBiquadFilter(); flt.type='bandpass'; flt.frequency.value=3800; flt.Q.value=0.7;
     const g=ctx.createGain();
-    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.055,now+.008); g.gain.exponentialRampToValueAtTime(.0001,now+.09);
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.018,now+.008); g.gain.exponentialRampToValueAtTime(.0001,now+.09);
     src.connect(flt); flt.connect(g); g.connect(ctx.destination); src.start(now); src.stop(now+.1);
   }catch(e){}
 }
@@ -478,7 +481,7 @@ function playChime(){
     [523.25,783.99].forEach((freq,i)=>{
       const osc=ctx.createOscillator(), g=ctx.createGain();
       osc.type='sine'; osc.frequency.value=freq;
-      g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.07-i*.015,now+.01); g.gain.exponentialRampToValueAtTime(.0001,now+.7);
+      g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.025-i*.006,now+.01); g.gain.exponentialRampToValueAtTime(.0001,now+.7);
       osc.connect(g); g.connect(ctx.destination); osc.start(now); osc.stop(now+.75);
     });
   }catch(e){}
@@ -489,7 +492,7 @@ function playReturn(){
     [{f:783.99,d:0},{f:523.25,d:.09}].forEach(({f,d})=>{
       const osc=ctx.createOscillator(), g=ctx.createGain();
       osc.type='sine'; osc.frequency.value=f;
-      g.gain.setValueAtTime(0,now+d); g.gain.linearRampToValueAtTime(.06,now+d+.01); g.gain.exponentialRampToValueAtTime(.0001,now+d+.55);
+      g.gain.setValueAtTime(0,now+d); g.gain.linearRampToValueAtTime(.022,now+d+.01); g.gain.exponentialRampToValueAtTime(.0001,now+d+.55);
       osc.connect(g); g.connect(ctx.destination); osc.start(now+d); osc.stop(now+d+.6);
     });
   }catch(e){}
@@ -518,6 +521,7 @@ function buildModelVisual(seg) {
     pdca: buildPDCAVisual,
     maslow: buildMaslowVisual,
     insights: buildInsightsVisual,
+    'leadership-styles': buildLeadershipStylesVisual,
     aar: buildAARVisual
   };
   const builder = builders[seg.modelType];
@@ -1079,6 +1083,468 @@ function buildInsightsVisual() {
     addText(svg, e.x, e.y+12, e.sub, 'rgba(255,255,255,.8)', 8, 500);
   });
   return svg;
+}
+
+function buildLeadershipStylesVisual() {
+  const uid = 'ls' + Math.random().toString(36).slice(2,7);
+
+  const container = document.createElement('div');
+  container.style.cssText = 'position:relative;width:100%;font-family:"Barlow",sans-serif;user-select:none';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    /* Outer wrapper: leaves room for both axes */
+    .${uid}-wrap    { display:flex; flex-direction:column; gap:0; }
+    .${uid}-mid-row { display:flex; align-items:stretch; gap:0; }
+
+    /* Y axis column — flex-row: arrow line first, then the axis label to its right */
+    .${uid}-y-col { display:flex; flex-direction:row; align-items:stretch; gap:6px;
+                    padding-bottom:4px; flex-shrink:0; margin-right:10px; }
+    /* Sub-column that holds just the arrow + Hi/Lo labels */
+    .${uid}-y-axis-part { display:flex; flex-direction:column; align-items:center; width:22px; flex:0 0 22px; }
+    .${uid}-y-label { font-family:"Barlow Condensed",sans-serif; font-size:9px; font-weight:700;
+      color:#888; letter-spacing:.14em; text-transform:uppercase;
+      writing-mode:vertical-rl; transform:rotate(180deg); align-self:center; flex:1; display:flex; align-items:center; justify-content:center; }
+    .${uid}-y-track { flex:1; display:flex; flex-direction:column; align-items:center;
+                      gap:0; padding:0; }
+    .${uid}-y-hi { font-family:"Barlow",sans-serif; font-size:11px; font-weight:700;
+      color:#aaa; letter-spacing:.1em; text-transform:uppercase;
+      writing-mode:vertical-rl; transform:rotate(180deg); margin-bottom:4px;
+      padding:6px 4px; border-radius:20px; background:transparent;
+      transition:color .25s ease, background .25s ease, transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+    .${uid}-y-line-wrap { flex:1; display:flex; align-items:center; justify-content:center; }
+    .${uid}-y-lo { font-family:"Barlow",sans-serif; font-size:11px; font-weight:700;
+      color:#aaa; letter-spacing:.1em; text-transform:uppercase;
+      writing-mode:vertical-rl; transform:rotate(180deg); margin-top:4px;
+      padding:6px 4px; border-radius:20px; background:transparent;
+      transition:color .25s ease, background .25s ease, transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+    .${uid}-y-hi.lit { color:white; background:#009FA0; transform:rotate(180deg) scale(1.15);
+      box-shadow:0 2px 12px rgba(0,159,160,.45); }
+    .${uid}-y-lo.lit { color:white; background:#fa6b02; transform:rotate(180deg) scale(1.15);
+      box-shadow:0 2px 12px rgba(250,107,2,.45); }
+
+    /* SVG axis line */
+    .${uid}-axis-svg { overflow:visible; }
+
+    /* Grid area */
+    .${uid}-grid-col { flex:1; }
+    .${uid}-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; position:relative; }
+
+    /* Cells */
+    .${uid}-cell { border-radius:14px; padding:16px 14px; min-height:130px; position:relative;
+      overflow:hidden; cursor:default;
+      transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease, opacity .3s ease; }
+    .${uid}-cell.hovered { transform:scale(1.18); z-index:10; }
+    .${uid}-cell.dimmed  { opacity:.28; transform:scale(.94); }
+    .${uid}-cell-label { font-family:"Barlow Condensed",sans-serif; font-size:14px; font-weight:800;
+      color:white; margin-bottom:6px; text-transform:uppercase; letter-spacing:.07em; }
+    .${uid}-cell-desc  { font-size:10px; color:rgba(255,255,255,.82); line-height:1.5; }
+
+    /* Clickable dot indicator */
+    .${uid}-dot { position:absolute; bottom:10px; right:10px; width:8px; height:8px;
+      border-radius:50%; background:rgba(255,255,255,.55); pointer-events:none; }
+    .${uid}-dot::after { content:''; position:absolute; inset:-4px; border-radius:50%;
+      background:rgba(255,255,255,.22); animation:${uid}DotPulse 2.2s ease-in-out infinite; }
+    @keyframes ${uid}DotPulse {
+      0%,100% { transform:scale(1);   opacity:.7; }
+      50%      { transform:scale(2.2); opacity:0;  }
+    }
+    .${uid}-cell.dimmed .${uid}-dot { opacity:.3; }
+
+    /* See example pill */
+    .${uid}-pill { position:absolute; bottom:9px; right:22px;
+      display:flex; align-items:center; gap:5px;
+      background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3);
+      border-radius:20px; padding:4px 10px 4px 8px;
+      font-family:"Barlow",sans-serif; font-size:10px; font-weight:700;
+      color:white; letter-spacing:.06em; text-transform:uppercase;
+      pointer-events:none; white-space:nowrap;
+      opacity:0; transform:translateY(4px);
+      transition:opacity .2s ease, transform .2s ease; }
+    .${uid}-pill::before { content:''; width:6px; height:6px; border-radius:50%;
+      background:rgba(255,255,255,.7); flex-shrink:0; }
+    .${uid}-cell.hovered .${uid}-pill { opacity:1; transform:translateY(0); }
+    .${uid}-cell.dimmed .${uid}-dot { opacity:.3; }
+
+    /* Shimmer sweep */
+    .${uid}-sweep { position:absolute; top:-50%; left:-75%; width:50%; height:200%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);
+      transform:skewX(-20deg); pointer-events:none; animation:${uid}Sw .55s ease forwards; }
+    @keyframes ${uid}Sw { from{left:-75%} to{left:150%} }
+
+    /* Centre circle */
+    .${uid}-centre { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:122px; height:122px; border-radius:50%;
+      background:linear-gradient(145deg,#0061AD 0%,#004B86 100%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:10px; z-index:5;
+      box-shadow:0 4px 22px rgba(0,97,173,.42), 0 0 0 3px rgba(255,255,255,.14);
+      transition:box-shadow .3s ease; }
+    .${uid}-centre.pulse { animation:${uid}Pulse .72s ease; }
+    @keyframes ${uid}Pulse {
+      0%,100% { box-shadow:0 4px 22px rgba(0,97,173,.42), 0 0 0 3px rgba(255,255,255,.14); }
+      42%      { box-shadow:0 6px 52px rgba(0,170,255,.78), 0 0 0 8px rgba(255,255,255,.44), 0 0 80px rgba(0,160,255,.22); }
+    }
+    .${uid}-ct   { font-size:7.5px; font-weight:700; color:white; line-height:1.45; text-transform:uppercase; letter-spacing:.05em; }
+    .${uid}-cdiv { width:28px; height:1px; background:rgba(255,255,255,.28); margin:4px auto; }
+
+    /* X axis row */
+    .${uid}-x-row { display:flex; align-items:center; gap:0; margin-top:14px;
+                    padding-left:60px; /* matches y-col width */ }
+    .${uid}-x-label { font-family:"Barlow Condensed",sans-serif; font-size:9px; font-weight:700;
+      color:#888; letter-spacing:.14em; text-transform:uppercase;
+      text-align:center; margin-bottom:4px; }
+    .${uid}-x-track { display:flex; align-items:center; gap:0; width:100%; }
+    .${uid}-x-lo { font-family:"Barlow",sans-serif; font-size:11px; font-weight:700;
+      color:#aaa; letter-spacing:.1em; text-transform:uppercase; margin-right:8px; flex-shrink:0;
+      padding:4px 8px; border-radius:20px; background:transparent;
+      transition:color .25s ease, background .25s ease, transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+    .${uid}-x-hi { font-family:"Barlow",sans-serif; font-size:11px; font-weight:700;
+      color:#aaa; letter-spacing:.1em; text-transform:uppercase; margin-left:8px; flex-shrink:0;
+      padding:4px 8px; border-radius:20px; background:transparent;
+      transition:color .25s ease, background .25s ease, transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease; }
+    .${uid}-x-lo.lit { color:white; background:#009FA0; transform:scale(1.15);
+      box-shadow:0 2px 12px rgba(0,159,160,.45); }
+    .${uid}-x-hi.lit { color:white; background:#fa6b02; transform:scale(1.15);
+      box-shadow:0 2px 12px rgba(250,107,2,.45); }
+    .${uid}-x-line-wrap { flex:1; }
+
+    /* Attribution */
+    .${uid}-attrib { text-align:center; font-size:9px; color:#aaa; font-style:italic; margin-top:12px; }
+
+    /* Scenario modal */
+    .${uid}-modal-backdrop { position:absolute; inset:0; background:rgba(10,24,48,.55);
+      border-radius:14px; z-index:20; display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity .22s ease; backdrop-filter:blur(2px); }
+    .${uid}-modal-backdrop.open { opacity:1; pointer-events:all; }
+    .${uid}-modal-card { position:relative; width:88%; max-width:320px; border-radius:18px;
+      padding:24px 22px 20px; color:white; box-shadow:0 16px 48px rgba(0,0,0,.35);
+      transform:scale(.88) translateY(10px); transition:transform .28s cubic-bezier(.34,1.56,.64,1);
+      overflow:hidden; }
+    .${uid}-modal-backdrop.open .${uid}-modal-card { transform:scale(1) translateY(0); }
+    .${uid}-modal-eyebrow { font-size:9px; font-weight:700; letter-spacing:.2em;
+      text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom:6px; }
+    .${uid}-modal-title { font-family:"Barlow Condensed",sans-serif; font-size:26px;
+      font-weight:800; color:white; letter-spacing:.02em; margin-bottom:14px; }
+    .${uid}-modal-divider { height:1px; background:rgba(255,255,255,.22); margin-bottom:14px; }
+    .${uid}-modal-scenario-label { font-size:9px; font-weight:700; letter-spacing:.18em;
+      text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:8px; }
+    .${uid}-modal-scenario { font-size:13px; color:rgba(255,255,255,.92); line-height:1.7; }
+    .${uid}-modal-close { position:absolute; top:14px; right:14px; width:28px; height:28px;
+      border-radius:50%; background:rgba(255,255,255,.18); border:none; color:white;
+      font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition:background .15s ease; line-height:1; }
+    .${uid}-modal-close:hover { background:rgba(255,255,255,.32); }
+    .${uid}-modal-shimmer { position:absolute; top:-50%; left:-75%; width:50%; height:200%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+      transform:skewX(-20deg); animation:${uid}MSw .7s .1s ease forwards; pointer-events:none; }
+    @keyframes ${uid}MSw { from{left:-75%} to{left:150%} }
+    .${uid}-cell { cursor:pointer; }
+  `;
+  container.appendChild(styleEl);
+
+  // Helper: draw an SVG axis line with arrowhead
+  function makeAxisSVG(isVertical, length) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const w = isVertical ? 16 : length;
+    const h = isVertical ? length : 16;
+    const svg = document.createElementNS(NS,'svg');
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    svg.setAttribute('width', w); svg.setAttribute('height', h);
+    svg.style.overflow = 'visible';
+
+    const defs = document.createElementNS(NS,'defs');
+    const marker = document.createElementNS(NS,'marker');
+    marker.setAttribute('id', `${uid}-arr-${isVertical?'v':'h'}`);
+    marker.setAttribute('markerWidth','6'); marker.setAttribute('markerHeight','6');
+    marker.setAttribute('refX','3'); marker.setAttribute('refY','3');
+    marker.setAttribute('orient','auto');
+    const poly = document.createElementNS(NS,'polygon');
+    poly.setAttribute('points','0 0, 6 3, 0 6');
+    poly.setAttribute('fill','#ccc');
+    marker.appendChild(poly); defs.appendChild(marker); svg.appendChild(defs);
+
+    const line = document.createElementNS(NS,'line');
+    if (isVertical) {
+      line.setAttribute('x1', w/2); line.setAttribute('y1', h);
+      line.setAttribute('x2', w/2); line.setAttribute('y2', 0);
+    } else {
+      line.setAttribute('x1', 0);   line.setAttribute('y1', h/2);
+      line.setAttribute('x2', w);   line.setAttribute('y2', h/2);
+    }
+    line.setAttribute('stroke','#ccc'); line.setAttribute('stroke-width','1.5');
+    line.setAttribute('marker-end', `url(#${uid}-arr-${isVertical?'v':'h'})`);
+    svg.appendChild(line);
+    return svg;
+  }
+
+  // ---- Build layout ----
+  const wrap = document.createElement('div');
+  wrap.className = `${uid}-wrap`;
+
+  // Middle row: Y axis + grid
+  const midRow = document.createElement('div');
+  midRow.className = `${uid}-mid-row`;
+
+  // Y axis column — now flex-row: line sub-col then label
+  const yCol = document.createElement('div');
+  yCol.className = `${uid}-y-col`;
+
+  // Sub-col: just Hi, line, Lo
+  const yAxisPart = document.createElement('div');
+  yAxisPart.className = `${uid}-y-axis-part`;
+
+  const yHi = document.createElement('div');
+  yHi.className = `${uid}-y-hi`; yHi.id = `${uid}-y-hi`; yHi.textContent = 'High';
+
+  const yLineWrap = document.createElement('div');
+  yLineWrap.className = `${uid}-y-line-wrap`;
+  const yLineSvgHolder = document.createElement('div');
+  yLineSvgHolder.style.cssText = 'width:16px;height:100%;display:flex;align-items:center;justify-content:center';
+  yLineWrap.appendChild(yLineSvgHolder);
+
+  const yLo = document.createElement('div');
+  yLo.className = `${uid}-y-lo`; yLo.id = `${uid}-y-lo`; yLo.textContent = 'Low';
+
+  yAxisPart.appendChild(yHi);
+  yAxisPart.appendChild(yLineWrap);
+  yAxisPart.appendChild(yLo);
+
+  // Label sits to the right of the arrow line
+  const yLabel = document.createElement('div');
+  yLabel.className = `${uid}-y-label`;
+  yLabel.textContent = 'Joint Decision Making';
+
+  yCol.appendChild(yAxisPart);
+  yCol.appendChild(yLabel);
+  midRow.appendChild(yCol);
+
+  // Grid column
+  const gridCol = document.createElement('div');
+  gridCol.className = `${uid}-grid-col`;
+
+  const grid = document.createElement('div');
+  grid.className = `${uid}-grid`;
+
+  // Centre circle
+  const centre = document.createElement('div');
+  centre.className = `${uid}-centre`; centre.id = `${uid}-centre`;
+  centre.innerHTML = `
+    <div class="${uid}-ct">High Challenge<br>High Support</div>
+    <div class="${uid}-cdiv"></div>
+    <div class="${uid}-ct">Situational<br>Consistency</div>
+    <div class="${uid}-cdiv"></div>
+    <div class="${uid}-ct" style="font-size:7px;opacity:.85">Positive Regard<br>&amp; Genuineness</div>
+  `;
+  grid.appendChild(centre);
+
+  const cells = [
+    { label:'Coaching',
+      desc:'Leader facilitates, encourages and supports team member\'s judgements and provides advice',
+      scenario:'An experienced team member is facing a challenge or decision and would benefit from structured questions that help them think it through and reach their own conclusion.',
+      bg:'#009FA0', glowRgb:'0,159,160', xPos:'low', yPos:'high', toneA:523, toneB:659 },
+    { label:'Mentoring',
+      desc:'Leader briefs team member in what is required, but also seeks their opinions and judgements',
+      scenario:'A capable but still developing colleague is taking on a new responsibility and needs guidance, context and occasional steer from someone more experienced.',
+      bg:'#0061AD', glowRgb:'0,97,173', xPos:'high', yPos:'high', toneA:659, toneB:880 },
+    { label:'Delegating',
+      desc:'Leader hands over complete discretion for a task so that the team member manages it and makes decisions for self',
+      scenario:'A trusted, proven colleague is given full ownership of a familiar task, with clear outcomes agreed and minimal intervention needed.',
+      bg:'#1A3A5C', glowRgb:'26,58,92', xPos:'low', yPos:'low', toneA:440, toneB:554 },
+    { label:'Directing',
+      desc:'Leader gives explicit briefing for a task and monitors performance closely',
+      scenario:'A new starter is carrying out a safety-critical process for the first time and needs clear instruction, close checking, and no ambiguity.',
+      bg:'#fa6b02', glowRgb:'250,107,2', xPos:'high', yPos:'low', toneA:784, toneB:988 }
+  ];
+
+  cells.forEach(c => {
+    const cell = document.createElement('div');
+    cell.className = `${uid}-cell`;
+    cell.style.background = c.bg;
+    cell.innerHTML = `<div class="${uid}-cell-label">${c.label}</div><div class="${uid}-cell-desc">${c.desc}</div><div class="${uid}-pill">See example</div><div class="${uid}-dot"></div>`;
+
+    cell.addEventListener('mouseenter', () => {
+      grid.querySelectorAll(`.${uid}-cell`).forEach(el => {
+        if (el !== cell) { el.classList.add('dimmed');  el.classList.remove('hovered'); el.style.boxShadow = ''; }
+        else             { el.classList.add('hovered'); el.classList.remove('dimmed');
+                           el.style.boxShadow = `0 14px 40px rgba(${c.glowRgb},.55)`; }
+      });
+
+      // Shimmer sweep
+      const old = cell.querySelector(`.${uid}-sweep`);
+      if (old) old.remove();
+      const sweep = document.createElement('div');
+      sweep.className = `${uid}-sweep`;
+      cell.appendChild(sweep);
+      setTimeout(() => { if (sweep.parentNode) sweep.remove(); }, 600);
+
+      // Centre pulse
+      const centreEl = document.getElementById(`${uid}-centre`);
+      centreEl.classList.remove('pulse');
+      void centreEl.offsetWidth;
+      centreEl.classList.add('pulse');
+
+      // Axis highlights
+      const yhEl = document.getElementById(`${uid}-y-hi`);
+      const ylEl = document.getElementById(`${uid}-y-lo`);
+      const xhEl = document.getElementById(`${uid}-x-hi`);
+      const xlEl = document.getElementById(`${uid}-x-lo`);
+      if (yhEl) { yhEl.classList.toggle('lit', c.yPos === 'high'); yhEl.classList.toggle('dimmed-ax', c.yPos !== 'high'); }
+      if (ylEl) { ylEl.classList.toggle('lit', c.yPos === 'low');  ylEl.classList.toggle('dimmed-ax', c.yPos !== 'low'); }
+      if (xhEl) { xhEl.classList.toggle('lit', c.xPos === 'high'); xhEl.classList.toggle('dimmed-ax', c.xPos !== 'high'); }
+      if (xlEl) { xlEl.classList.toggle('lit', c.xPos === 'low');  xlEl.classList.toggle('dimmed-ax', c.xPos !== 'low'); }
+
+      // Also update arrow colours in SVG
+      document.querySelectorAll(`#${uid}-arr-v polygon, #${uid}-arr-h polygon`).forEach(p => p.setAttribute('fill','#aaa'));
+
+      // Sound
+      try {
+        const ctx = getCtx(), now = ctx.currentTime;
+        [c.toneA, c.toneB].forEach((freq, i) => {
+          const osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.value = freq;
+          const t = now + i * 0.06;
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(0.02 - i * 0.006, t + 0.016);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 0.6);
+        });
+      } catch(e) {}
+    });
+
+    cell.addEventListener('mouseleave', () => {
+      grid.querySelectorAll(`.${uid}-cell`).forEach(el => {
+        el.classList.remove('dimmed','hovered');
+        el.style.boxShadow = '';
+      });
+      [document.getElementById(`${uid}-y-hi`), document.getElementById(`${uid}-y-lo`),
+       document.getElementById(`${uid}-x-hi`), document.getElementById(`${uid}-x-lo`)].forEach(el => {
+        if (el) { el.classList.remove('lit','dimmed-ax'); }
+      });
+    });
+
+    // Click handler: show scenario modal
+    cell.addEventListener('click', () => {
+      const backdrop = document.getElementById(`${uid}-backdrop`);
+      const card = document.getElementById(`${uid}-modal-card`);
+      // Update card colour and content
+      card.style.background = c.bg;
+      card.querySelector(`.${uid}-modal-title`).textContent = c.label;
+      card.querySelector(`.${uid}-modal-scenario`).textContent = c.scenario;
+      // Re-trigger shimmer
+      const oldShimmer = card.querySelector(`.${uid}-modal-shimmer`);
+      if (oldShimmer) oldShimmer.remove();
+      const shimmer = document.createElement('div');
+      shimmer.className = `${uid}-modal-shimmer`;
+      card.appendChild(shimmer);
+      setTimeout(() => { if (shimmer.parentNode) shimmer.remove(); }, 900);
+      backdrop.classList.add('open');
+      playChime();
+    });
+
+    grid.appendChild(cell);
+  });
+
+  // Build modal backdrop (scoped inside the grid wrapper)
+  const backdrop = document.createElement('div');
+  backdrop.className = `${uid}-modal-backdrop`;
+  backdrop.id = `${uid}-backdrop`;
+
+  const modalCard = document.createElement('div');
+  modalCard.className = `${uid}-modal-card`;
+  modalCard.id = `${uid}-modal-card`;
+  modalCard.innerHTML = `
+    <button class="${uid}-modal-close" id="${uid}-modal-close" aria-label="Close">✕</button>
+    <div class="${uid}-modal-eyebrow">When to use this style</div>
+    <div class="${uid}-modal-title"></div>
+    <div class="${uid}-modal-divider"></div>
+    <div class="${uid}-modal-scenario-label">Example scenario</div>
+    <div class="${uid}-modal-scenario"></div>
+  `;
+
+  backdrop.appendChild(modalCard);
+
+  // Close on backdrop click (outside card)
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) backdrop.classList.remove('open');
+  });
+  // Close button
+  modalCard.querySelector(`#${uid}-modal-close`).addEventListener('click', () => {
+    backdrop.classList.remove('open');
+  });
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') backdrop.classList.remove('open');
+  });
+
+  gridCol.style.position = 'relative';
+  gridCol.appendChild(grid);
+  gridCol.appendChild(backdrop);
+  midRow.appendChild(gridCol);
+  wrap.appendChild(midRow);
+
+  // ---- X axis row ----
+  const xBlock = document.createElement('div');
+  xBlock.style.cssText = 'padding-left:60px;margin-top:14px';
+
+  const xLabelRow = document.createElement('div');
+  xLabelRow.className = `${uid}-x-label`;
+  xLabelRow.textContent = "Leader's Explicit Direction";
+  xBlock.appendChild(xLabelRow);
+
+  const xTrack = document.createElement('div');
+  xTrack.className = `${uid}-x-track`;
+
+  const xLo = document.createElement('div');
+  xLo.className = `${uid}-x-lo`; xLo.id = `${uid}-x-lo`; xLo.textContent = 'Low';
+
+  const xLineWrap = document.createElement('div');
+  xLineWrap.className = `${uid}-x-line-wrap`;
+  const xLineSvgHolder = document.createElement('div');
+  xLineSvgHolder.style.cssText = 'width:100%;height:16px';
+  xLineWrap.appendChild(xLineSvgHolder);
+
+  const xHi = document.createElement('div');
+  xHi.className = `${uid}-x-hi`; xHi.id = `${uid}-x-hi`; xHi.textContent = 'High';
+
+  xTrack.appendChild(xLo);
+  xTrack.appendChild(xLineWrap);
+  xTrack.appendChild(xHi);
+  xBlock.appendChild(xTrack);
+  wrap.appendChild(xBlock);
+
+  // Attribution
+  const attrib = document.createElement('div');
+  attrib.className = `${uid}-attrib`;
+  attrib.textContent = 'Based on Blanchard, Zigarmi & Zigarmi 1985';
+  wrap.appendChild(attrib);
+
+  container.appendChild(wrap);
+
+  // Draw axis SVG lines once layout is in the DOM and has size
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      // Y line
+      const yH = yLineWrap.offsetHeight;
+      if (yH > 0) {
+        const ysvg = makeAxisSVG(true, yH);
+        ysvg.style.cssText = 'width:16px;height:100%;display:block';
+        yLineSvgHolder.innerHTML = '';
+        yLineSvgHolder.appendChild(ysvg);
+      }
+      // X line
+      const xW = xLineSvgHolder.offsetWidth;
+      if (xW > 0) {
+        const xsvg = makeAxisSVG(false, xW);
+        xsvg.style.cssText = 'width:100%;height:16px;display:block';
+        xLineSvgHolder.innerHTML = '';
+        xLineSvgHolder.appendChild(xsvg);
+      }
+    });
+  });
+
+  return container;
 }
 
 function buildAARVisual() {
