@@ -391,11 +391,14 @@ const SEGMENTS = [
     id:'individual-needs', label:'Know individual needs and motivations',
     quadrant:'Developing', startAngle:180, endAngle:210,
     tagline:'Understanding what drives each person',
-    desc:'Every person in your team is motivated differently. Knowing what matters to each individual, what energises them, what they find challenging, and what they aspire to, is the foundation of effective people development.',
-    modelTitle:"Maslow's Hierarchy of Needs",
-    modelDesc:"Maslow's model arranges human needs into a hierarchy: physiological, safety, belonging, esteem, and self-actualisation. While it is a simplification, it reminds leaders that people cannot engage with growth and purpose if their more fundamental needs are unmet.",
-    bullets:['Check that basic needs are met before expecting peak performance','Different people will be at different levels at different times','Self-actualisation looks different for everyone'],
-    modelType:'maslow'
+    desc:'Every person in your team is motivated differently. The Motivation Inventory reveals 21 distinct motivational factors across three categories: People, Achievement and Enjoyment. Understanding these patterns, starting with your own, is the foundation of effective people development.',
+    modelTitle:'Motivation Inventory (Ali Stewart & Co)',
+    modelDesc:'The Motivation Inventory identifies 21 motivational factors grouped into three categories: People, Achievement and Enjoyment. Rather than labelling people, it reveals the unique pattern of what drives each individual. Effective Leader-Developers tend to have high People and Achievement motivation, with sufficient Enjoyment to avoid tunnel vision. Understanding your own pattern first is the essential starting point for understanding others.',
+    bullets:['Understanding your own motivation pattern comes before understanding anyone else\'s','It is the combination and relative weight of factors that matters, not any single driver in isolation','Leaders with high People motivation need it paired with high Achievement, or the team risks becoming a social group without direction'],
+    modelType:'motivation-inventory',
+    bookPages:'223-229',
+    noteTitle:'The pattern is the point',
+    noteText:'Two people can both be highly people-motivated yet be completely different in what that means. One wants to influence, the other to nurture. One thrives with a crowd, another needs solitude. The value of this framework is not the category, it is the conversation it creates.'
   },
   {
     id:'adapt-style', label:'Flexibly adapt style',
@@ -498,6 +501,105 @@ function playReturn(){
   }catch(e){}
 }
 
+// ── Motivation Inventory sounds ──
+function playMITab(catId){
+  // Each category gets its own gentle tone colour
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    const freqs={people:[392,523],achievement:[440,554],enjoyment:[349,440]};
+    const pair=freqs[catId]||freqs.people;
+    pair.forEach((freq,i)=>{
+      const osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=freq;
+      const t=now+i*.07;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.018,t+.012); g.gain.exponentialRampToValueAtTime(.0001,t+.5);
+      osc.connect(g); g.connect(ctx.destination); osc.start(t); osc.stop(t+.55);
+    });
+  }catch(e){}
+}
+function playMISelect(){
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    const osc=ctx.createOscillator(), g=ctx.createGain();
+    osc.type='sine'; osc.frequency.value=659;
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.016,now+.008); g.gain.exponentialRampToValueAtTime(.0001,now+.28);
+    osc.connect(g); g.connect(ctx.destination); osc.start(now); osc.stop(now+.3);
+  }catch(e){}
+}
+function playMIDeselect(){
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    const osc=ctx.createOscillator(), g=ctx.createGain();
+    osc.type='sine'; osc.frequency.value=440;
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.012,now+.008); g.gain.exponentialRampToValueAtTime(.0001,now+.22);
+    osc.connect(g); g.connect(ctx.destination); osc.start(now); osc.stop(now+.25);
+  }catch(e){}
+}
+function playMINext(){
+  // Gentle ascending three-note phrase for advancing a step
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    [523,659,784].forEach((freq,i)=>{
+      const osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=freq;
+      const t=now+i*.09;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.018-i*.003,t+.012); g.gain.exponentialRampToValueAtTime(.0001,t+.45);
+      osc.connect(g); g.connect(ctx.destination); osc.start(t); osc.stop(t+.5);
+    });
+  }catch(e){}
+}
+function playMIBack(){
+  // Gentle descending two-note for going back
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    [523,392].forEach((freq,i)=>{
+      const osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=freq;
+      const t=now+i*.08;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.015,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+.4);
+      osc.connect(g); g.connect(ctx.destination); osc.start(t); osc.stop(t+.45);
+    });
+  }catch(e){}
+}
+function playMIBegin(){
+  // Warm four-note ascending welcome phrase
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    [392,494,587,784].forEach((freq,i)=>{
+      const osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=freq;
+      const t=now+i*.1;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.016-i*.002,t+.014); g.gain.exponentialRampToValueAtTime(.0001,t+.55);
+      osc.connect(g); g.connect(ctx.destination); osc.start(t); osc.stop(t+.6);
+    });
+  }catch(e){}
+}
+function playMIComplete(){
+  // A satisfying gentle completion arpeggio for "See my profile"
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    [523,659,784,1047].forEach((freq,i)=>{
+      const osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=freq;
+      const t=now+i*.08;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.015-i*.002,t+.012); g.gain.exponentialRampToValueAtTime(.0001,t+.6);
+      osc.connect(g); g.connect(ctx.destination); osc.start(t); osc.stop(t+.65);
+    });
+  }catch(e){}
+}
+function playMIDownload(){
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    [784,1047].forEach((freq,i)=>{
+      const osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=freq;
+      const t=now+i*.12;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.018,t+.012); g.gain.exponentialRampToValueAtTime(.0001,t+.7);
+      osc.connect(g); g.connect(ctx.destination); osc.start(t); osc.stop(t+.75);
+    });
+  }catch(e){}
+}
+
 // ============================================================
 //  MODEL VISUAL BUILDERS
 // ============================================================
@@ -522,6 +624,7 @@ function buildModelVisual(seg) {
     maslow: buildMaslowVisual,
     insights: buildInsightsVisual,
     'leadership-styles': buildLeadershipStylesVisual,
+    'motivation-inventory': buildMotivationInventoryVisual,
     aar: buildAARVisual
   };
   const builder = builders[seg.modelType];
@@ -1547,6 +1650,465 @@ function buildLeadershipStylesVisual() {
   return container;
 }
 
+function buildMotivationInventoryVisual() {
+  const uid = 'mi' + Math.random().toString(36).slice(2,7);
+
+  const CATS = [
+    { id:'people', label:'People', color:'#C0395B', light:'rgba(192,57,91,.10)',
+      factors:[
+        {name:'Influence',               desc:'Persuading, communicating, developing; convincing people towards a course of action'},
+        {name:'Nurture',                 desc:'Helping people achieve their goals; listening to them; providing close support as well as time and attention'},
+        {name:'Gregariousness',          desc:'Meeting and working with a wide range of people, including the public'},
+        {name:'Solitude',                desc:'Having space to get on with things without contact or distraction from other people'},
+        {name:'Affiliation',             desc:'Having close relationships; being part of a team; working interdependently with others and being liked and respected by them'},
+        {name:'Dedication',              desc:'Helping the wider community; doing something worthwhile; making the world a better place to be'},
+        {name:'Relating',                desc:'Responding to different individual needs; dealing with difficult interpersonal situations; trusting and being trusted; resolving conflict'}
+      ]},
+    { id:'achievement', label:'Achievement', color:'#1A3A5C', light:'rgba(26,58,92,.10)',
+      factors:[
+        {name:'Task Focus',              desc:'Having a liking for detail and analysis; using skills and knowledge; enjoying specific tasks; intellectual challenge; focusing on the job in hand'},
+        {name:'Goal Orientation',        desc:'Working to targets; a future perspective to achieve tangible results; output rather than input focused; problem solving; achieving business results'},
+        {name:'Power & Authority',       desc:'Having control over others; being able to direct them and control work and events; making big decisions; being regarded as the source of authority'},
+        {name:'Responsibility',          desc:'Leading others; taking and accepting responsibility for decisions; making a difference; doing what is necessary to ensure company success'},
+        {name:'Initiative & Independence',desc:'Using own initiative; dislike of bureaucracy and red tape; operating independently; deciding own course of action'},
+        {name:'Creativity',              desc:'Generating ideas; producing something new; finding new ways'},
+        {name:'Challenge',               desc:'Being stretched; liking energy and hard work and competitive situations; responding to pressure and deadlines; being active and challenged'}
+      ]},
+    { id:'enjoyment', label:'Enjoyment', color:'#009FA0', light:'rgba(0,159,160,.10)',
+      factors:[
+        {name:'Suitability',             desc:'Comfort in knowing capability to do job based on previous experience; perceived match of knowledge and skills'},
+        {name:'Structure',               desc:'Operating to guidelines and systems; organising and planning; meeting standards; creating order, procedure and systems'},
+        {name:'Security',                desc:'Job security; knowing what is going on; a liking for certainty'},
+        {name:'Tangible Reward',         desc:'Money; status; glamour; perks'},
+        {name:'Variety & Fun',           desc:'Enjoyment and fun; difference; travel; location; not repetitive or being bored'},
+        {name:'Recognition',             desc:'Being well regarded and appreciated; feeling good about self and work; self-development'},
+        {name:'Comfort',                 desc:'Working moderate hours; not dealing with unpleasant or difficult situations; keeping clear of anxiety and stress; avoiding failure'}
+      ]}
+  ];
+
+  const ALL = [];
+  CATS.forEach(cat => cat.factors.forEach(f => ALL.push(Object.assign({}, f, {catId:cat.id, catLabel:cat.label, catColor:cat.color, catLight:cat.light}))));
+
+  let phase = 'browse';
+  let activeTab = 'people';
+  let sel6 = new Set();
+  let top2 = new Set();
+  let leastSet = new Set();
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%;user-select:none';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-steps{display:flex;align-items:center;gap:0;margin-bottom:16px}
+    .${uid}-step{flex:1;height:3px;border-radius:2px;background:#e4edf5;transition:background .3s}
+    .${uid}-step.done{background:#009FA0}
+    .${uid}-step.active{background:#0061AD}
+    .${uid}-step-gap{width:4px}
+    .${uid}-instr{background:#f0f6fc;border-radius:12px;padding:12px 16px;margin-bottom:12px}
+    .${uid}-instr-title{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:16px;color:#004B86;margin-bottom:3px}
+    .${uid}-instr-sub{font-size:12px;color:#666;line-height:1.5}
+    .${uid}-counter{display:inline-flex;align-items:center;gap:8px;background:#0061AD;color:white;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;margin-bottom:12px;transition:background .3s}
+    .${uid}-counter.full{background:#009FA0}
+    .${uid}-tabs{display:flex;gap:6px;margin-bottom:12px}
+    .${uid}-tab{flex:1;padding:8px 4px;border:none;border-radius:10px;font-family:"Barlow",sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .18s;background:#e4edf5;color:#666}
+    .${uid}-tab.active{color:white}
+    .${uid}-rows{display:flex;flex-direction:column;gap:6px}
+    .${uid}-row{background:white;border-radius:10px;border:1.5px solid #e4edf5;border-left-width:3px;padding:10px 14px;animation:${uid}FIn .22s ease both}
+    @keyframes ${uid}FIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .${uid}-row-name{font-weight:700;font-size:13px;margin-bottom:3px}
+    .${uid}-row-desc{font-size:11.5px;color:#666;line-height:1.5}
+    .${uid}-chips{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .${uid}-chip{border-radius:12px;padding:10px 12px 10px 12px;border:2px solid transparent;cursor:pointer;transition:all .2s;position:relative;background:#f4f8fc;animation:${uid}FIn .22s ease both}
+    .${uid}-chip:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+    .${uid}-chip-cat{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+    .${uid}-chip-name{font-size:12px;font-weight:700;color:#004B86;line-height:1.3;padding-right:20px}
+    .${uid}-chip-desc{font-size:10px;color:#666;line-height:1.4;margin-top:5px}
+    .${uid}-chip.selected{background:white;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+    .${uid}-chip.dimmed{opacity:.28;pointer-events:none}
+    .${uid}-chip.top2-pick{outline:3px solid gold;outline-offset:1px}
+    .${uid}-chip-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;background:#e4edf5;color:#aaa;font-weight:700;transition:all .18s;flex-shrink:0}
+    .${uid}-chip.selected .${uid}-chip-check{color:white}
+    .${uid}-pae{margin:14px 0}
+    .${uid}-pae-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+    .${uid}-pae-label{font-size:11px;font-weight:700;width:82px;flex-shrink:0}
+    .${uid}-pae-track{flex:1;background:#e4edf5;border-radius:20px;height:20px;overflow:hidden}
+    .${uid}-pae-fill{height:100%;border-radius:20px;transition:width 1.1s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;padding-left:8px;width:0%}
+    .${uid}-pae-count{font-size:10px;font-weight:800;color:white;white-space:nowrap}
+    .${uid}-pae-score{font-size:11px;font-weight:700;width:28px;text-align:right;flex-shrink:0}
+    .${uid}-hero-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+    .${uid}-hero{border-radius:14px;padding:14px 14px 14px 14px;color:white;position:relative;overflow:hidden;animation:${uid}FIn .36s ease both}
+    .${uid}-hero-eyebrow{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px}
+    .${uid}-hero-name{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;letter-spacing:.02em;margin-bottom:6px;padding-right:28px}
+    .${uid}-hero-desc{font-size:10px;color:rgba(255,255,255,.85);line-height:1.55}
+    .${uid}-hero-num{position:absolute;top:8px;right:12px;font-family:"Barlow Condensed",sans-serif;font-size:42px;font-weight:800;color:rgba(255,255,255,.14);line-height:1}
+    .${uid}-tag-group{margin-bottom:12px}
+    .${uid}-tag-group-label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8A8E91;margin-bottom:7px}
+    .${uid}-tags{display:flex;flex-wrap:wrap;gap:6px}
+    .${uid}-tag{border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;color:white}
+    .${uid}-tag.least{background:#e4edf5;color:#666}
+    .${uid}-interp{background:linear-gradient(135deg,#004B86,#0061AD);border-radius:14px;padding:16px 18px;margin:14px 0}
+    .${uid}-interp-label{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px}
+    .${uid}-interp-text{font-size:12px;color:rgba(255,255,255,.9);line-height:1.7}
+    .${uid}-nav{display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:11px 20px;font-family:"Barlow",sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s}
+    .${uid}-btn-primary{background:#0061AD;color:white;box-shadow:0 4px 14px rgba(0,97,173,.2)}
+    .${uid}-btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,97,173,.3)}
+    .${uid}-btn-primary:disabled{background:#b0c4d8;cursor:not-allowed}
+    .${uid}-btn-ghost{background:#e4edf5;color:#666}
+    .${uid}-btn-ghost:hover{background:#d0dce8;color:#333}
+    .${uid}-btn-download{background:#009FA0;color:white;box-shadow:0 4px 14px rgba(0,159,160,.2)}
+    .${uid}-btn-download:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,159,160,.3)}
+    .${uid}-ml{margin-left:auto}
+    .${uid}-begin{display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 0 6px}
+    .${uid}-begin-title{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:18px;color:#004B86;margin-bottom:6px}
+    .${uid}-begin-sub{font-size:12px;color:#666;line-height:1.6;max-width:320px;margin-bottom:16px}
+    .${uid}-divider{height:1px;background:#e4edf5;margin:14px 0}
+  `;
+
+  function getCat(id) { return CATS.find(c => c.id === id); }
+  function getFactor(name) { return ALL.find(f => f.name === name); }
+
+  function buildSteps(current) {
+    const d = document.createElement('div');
+    d.className = uid+'-steps';
+    [1,2,3,4].forEach((n,i) => {
+      const s = document.createElement('div');
+      s.className = uid+'-step'+(n < current?' done':n===current?' active':'');
+      d.appendChild(s);
+      if (i<3){const g=document.createElement('div');g.className=uid+'-step-gap';d.appendChild(g);}
+    });
+    return d;
+  }
+
+  function buildCounter(count, max, label) {
+    const d = document.createElement('div');
+    d.className = uid+'-counter'+(count>=max?' full':'');
+    d.innerHTML = '<span>'+count+' / '+max+'</span><span>'+label+'</span>';
+    return d;
+  }
+
+  function buildChip(f, isSelected, isDimmed, isTop2) {
+    const chip = document.createElement('div');
+    chip.className = uid+'-chip'+(isSelected?' selected':'')+(isDimmed?' dimmed':'')+(isTop2?' top2-pick':'');
+    chip.style.borderColor = isSelected ? f.catColor : 'transparent';
+    chip.style.color = f.catColor;
+    chip.innerHTML =
+      '<div class="'+uid+'-chip-cat">'+f.catLabel+'</div>'+
+      '<div class="'+uid+'-chip-name">'+f.name+'</div>'+
+      (isSelected ? '<div class="'+uid+'-chip-desc">'+f.desc+'</div>' : '')+
+      '<div class="'+uid+'-chip-check" style="background:'+(isSelected?f.catColor:'#e4edf5')+'">'+
+        (isTop2?'&#9733;':'&#10003;')+'</div>';
+    return chip;
+  }
+
+  function renderBrowse() {
+    wrap.innerHTML = '';
+    wrap.appendChild(styleEl);
+
+    const tabBar = document.createElement('div');
+    tabBar.className = uid+'-tabs';
+    CATS.forEach(cat => {
+      const t = document.createElement('button');
+      t.className = uid+'-tab'+(cat.id===activeTab?' active':'');
+      t.textContent = cat.label;
+      t.style.background = cat.id===activeTab ? cat.color : '';
+      t.addEventListener('click', () => { playMITab(cat.id); activeTab=cat.id; renderBrowse(); });
+      tabBar.appendChild(t);
+    });
+    wrap.appendChild(tabBar);
+
+    const cat = getCat(activeTab);
+    const rows = document.createElement('div');
+    rows.className = uid+'-rows';
+    cat.factors.forEach((f,i) => {
+      const row = document.createElement('div');
+      row.className = uid+'-row';
+      row.style.animationDelay = (i*0.04)+'s';
+      row.style.borderLeftColor = cat.color;
+      row.innerHTML = '<div class="'+uid+'-row-name" style="color:'+cat.color+'">'+f.name+'</div>'+
+                      '<div class="'+uid+'-row-desc">'+f.desc+'</div>';
+      rows.appendChild(row);
+    });
+    wrap.appendChild(rows);
+
+    const begin = document.createElement('div');
+    begin.className = uid+'-begin';
+    begin.innerHTML = '<div class="'+uid+'-begin-title">Ready to explore your motivation pattern?</div>'+
+      '<div class="'+uid+'-begin-sub">Browse all three categories first, then begin your personal reflection. It takes about two minutes and works best when you are honest with yourself.</div>';
+    const btn = document.createElement('button');
+    btn.className = uid+'-btn '+uid+'-btn-primary';
+    btn.textContent = 'Begin reflection \u2192';
+    btn.addEventListener('click', () => { playMIBegin(); sel6.clear(); top2.clear(); leastSet.clear(); renderSelect6(); });
+    begin.appendChild(btn);
+    wrap.appendChild(begin);
+  }
+
+  function renderSelect6() {
+    wrap.innerHTML = '';
+    wrap.appendChild(styleEl);
+    wrap.appendChild(buildSteps(2));
+
+    const instr = document.createElement('div');
+    instr.className = uid+'-instr';
+    instr.innerHTML = '<div class="'+uid+'-instr-title">Step 1: Select your top 6</div>'+
+      '<div class="'+uid+'-instr-sub">Which six factors matter most to you? Think about who you are, not who you think you should be.</div>';
+    wrap.appendChild(instr);
+    wrap.appendChild(buildCounter(sel6.size, 6, 'selected'));
+
+    const chips = document.createElement('div');
+    chips.className = uid+'-chips';
+    ALL.forEach((f,i) => {
+      const isSel = sel6.has(f.name);
+      const isDim = sel6.size>=6 && !isSel;
+      const chip = buildChip(f, isSel, isDim, false);
+      chip.style.animationDelay = (i*0.025)+'s';
+      chip.addEventListener('click', () => {
+        if (sel6.has(f.name)) { sel6.delete(f.name); playMIDeselect(); }
+        else if (sel6.size<6) { sel6.add(f.name); playMISelect(); }
+        renderSelect6();
+      });
+      chips.appendChild(chip);
+    });
+    wrap.appendChild(chips);
+
+    const nav = document.createElement('div');
+    nav.className = uid+'-nav';
+    const back = document.createElement('button');
+    back.className = uid+'-btn '+uid+'-btn-ghost';
+    back.textContent = '\u2190 Browse factors';
+    back.addEventListener('click', () => { playMIBack(); renderBrowse(); });
+    const next = document.createElement('button');
+    next.className = uid+'-btn '+uid+'-btn-primary '+uid+'-ml';
+    next.textContent = 'Next: Pick your top 2 \u2192';
+    next.disabled = sel6.size!==6;
+    next.addEventListener('click', () => { if(sel6.size===6){ playMINext(); top2.clear();renderSelect2();} });
+    nav.appendChild(back); nav.appendChild(next);
+    wrap.appendChild(nav);
+  }
+
+  function renderSelect2() {
+    wrap.innerHTML = '';
+    wrap.appendChild(styleEl);
+    wrap.appendChild(buildSteps(3));
+
+    const instr = document.createElement('div');
+    instr.className = uid+'-instr';
+    instr.innerHTML = '<div class="'+uid+'-instr-title">Step 2: Your top 2 of all</div>'+
+      '<div class="'+uid+'-instr-sub">From your six, which two are your most important motivators of all? These are your primary drivers.</div>';
+    wrap.appendChild(instr);
+    wrap.appendChild(buildCounter(top2.size, 2, 'chosen'));
+
+    const chips = document.createElement('div');
+    chips.className = uid+'-chips';
+    sel6.forEach((name,i) => {
+      const f = getFactor(name);
+      const isSel = top2.has(name);
+      const isDim = top2.size>=2 && !isSel;
+      const chip = buildChip(f, isSel, isDim, isSel);
+      chip.addEventListener('click', () => {
+        if (top2.has(name)) { top2.delete(name); playMIDeselect(); }
+        else if (top2.size<2) { top2.add(name); playMISelect(); }
+        renderSelect2();
+      });
+      chips.appendChild(chip);
+    });
+    wrap.appendChild(chips);
+
+    const nav = document.createElement('div');
+    nav.className = uid+'-nav';
+    const back = document.createElement('button');
+    back.className = uid+'-btn '+uid+'-btn-ghost';
+    back.textContent = '\u2190 Back';
+    back.addEventListener('click', () => { playMIBack(); renderSelect6(); });
+    const next = document.createElement('button');
+    next.className = uid+'-btn '+uid+'-btn-primary '+uid+'-ml';
+    next.textContent = 'Next: Least important \u2192';
+    next.disabled = top2.size!==2;
+    next.addEventListener('click', () => { if(top2.size===2){ playMINext(); leastSet.clear();renderSelectLeast();} });
+    nav.appendChild(back); nav.appendChild(next);
+    wrap.appendChild(nav);
+  }
+
+  function renderSelectLeast() {
+    wrap.innerHTML = '';
+    wrap.appendChild(styleEl);
+    wrap.appendChild(buildSteps(4));
+
+    const instr = document.createElement('div');
+    instr.className = uid+'-instr';
+    instr.innerHTML = '<div class="'+uid+'-instr-title">Step 3: Least important</div>'+
+      '<div class="'+uid+'-instr-sub">From the remaining factors, select those that matter least to you right now. There is no right or wrong answer here.</div>';
+    wrap.appendChild(instr);
+
+    const counter = document.createElement('div');
+    counter.className = uid+'-counter'+(leastSet.size>0?' full':'');
+    counter.textContent = leastSet.size+' selected';
+    wrap.appendChild(counter);
+
+    const chips = document.createElement('div');
+    chips.className = uid+'-chips';
+    ALL.filter(f => !sel6.has(f.name)).forEach((f,i) => {
+      const isSel = leastSet.has(f.name);
+      const chip = buildChip(f, isSel, false, false);
+      chip.style.animationDelay = (i*0.03)+'s';
+      chip.addEventListener('click', () => {
+        if (leastSet.has(f.name)) { leastSet.delete(f.name); playMIDeselect(); }
+        else { leastSet.add(f.name); playMISelect(); }
+        renderSelectLeast();
+      });
+      chips.appendChild(chip);
+    });
+    wrap.appendChild(chips);
+
+    const nav = document.createElement('div');
+    nav.className = uid+'-nav';
+    const back = document.createElement('button');
+    back.className = uid+'-btn '+uid+'-btn-ghost';
+    back.textContent = '\u2190 Back';
+    back.addEventListener('click', () => { playMIBack(); renderSelect2(); });
+    const next = document.createElement('button');
+    next.className = uid+'-btn '+uid+'-btn-primary '+uid+'-ml';
+    next.textContent = 'See my profile \u2192';
+    next.addEventListener('click', () => { playMIComplete(); renderProfile(); });
+    nav.appendChild(back); nav.appendChild(next);
+    wrap.appendChild(nav);
+  }
+
+  function renderProfile() {
+    wrap.innerHTML = '';
+    wrap.appendChild(styleEl);
+    wrap.appendChild(buildSteps(5));
+
+    const scores = {people:0, achievement:0, enjoyment:0};
+    sel6.forEach(name => { const f=getFactor(name); if(f) scores[f.catId]++; });
+
+    const titleEl = document.createElement('div');
+    titleEl.style.cssText = 'font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#004B86;margin-bottom:14px';
+    titleEl.textContent = 'Your Motivation Profile';
+    wrap.appendChild(titleEl);
+
+    // PAE bars
+    const pae = document.createElement('div');
+    pae.className = uid+'-pae';
+    CATS.forEach(cat => {
+      const score = scores[cat.id];
+      const pct = Math.round((score/6)*100);
+      const row = document.createElement('div');
+      row.className = uid+'-pae-row';
+      const fill = document.createElement('div');
+      fill.className = uid+'-pae-fill';
+      fill.style.background = cat.color;
+      fill.setAttribute('data-pct', pct);
+      fill.innerHTML = score>0?'<span class="'+uid+'-pae-count">'+score+' of 6</span>':'';
+      row.innerHTML = '<div class="'+uid+'-pae-label" style="color:'+cat.color+'">'+cat.label+'</div>'+
+                      '<div class="'+uid+'-pae-track"></div>'+
+                      '<div class="'+uid+'-pae-score" style="color:'+cat.color+'">'+score+'</div>';
+      row.querySelector('.'+uid+'-pae-track').appendChild(fill);
+      pae.appendChild(row);
+    });
+    wrap.appendChild(pae);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        wrap.querySelectorAll('.'+uid+'-pae-fill').forEach(el => { el.style.width = el.getAttribute('data-pct')+'%'; });
+      });
+    });
+
+    // Top 2 heroes
+    const heroLabel = document.createElement('div');
+    heroLabel.className = uid+'-tag-group-label';
+    heroLabel.textContent = 'Your top 2 motivators';
+    wrap.appendChild(heroLabel);
+
+    const heroPair = document.createElement('div');
+    heroPair.className = uid+'-hero-pair';
+    [...top2].forEach((name,i) => {
+      const f = getFactor(name);
+      const hero = document.createElement('div');
+      hero.className = uid+'-hero';
+      hero.style.background = f.catColor;
+      hero.style.animationDelay = (i*0.1)+'s';
+      hero.innerHTML = '<div class="'+uid+'-hero-num">'+(i+1)+'</div>'+
+                       '<div class="'+uid+'-hero-eyebrow">'+f.catLabel+'</div>'+
+                       '<div class="'+uid+'-hero-name">'+f.name+'</div>'+
+                       '<div class="'+uid+'-hero-desc">'+f.desc+'</div>';
+      heroPair.appendChild(hero);
+    });
+    wrap.appendChild(heroPair);
+
+    // Top 6 tags
+    const top6Group = document.createElement('div');
+    top6Group.className = uid+'-tag-group';
+    top6Group.innerHTML = '<div class="'+uid+'-tag-group-label">All 6 of your key motivators</div>';
+    const top6Tags = document.createElement('div');
+    top6Tags.className = uid+'-tags';
+    sel6.forEach(name => {
+      const f = getFactor(name);
+      const tag = document.createElement('div');
+      tag.className = uid+'-tag';
+      tag.style.background = f.catColor;
+      tag.textContent = f.name + (top2.has(name)?' \u2605':'');
+      top6Tags.appendChild(tag);
+    });
+    top6Group.appendChild(top6Tags);
+    wrap.appendChild(top6Group);
+
+    // Least important
+    if (leastSet.size>0) {
+      const leastGroup = document.createElement('div');
+      leastGroup.className = uid+'-tag-group';
+      leastGroup.innerHTML = '<div class="'+uid+'-tag-group-label">Factors you rated least important</div>';
+      const leastTags = document.createElement('div');
+      leastTags.className = uid+'-tags';
+      leastSet.forEach(name => {
+        const tag = document.createElement('div');
+        tag.className = uid+'-tag least';
+        tag.textContent = name;
+        leastTags.appendChild(tag);
+      });
+      leastGroup.appendChild(leastTags);
+      wrap.appendChild(leastGroup);
+    }
+
+    // Interpretation
+    const domCat = CATS.reduce((a,b) => scores[a.id]>=scores[b.id]?a:b);
+    const interpMap = {
+      people:'Your profile shows a strong People orientation. To make the most of this as a leader, pair it with Achievement focus to ensure your care for others drives real results. High People motivation is your superpower when it creates movement, not just connection.',
+      achievement:'Your profile shows a strong Achievement orientation. This is a hallmark of effective Leader-Developers. Stay mindful of your Enjoyment needs to prevent tunnel vision, and keep People motivation visible so your team feels the human side of your drive.',
+      enjoyment:'Your profile shows strong Enjoyment motivators. These are the conditions that allow you to sustain performance without burning out. Work to ensure Achievement and People motivators are also present, so your environment supports both you and the people around you.'
+    };
+    const interp = document.createElement('div');
+    interp.className = uid+'-interp';
+    interp.innerHTML = '<div class="'+uid+'-interp-label">A note on your profile</div>'+
+                       '<div class="'+uid+'-interp-text">'+interpMap[domCat.id]+'</div>';
+    wrap.appendChild(interp);
+
+    const div = document.createElement('div');
+    div.className = uid+'-divider';
+    wrap.appendChild(div);
+
+    const nav = document.createElement('div');
+    nav.className = uid+'-nav';
+    const restart = document.createElement('button');
+    restart.className = uid+'-btn '+uid+'-btn-ghost';
+    restart.textContent = '\u21BA Start again';
+    restart.addEventListener('click', () => {
+      playMIBack();
+      sel6.clear(); top2.clear(); leastSet.clear();
+      phase='browse'; activeTab='people'; renderBrowse();
+    });
+    const dl = document.createElement('button');
+    dl.className = uid+'-btn '+uid+'-btn-download '+uid+'-ml';
+    dl.textContent = '\u2193 Download profile';
+    dl.addEventListener('click', () => { playMIDownload(); generateMotivationPDF(top2, sel6, leastSet, scores); });
+    nav.appendChild(restart); nav.appendChild(dl);
+    wrap.appendChild(nav);
+  }
+
+  renderBrowse();
+  return wrap;
+}
+
 function buildAARVisual() {
   const svg = createSVG(400, 200);
   const qs = [
@@ -2481,6 +3043,163 @@ function downloadChangeSheetPDF(issue, less, more) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+// ── Motivation Profile PDF ──
+function generateMotivationPDF(top2, sel6, leastSet, scores) {
+  try {
+    const W = 595, H = 842, M = 44;
+    let objCount = 0;
+    const objects = [];
+    function addObj(data) { objCount++; objects.push({ id: objCount, data }); return objCount; }
+    function escPDF(str) {
+      return String(str).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+    }
+    function getCatId(name) {
+      if (['Task Focus','Goal Orientation','Power & Authority','Responsibility','Initiative & Independence','Creativity','Challenge'].indexOf(name) !== -1) return 'achievement';
+      if (['Suitability','Structure','Security','Tangible Reward','Variety & Fun','Recognition','Comfort'].indexOf(name) !== -1) return 'enjoyment';
+      return 'people';
+    }
+
+    const blue = '0.00 0.38 0.68';
+    const teal = '0.00 0.62 0.63';
+    const pink = '0.75 0.22 0.36';
+    const dark = '0.10 0.23 0.36';
+    const white = '1 1 1';
+    const grey = '0.55 0.55 0.55';
+    const catColors = { people: pink, achievement: dark, enjoyment: teal };
+    const catLabels = { people: 'People', achievement: 'Achievement', enjoyment: 'Enjoyment' };
+
+    let s = '';
+    const lh = 16;
+    let y = H - M;
+
+    // Title bar
+    s += `${blue} rg\n`;
+    s += `${M} ${H - M - 44} ${W - 2*M} 44 re f\n`;
+    s += `${white} rg\n`;
+    s += `BT /F1 15 Tf ${M + 12} ${H - M - 28} Td (${escPDF('Story Liberator - Motivation Profile')}) Tj ET\n`;
+    s += `BT /F2 8 Tf ${W - M - 140} ${H - M - 28} Td (${escPDF('Liberator Programme | Ali Stewart & Co')}) Tj ET\n`;
+    y = H - M - 62;
+
+    // Section: Top 2
+    s += `${grey} rg\n`;
+    s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('YOUR TOP 2 MOTIVATORS')}) Tj ET\n`;
+    y -= 8;
+    const top2arr = [...top2];
+    const colW = (W - 2*M - 10) / 2;
+    top2arr.forEach((name, i) => {
+      const x = M + (i * (colW + 10));
+      const bh = 68;
+      const catId = getCatId(name);
+      const cc = catColors[catId];
+      s += `${cc} rg\n`;
+      s += `${x} ${y - bh} ${colW} ${bh} re f\n`;
+      s += `${white} rg\n`;
+      s += `BT /F2 8 Tf ${x + 10} ${y - 16} Td (${escPDF(catLabels[catId] + ' | #' + (i + 1))}) Tj ET\n`;
+      s += `BT /F1 13 Tf ${x + 10} ${y - 32} Td (${escPDF(name)}) Tj ET\n`;
+    });
+    y -= 78;
+
+    // Section: PAE balance bars
+    s += `${grey} rg\n`;
+    s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('MOTIVATION BALANCE')}) Tj ET\n`;
+    y -= 8;
+    const barW = W - 2*M - 50;
+    [
+      { id:'people',      label:'People',      color: pink },
+      { id:'achievement', label:'Achievement', color: dark },
+      { id:'enjoyment',   label:'Enjoyment',   color: teal }
+    ].forEach(cat => {
+      const score = scores[cat.id] || 0;
+      const fillW = Math.max(8, Math.round((score / 6) * barW));
+      s += `${cat.color} rg\n`;
+      s += `${M} ${y - 14} ${fillW} 14 re f\n`;
+      s += `0.88 0.90 0.93 rg\n`;
+      s += `${M + fillW} ${y - 14} ${barW - fillW} 14 re f\n`;
+      s += `${cat.color} rg\n`;
+      s += `BT /F1 9 Tf ${M + barW + 6} ${y - 10} Td (${escPDF(score + '/6')}) Tj ET\n`;
+      s += `${white} rg\n`;
+      s += `BT /F2 8 Tf ${M + 4} ${y - 10} Td (${escPDF(cat.label)}) Tj ET\n`;
+      y -= 20;
+    });
+    y -= 12;
+
+    // Section: Top 6
+    s += `${grey} rg\n`;
+    s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('ALL 6 KEY MOTIVATORS')}) Tj ET\n`;
+    y -= 8;
+    [...sel6].forEach(name => {
+      const isStar = top2.has(name);
+      const catId = getCatId(name);
+      const cc = catColors[catId];
+      s += `${cc} rg\n`;
+      s += `${M} ${y - 18} ${W - 2*M} 18 re f\n`;
+      s += `${white} rg\n`;
+      s += `BT /F1 9 Tf ${M + 6} ${y - 12} Td (${escPDF((isStar ? '** ' : '   ') + name)}) Tj ET\n`;
+      s += `BT /F2 8 Tf ${W - M - 75} ${y - 12} Td (${escPDF(catLabels[catId])}) Tj ET\n`;
+      y -= 22;
+    });
+    s += `${grey} rg\n`;
+    s += `BT /F2 7 Tf ${M + 6} ${y - 10} Td (${escPDF('** = top 2 motivator')}) Tj ET\n`;
+    y -= 24;
+
+    // Section: Least important
+    if (leastSet.size > 0) {
+      y -= 4;
+      s += `${grey} rg\n`;
+      s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('FACTORS RATED LEAST IMPORTANT')}) Tj ET\n`;
+      y -= 8;
+      [...leastSet].forEach(name => {
+        s += `0.92 0.94 0.96 rg\n`;
+        s += `${M} ${y - 18} ${W - 2*M} 18 re f\n`;
+        s += `0.40 0.40 0.40 rg\n`;
+        s += `BT /F2 9 Tf ${M + 8} ${y - 12} Td (${escPDF(name)}) Tj ET\n`;
+        y -= 22;
+      });
+    }
+
+    // Footer
+    s += `${grey} rg\n`;
+    s += `BT /F2 7 Tf ${M} ${M - 8} Td (${escPDF('Story Contracting - Liberator Programme - Motivation Profile - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+    // Build PDF objects
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId   = addObj(''); // placeholder
+    const font1Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const streamBytes = new TextEncoder().encode(s);
+    const streamId  = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${s}endstream`);
+    const pageId    = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R >> >> >>`);
+    objects[1].data = `<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>`;
+
+    // Assemble
+    let pdf = '%PDF-1.4\n';
+    const offsets = [];
+    objects.forEach(obj => {
+      offsets.push(pdf.length);
+      pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`;
+    });
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objCount + 1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10, '0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount + 1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    // Download
+    const blob = new Blob([pdf], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Motivation-Profile-' + new Date().toISOString().slice(0, 10) + '.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+  } catch(err) {
+    console.error('Motivation PDF error:', err);
+    alert('PDF generation error: ' + err.message);
+  }
 }
 
 // ── Initialize ──
