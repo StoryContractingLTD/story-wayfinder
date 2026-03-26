@@ -71,7 +71,30 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .wheel-svg-container.has-hover .ov-wedge{fill:rgba(10,30,60,0.55)}
 .wheel-svg-container.has-hover .ov-wedge.active{fill:transparent}
 
-/* Hover bar */
+/* Centre hub overlay */
+.hub-circle { fill:transparent; cursor:pointer; }
+.hub-ring { fill:none; stroke:rgba(255,255,255,0); stroke-width:0;
+  transform-origin:1100px 1100px; pointer-events:none;
+  transition:stroke .3s ease, stroke-width .3s ease; }
+.hub-ring-outer { fill:none; stroke:rgba(255,255,255,0); stroke-width:0;
+  transform-origin:1100px 1100px; pointer-events:none;
+  transition:stroke .3s ease; }
+.hub-hovered .hub-ring {
+  stroke:rgba(255,255,255,.7); stroke-width:28;
+  animation:hubPulse 1.6s ease-in-out infinite;
+}
+.hub-hovered .hub-ring-outer {
+  stroke:rgba(255,255,255,.25); stroke-width:16;
+  animation:hubPulseOuter 1.6s ease-in-out infinite;
+}
+@keyframes hubPulse {
+  0%,100% { stroke-width:20; stroke:rgba(255,255,255,.5);  transform:scale(1);    }
+  50%      { stroke-width:36; stroke:rgba(255,255,255,.85); transform:scale(1.10); }
+}
+@keyframes hubPulseOuter {
+  0%,100% { stroke-width:10; stroke:rgba(255,255,255,.18); transform:scale(1);    }
+  50%      { stroke-width:20; stroke:rgba(255,255,255,.38); transform:scale(1.18); }
+}
 .hover-bar{height:76px;margin:8px -16px 0;border-radius:0 0 28px 28px;display:flex;align-items:center;justify-content:center;padding:10px 20px;transition:all .25s ease;overflow:hidden}
 .hover-bar.idle{background:#f0f6fc}
 .hover-bar.active{background:#0061AD}
@@ -2210,7 +2233,7 @@ function getWheelSVG() {
 // ============================================================
 //  OVERLAY SVG
 // ============================================================
-function buildOverlaySVG(onHover, onClick) {
+function buildOverlaySVG(onHover, onClick, onHoverHub, onClickHub) {
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('id','overlay-svg');
@@ -2230,7 +2253,32 @@ function buildOverlaySVG(onHover, onClick) {
     wedgeEls.push(path);
   });
 
-  svg.addEventListener('mouseleave', () => onHover(null));
+  // Centre hub — outer pulse ring, inner pulse ring, then transparent hit circle
+  const hubRingOuter = document.createElementNS(NS, 'circle');
+  hubRingOuter.setAttribute('cx', CX); hubRingOuter.setAttribute('cy', CY); hubRingOuter.setAttribute('r', R_INNER + 30);
+  hubRingOuter.setAttribute('class', 'hub-ring-outer');
+  svg.appendChild(hubRingOuter);
+
+  const hubRing = document.createElementNS(NS, 'circle');
+  hubRing.setAttribute('cx', CX); hubRing.setAttribute('cy', CY); hubRing.setAttribute('r', R_INNER - 10);
+  hubRing.setAttribute('class', 'hub-ring');
+  svg.appendChild(hubRing);
+
+  const hubCircle = document.createElementNS(NS, 'circle');
+  hubCircle.setAttribute('cx', CX); hubCircle.setAttribute('cy', CY); hubCircle.setAttribute('r', R_INNER);
+  hubCircle.setAttribute('class', 'hub-circle');
+  hubCircle.addEventListener('mouseenter', () => {
+    svg.classList.add('hub-hovered');
+    onHoverHub(true);
+  });
+  hubCircle.addEventListener('mouseleave', () => {
+    svg.classList.remove('hub-hovered');
+    onHoverHub(false);
+  });
+  hubCircle.addEventListener('click', () => onClickHub());
+  svg.appendChild(hubCircle);
+
+  svg.addEventListener('mouseleave', () => { svg.classList.remove('hub-hovered'); onHover(null); });
 
   return { svg, wedgeEls };
 }
@@ -2279,6 +2327,28 @@ function buildWheelPage(onOpen) {
     (id) => {
       playChime();
       onOpen(id);
+    },
+    (isHovered) => {
+      if (isHovered) {
+        playShush();
+        container.classList.remove('has-hover');
+        wedgeEls.forEach(w => w.classList.remove('active'));
+        hoverBar.className = 'hover-bar active';
+        hoverBar.style.background = 'linear-gradient(135deg,#004B86,#0061AD)';
+        hoverBarContent.innerHTML = `
+          <div class="quadrant-label" style="color:rgba(255,255,255,.6)">The Liberator Programme</div>
+          <div class="segment-label" style="color:white">High Challenge &amp; High Support</div>
+          <div class="click-hint" style="color:rgba(255,255,255,.5)">More coming soon</div>
+        `;
+      } else {
+        hoverBar.className = 'hover-bar idle';
+        hoverBar.style.background = '';
+        hoverBarContent.innerHTML = '<div class="idle-text">Hover over a section of the wheel to explore</div>';
+      }
+    },
+    () => {
+      // Centre click — placeholder for future use
+      playChime();
     }
   );
   container.appendChild(overlaySVG);
