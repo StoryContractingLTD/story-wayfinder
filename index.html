@@ -33,7 +33,7 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 /* Header */
-.header{display:flex;align-items:center;justify-content:space-between;padding:20px 32px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 32px}
 .header-left{display:flex;align-items:center;gap:16px}
 .divider{width:1px;height:28px;background:#c8d8e8}
 .tag{font-size:12px;font-weight:600;color:#8fa0b0;letter-spacing:.2em;text-transform:uppercase}
@@ -46,8 +46,8 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .logo svg{height:36px;width:auto}
 
 /* Container */
-.container{max-width:1200px;margin:0 auto;padding:8px 32px 48px}
-.center-block{text-align:center;max-width:620px;margin:0 auto 28px}
+.container{max-width:1200px;margin:0 auto;padding:4px 32px 48px}
+.center-block{text-align:center;max-width:620px;margin:0 auto 18px}
 .title{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:48px;font-weight:800;color:#004B86;letter-spacing:-.02em}
 .subtitle{color:#666;font-size:16px;line-height:1.75;margin-top:12px}
 
@@ -95,13 +95,13 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
   0%,100% { stroke-width:10; stroke:rgba(255,255,255,.18); transform:scale(1);    }
   50%      { stroke-width:20; stroke:rgba(255,255,255,.38); transform:scale(1.18); }
 }
-.hover-bar{height:76px;margin:8px -16px 0;border-radius:0 0 28px 28px;display:flex;align-items:center;justify-content:center;padding:10px 20px;transition:all .25s ease;overflow:hidden}
+.hover-bar{height:68px;margin:8px -16px 0;border-radius:0 0 28px 28px;display:flex;align-items:center;justify-content:center;padding:10px 20px;transition:all .25s ease;overflow:hidden}
 .hover-bar.idle{background:#f0f6fc}
 .hover-bar.active{background:#0061AD}
-.hover-bar-content{text-align:center;transition:opacity .18s ease}
+.hover-bar-content{text-align:center;transition:opacity .18s ease;width:100%}
 .hover-bar .quadrant-label{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
 .hover-bar .segment-label{font-weight:600;font-size:15px}
-.hover-bar .idle-text{color:#8fa0b0;font-size:13px;font-weight:500}
+.hover-bar .idle-text{color:#8fa0b0;font-size:13px;font-weight:500;line-height:1.6}
 .hover-bar .click-hint{font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-top:4px;opacity:0.5}
 
 /* Back button */
@@ -329,12 +329,19 @@ const SEGMENTS = [
   {
     id:'provide-support', label:'Provide continued support',
     quadrant:'Enabling', startAngle:330, endAngle:360,
-    tagline:'Staying present without taking over',
-    desc:'Continued support means being consistently available, checking in without checking up, and creating a safety net that allows people to take risks and learn from experience.',
-    modelTitle:'The Coaching Spectrum',
-    modelDesc:'The coaching spectrum shows the range of support a leader can offer, from directive (telling, instructing) to non-directive (listening, reflecting, asking). Effective leaders know when to push and when to pull, adjusting their position on the spectrum depending on the moment.',
-    bullets:['Non-directive approaches build long-term capability','Directive support is sometimes necessary and appropriate','Move along the spectrum based on the person and the situation'],
-    modelType:'spectrum'
+    tagline:'Staying consistent through the journey',
+    desc:'Providing continued support means being the constant that people can rely on. Like a pilot following a flight plan, the effective Leader-Developer knows their destination, responds to deviations in real time, and consistently steers performance back on course without waiting for the annual review.',
+    modelTitle:'The Flight Plan Analogy',
+    modelDesc:'Giving feedback is described as a moment of truth: the point at which everything diagnosed, decided, and prepared is put into action. The flight plan is the analogy. Just as a pilot does not wait until landing to discover they are off course, an effective leader does not store up feedback for the annual appraisal. They give it continuously, in real time, hour by hour, day by day. Formal reviews are the beacons on the route: useful checkpoints for re-routing when needed. But the GPS of regular praise and recognition is what keeps people on track between them. Effective leaders are always on the lookout for good performance, catching it at the time and reinforcing it immediately.',
+    bullets:[
+      'Give feedback in the moment, not stored up for the annual review: immediate and continuous is far more effective than periodic and formal',
+      'Positive reinforcement is the GPS signal: catching someone doing something right, at the time, is more powerful than waiting to catch them getting it wrong',
+      'Formal appraisals are beacons on the route, useful for re-routing, but the journey requires constant navigation between them'
+    ],
+    modelType:'flight-plan',
+    bookPages:'192-194',
+    noteTitle:'Feedback as a habit, not an event',
+    noteText:'The most powerful shift a leader can make is treating feedback as a continuous habit rather than a scheduled event. Catching someone doing something right, at the time, immediately, is far more effective than waiting for a formal review. The beacons matter, but it is the GPS signal between them that keeps people on course.'
   },
 
   // ── Visioning (top-right, 0° to 90°, 4 segments) ──
@@ -663,7 +670,6 @@ function playMIDownload(){
 
 // ── Strokes tile sounds ──
 function playStrokesExpand(){
-  // Soft two-note opening: a gentle upward step using triangle (warmer than sine)
   try{
     const ctx=getCtx(), now=ctx.currentTime;
     [{f:523,t:0},{f:659,t:.08}].forEach(({f,t})=>{
@@ -675,7 +681,6 @@ function playStrokesExpand(){
   }catch(e){}
 }
 function playStrokesCollapse(){
-  // Soft single descending note: a gentle settling-back feel
   try{
     const ctx=getCtx(), now=ctx.currentTime;
     const osc=ctx.createOscillator(), g=ctx.createGain();
@@ -712,7 +717,8 @@ function buildModelVisual(seg) {
     insights: buildInsightsVisual,
     'leadership-styles': buildLeadershipStylesVisual,
     'motivation-inventory': buildMotivationInventoryVisual,
-    aar: buildAARVisual
+    aar: buildAARVisual,
+    'flight-plan': buildFlightPlanVisual
   };
   const builder = builders[seg.modelType];
   if (builder) wrap.appendChild(builder());
@@ -1221,10 +1227,8 @@ function buildSBIVisual() {
 
 function buildStrokesVisual() {
   const uid = 'sk' + Math.random().toString(36).slice(2,7);
-
   const container = document.createElement('div');
   container.style.cssText = 'position:relative;width:100%;font-family:"Barlow",sans-serif;user-select:none';
-
   const styleEl = document.createElement('style');
   styleEl.textContent = `
     @keyframes ${uid}-dot-pulse { 0%,100%{opacity:.35;transform:scale(.8)} 50%{opacity:1;transform:scale(1.25)} }
@@ -1252,131 +1256,66 @@ function buildStrokesVisual() {
     .${uid}-hint { text-align:center; font-size:11px; color:#aaa; margin-top:10px; font-style:italic; }
   `;
   container.appendChild(styleEl);
-
-  // Brand palette from Story Contracting guidelines:
-  // Primary: #0061AD | Construction (teal): #01A4AB | Story England (orange): #fa6b02
-  // Story Scotland (dark navy): #22357A | Mobilising quadrant: #1A3A5C
   const cells = [
-    {
-      row:0, col:0,
-      bg:'#e4f5f6', textColor:'#0a3e40', dotColor:'rgba(10,62,64,.45)',
-      badgeBg:'rgba(1,164,171,.15)', badgeText:'#0a5a5f',
-      badge:'Nurturing', typeLabel:'Positive Unconditional', typeSub:'For being',
-      quote:'"I like you, you\'re a good bloke."',
-      note:'Warm and nourishing, but does not change workplace behaviour. Better suited to close personal relationships than professional settings. Positive, but not enough on its own to develop people.'
-    },
-    {
-      row:0, col:1,
-      bg:'#1A3A5C', textColor:'#ffffff', dotColor:'rgba(255,255,255,.6)',
-      badgeBg:'rgba(255,255,255,.2)', badgeText:'#ffffff',
-      badge:'Most Effective', typeLabel:'Positive Conditional', typeSub:'For doing',
-      quote:'"That was a good report you produced. It was clear, concise and summed up the issues."',
-      note:'The most powerful Stroke in leadership. Specific, genuine, and directly linked to observable behaviour. It reinforces exactly what you want to see more of and builds real confidence.'
-    },
-    {
-      row:1, col:0,
-      bg:'#fff2e6', textColor:'#6b3000', dotColor:'rgba(107,48,0,.4)',
-      badgeBg:'rgba(250,107,2,.15)', badgeText:'#7a3800',
-      badge:'Use Carefully', typeLabel:'Negative Conditional', typeSub:'For doing',
-      quote:'"When someone has an idea you always criticise it right away, so people are reluctant to make suggestions. Next time, find something positive to say first before pointing out the flaws."',
-      note:'Can influence behaviour when delivered honestly and fairly. Most effective when paired with genuine positive recognition and a clear commitment to supporting the person\'s improvement.'
-    },
-    {
-      row:1, col:1,
-      bg:'#22357A', textColor:'#ffffff', dotColor:'rgba(255,255,255,.6)',
-      badgeBg:'rgba(255,255,255,.18)', badgeText:'#ffffff',
-      badge:'Never Appropriate', typeLabel:'Negative Unconditional', typeSub:'For being',
-      quote:'"You\'re a waste of space."',
-      note:'Attacks who someone is, not what they did. It provokes the strongest possible defensive reaction, destroys psychological safety, and has no place in any approach to empowering leadership.'
-    }
+    { row:0, col:0, bg:'#e4f5f6', textColor:'#0a3e40', dotColor:'rgba(10,62,64,.45)', badgeBg:'rgba(1,164,171,.15)', badgeText:'#0a5a5f', badge:'Nurturing', typeLabel:'Positive Unconditional', typeSub:'For being', quote:'"I like you, you\'re a good bloke."', note:'Warm and nourishing, but does not change workplace behaviour. Better suited to close personal relationships than professional settings. Positive, but not enough on its own to develop people.' },
+    { row:0, col:1, bg:'#1A3A5C', textColor:'#ffffff', dotColor:'rgba(255,255,255,.6)', badgeBg:'rgba(255,255,255,.2)', badgeText:'#ffffff', badge:'Most Effective', typeLabel:'Positive Conditional', typeSub:'For doing', quote:'"That was a good report you produced. It was clear, concise and summed up the issues."', note:'The most powerful Stroke in leadership. Specific, genuine, and directly linked to observable behaviour. It reinforces exactly what you want to see more of and builds real confidence.' },
+    { row:1, col:0, bg:'#fff2e6', textColor:'#6b3000', dotColor:'rgba(107,48,0,.4)', badgeBg:'rgba(250,107,2,.15)', badgeText:'#7a3800', badge:'Use Carefully', typeLabel:'Negative Conditional', typeSub:'For doing', quote:'"When someone has an idea you always criticise it right away, so people are reluctant to make suggestions. Next time, find something positive to say first before pointing out the flaws."', note:'Can influence behaviour when delivered honestly and fairly. Most effective when paired with genuine positive recognition and a clear commitment to supporting the person\'s improvement.' },
+    { row:1, col:1, bg:'#22357A', textColor:'#ffffff', dotColor:'rgba(255,255,255,.6)', badgeBg:'rgba(255,255,255,.18)', badgeText:'#ffffff', badge:'Never Appropriate', typeLabel:'Negative Unconditional', typeSub:'For being', quote:'"You\'re a waste of space."', note:'Attacks who someone is, not what they did. It provokes the strongest possible defensive reaction, destroys psychological safety, and has no place in any approach to empowering leadership.' }
   ];
-
   const grid = document.createElement('div');
   grid.className = `${uid}-grid`;
-
-  // Corner cell
   const corner = document.createElement('div');
   corner.className = `${uid}-corner`;
   grid.appendChild(corner);
-
-  // Column headers: Unconditional (light #0061AD tint), Conditional (dark #1A3A5C)
-  [['UNCONDITIONAL', 'For being'], ['CONDITIONAL', 'For doing']].forEach(([h, sub], i) => {
+  [['UNCONDITIONAL','For being'],['CONDITIONAL','For doing']].forEach(([h,sub],i) => {
     const ch = document.createElement('div');
     ch.className = `${uid}-col-head`;
-    ch.style.cssText = `background:${i===1 ? '#1A3A5C' : '#ddeaf5'};color:${i===1 ? '#fff' : '#1A3A5C'}`;
+    ch.style.cssText = `background:${i===1?'#1A3A5C':'#ddeaf5'};color:${i===1?'#fff':'#1A3A5C'}`;
     ch.innerHTML = `${h}<br><span style="font-weight:400;opacity:.75;font-size:10px;letter-spacing:.02em;text-transform:none;font-style:italic">${sub}</span>`;
     grid.appendChild(ch);
   });
-
-  // Row headers: Positive uses Construction teal #01A4AB, Negative uses Story England orange #fa6b02
-  [['POSITIVE', '#01A4AB'], ['NEGATIVE', '#fa6b02']].forEach(([label, col], rowIdx) => {
+  [['POSITIVE','#01A4AB'],['NEGATIVE','#fa6b02']].forEach(([label,col],rowIdx) => {
     const rh = document.createElement('div');
     rh.className = `${uid}-row-head`;
     rh.style.cssText = `background:${col};color:#fff`;
     rh.textContent = label;
     grid.appendChild(rh);
-
-    [0, 1].forEach(colIdx => {
-      const cd = cells.find(c => c.row === rowIdx && c.col === colIdx);
+    [0,1].forEach(colIdx => {
+      const cd = cells.find(c => c.row===rowIdx && c.col===colIdx);
       const cell = document.createElement('div');
       cell.className = `${uid}-cell`;
       cell.style.cssText = `background:${cd.bg};color:${cd.textColor}`;
-
       const front = document.createElement('div');
       front.className = `${uid}-cell-front`;
-      front.innerHTML = `
-        <span class="${uid}-badge" style="background:${cd.badgeBg};color:${cd.badgeText}">${cd.badge}</span>
-        <div class="${uid}-type-label">${cd.typeLabel}</div>
-        <div class="${uid}-type-sub">${cd.typeSub}</div>
-        <span class="${uid}-pulse-dot" style="background:${cd.dotColor}"></span>
-      `;
-
+      front.innerHTML = `<span class="${uid}-badge" style="background:${cd.badgeBg};color:${cd.badgeText}">${cd.badge}</span><div class="${uid}-type-label">${cd.typeLabel}</div><div class="${uid}-type-sub">${cd.typeSub}</div><span class="${uid}-pulse-dot" style="background:${cd.dotColor}"></span>`;
       const detail = document.createElement('div');
       detail.className = `${uid}-cell-detail`;
-      detail.innerHTML = `
-        <span class="${uid}-close" title="Close">&#x2715;</span>
-        <span class="${uid}-badge" style="background:${cd.badgeBg};color:${cd.badgeText}">${cd.badge}</span>
-        <div class="${uid}-quote">${cd.quote}</div>
-        <div class="${uid}-note">${cd.note}</div>
-      `;
-
+      detail.innerHTML = `<span class="${uid}-close" title="Close">&#x2715;</span><span class="${uid}-badge" style="background:${cd.badgeBg};color:${cd.badgeText}">${cd.badge}</span><div class="${uid}-quote">${cd.quote}</div><div class="${uid}-note">${cd.note}</div>`;
       cell.appendChild(front);
       cell.appendChild(detail);
-
       cell.addEventListener('click', (e) => {
-        if (e.target.classList.contains(`${uid}-close`)) {
-          cell.classList.remove('active');
-          playStrokesCollapse();
-          return;
-        }
-        // Mark all cells as seen to stop dots on first interaction
+        if (e.target.classList.contains(`${uid}-close`)) { cell.classList.remove('active'); playStrokesCollapse(); return; }
         grid.querySelectorAll(`.${uid}-cell`).forEach(c => c.classList.add('seen'));
         const wasActive = cell.classList.contains('active');
-        grid.querySelectorAll(`.${uid}-cell.active`).forEach(c => { if (c !== cell) c.classList.remove('active'); });
+        grid.querySelectorAll(`.${uid}-cell.active`).forEach(c => { if (c!==cell) c.classList.remove('active'); });
         cell.classList.toggle('active');
         wasActive ? playStrokesCollapse() : playStrokesExpand();
       });
-
       grid.appendChild(cell);
     });
   });
-
   container.appendChild(grid);
-
   const hint = document.createElement('div');
   hint.className = `${uid}-hint`;
   hint.textContent = 'Tap any cell to see the example and leadership note';
   container.appendChild(hint);
-
   return container;
 }
 
 function buildCatchRightVisual() {
   const uid = 'cr' + Math.random().toString(36).slice(2,7);
-
   const container = document.createElement('div');
   container.style.cssText = 'width:100%;font-family:"Barlow",sans-serif;user-select:none';
-
   const styleEl = document.createElement('style');
   styleEl.textContent = `
     @keyframes ${uid}-ring-pulse { 0%{opacity:.55;transform:scale(1)} 60%{opacity:0;transform:scale(1.62)} 100%{opacity:0;transform:scale(1.62)} }
@@ -1396,54 +1335,38 @@ function buildCatchRightVisual() {
     .${uid}-panel strong { display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px; opacity:.65; }
   `;
   container.appendChild(styleEl);
-
   const steps = [
-    { letter:'1', label:'Spot the step',     colour:'#01A4AB', freq:523,
-      title:'Spot an improvement',       body:'Look for a step forward, something different, or better than before. High performance on its own deserves appreciation, but it is the improvement that carries the greatest developmental signal. Praising attendance at basic meetings debases the currency of feedback.' },
-    { letter:'2', label:'Catch and name it', colour:'#1A3A5C', freq:587,
-      title:'Be specific and genuine',   body:'Name exactly what you saw, and why it matters. Use the Conditional Positive Stroke: link the recognition directly to the behaviour. Vague praise lands weakly. Specific, genuine recognition reaches people.' },
-    { letter:'3', label:'Reinforce it',      colour:'#0061AD', freq:659,
-      title:'Consolidate the achievement', body:'Give the person time to own the step. Celebrate the landing before moving on. But do not keep repeating the same praise: that signals to stay put rather than grow. Consolidation is a pause, not a destination.' },
-    { letter:'4', label:'Encourage the next',colour:'#22357A', freq:784,
-      title:'Keep the journey moving',   body:'True excellence is always a moving state. Once a step is consolidated, the leader\'s role is to encourage the next one. The cycle then repeats: spot, catch, reinforce, encourage forward.' }
+    { letter:'1', label:'Spot the step',      colour:'#01A4AB', freq:523, title:'Spot an improvement',        body:'Look for a step forward, something different, or better than before. High performance on its own deserves appreciation, but it is the improvement that carries the greatest developmental signal. Praising attendance at basic meetings debases the currency of feedback.' },
+    { letter:'2', label:'Catch and name it',  colour:'#1A3A5C', freq:587, title:'Be specific and genuine',    body:'Name exactly what you saw, and why it matters. Use the Conditional Positive Stroke: link the recognition directly to the behaviour. Vague praise lands weakly. Specific, genuine recognition reaches people.' },
+    { letter:'3', label:'Reinforce it',       colour:'#0061AD', freq:659, title:'Consolidate the achievement', body:'Give the person time to own the step. Celebrate the landing before moving on. But do not keep repeating the same praise: that signals to stay put rather than grow. Consolidation is a pause, not a destination.' },
+    { letter:'4', label:'Encourage the next', colour:'#22357A', freq:784, title:'Keep the journey moving',     body:'True excellence is always a moving state. Once a step is consolidated, the leader\'s role is to encourage the next one. The cycle then repeats: spot, catch, reinforce, encourage forward.' }
   ];
-
   const journey = document.createElement('div');
   journey.className = `${uid}-journey`;
-
   const panel = document.createElement('div');
   panel.className = `${uid}-panel`;
   panel.innerHTML = `<strong>Select a stage to explore</strong>Click any stage above to see what it means in practice.`;
-
   steps.forEach((s, i) => {
     const stepEl = document.createElement('div');
     stepEl.className = `${uid}-step`;
-
-    // Wrapper holds the ring + node together
     const wrap = document.createElement('div');
     wrap.className = `${uid}-node-wrap`;
-
     const ring = document.createElement('div');
     ring.className = `${uid}-ring`;
     ring.style.borderColor = s.colour;
     ring.style.animationDelay = `${i * 0.45}s`;
-
     const node = document.createElement('div');
     node.className = `${uid}-step-node`;
     node.style.background = s.colour;
     node.textContent = s.letter;
-
     wrap.appendChild(ring);
     wrap.appendChild(node);
-
     const label = document.createElement('div');
     label.className = `${uid}-step-label`;
     label.style.color = s.colour;
     label.textContent = s.label;
-
     stepEl.appendChild(wrap);
     stepEl.appendChild(label);
-
     stepEl.addEventListener('click', () => {
       journey.querySelectorAll(`.${uid}-step`).forEach(el => el.classList.remove('active'));
       journey.querySelectorAll(`.${uid}-step`).forEach(el => el.classList.add('seen'));
@@ -1451,20 +1374,14 @@ function buildCatchRightVisual() {
       panel.style.borderLeftColor = s.colour;
       panel.style.background = s.colour + '12';
       panel.innerHTML = `<strong style="color:${s.colour}">${s.title}</strong>${s.body}`;
-      // Gentle single tone, ascending pitch per step
       try {
         const ctx = getCtx(), now = ctx.currentTime;
         const osc = ctx.createOscillator(), g = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.value = s.freq;
-        g.gain.setValueAtTime(0, now);
-        g.gain.linearRampToValueAtTime(.016, now + .012);
-        g.gain.exponentialRampToValueAtTime(.0001, now + .38);
-        osc.connect(g); g.connect(ctx.destination);
-        osc.start(now); osc.stop(now + .42);
+        osc.type = 'triangle'; osc.frequency.value = s.freq;
+        g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(.016, now+.012); g.gain.exponentialRampToValueAtTime(.0001, now+.38);
+        osc.connect(g); g.connect(ctx.destination); osc.start(now); osc.stop(now+.42);
       } catch(e) {}
     });
-
     journey.appendChild(stepEl);
     if (i < steps.length - 1) {
       const conn = document.createElement('div');
@@ -1472,10 +1389,8 @@ function buildCatchRightVisual() {
       journey.appendChild(conn);
     }
   });
-
   container.appendChild(journey);
   container.appendChild(panel);
-
   return container;
 }
 
@@ -2474,6 +2389,303 @@ function buildAARVisual() {
   return svg;
 }
 
+function buildFlightPlanVisual() {
+  const fp = 'fp' + Math.random().toString(36).slice(2,7);
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;opacity:0;transition:opacity .5s ease;margin-top:8px;position:relative;font-family:"Barlow",sans-serif';
+
+  const routeD = 'M 45,210 C 75,178 118,130 158,96 C 172,84 186,78 198,80 C 216,83 234,57 256,51 C 270,47 282,63 279,82 C 276,102 272,136 281,165 C 288,184 298,192 305,190 C 328,182 368,138 402,96 C 418,80 432,71 440,71';
+
+  const beaconInfo = {
+    A: { title:'Departure', text:'The journey begins. Clear expectations are established: the destination is known, the standard is set, and the leader is ready to navigate.' },
+    B: { title:'First Beacon', text:'A formal review checkpoint. Progress is confirmed, the route is assessed, and re-routing happens here if needed. The destination has not changed.' },
+    C: { title:'Course Corrected', text:'After the GPS alarm flagged an off-course deviation, immediate feedback brought things back on track. The route resumes without waiting for the next beacon.' },
+    D: { title:'Destination Approach', text:'Sustained performance, continuously reinforced. The journey here was shaped by consistent, timely recognition and honest course corrections along the way.' }
+  };
+
+  // Sonar ping sound
+  function playSonar() {
+    try {
+      const ctx = getCtx(), now = ctx.currentTime;
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(900, now);
+      osc.frequency.exponentialRampToValueAtTime(420, now + 0.45);
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(0.022, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(now); osc.stop(now + 0.5);
+    } catch(e) {}
+  }
+
+  // Subtle minimise sound
+  function playMinimise() {
+    try {
+      const ctx = getCtx(), now = ctx.currentTime;
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, now);
+      osc.frequency.exponentialRampToValueAtTime(280, now + 0.18);
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(0.014, now + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(now); osc.stop(now + 0.22);
+    } catch(e) {}
+  }
+
+  // Alarm warble: two short urgent descending pulses
+  function playAlarmWarble() {
+    try {
+      const ctx = getCtx(), now = ctx.currentTime;
+      [{start:0, f1:780, f2:520}, {start:0.22, f1:700, f2:460}].forEach(({start, f1, f2}) => {
+        const osc = ctx.createOscillator(), g = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(f1, now + start);
+        osc.frequency.exponentialRampToValueAtTime(f2, now + start + 0.16);
+        g.gain.setValueAtTime(0, now + start);
+        g.gain.linearRampToValueAtTime(0.016, now + start + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + start + 0.18);
+        osc.connect(g); g.connect(ctx.destination);
+        osc.start(now + start); osc.stop(now + start + 0.2);
+      });
+    } catch(e) {}
+  }
+
+  wrap.innerHTML = `<svg id="${fp}s" viewBox="0 0 490 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible">
+<defs><style>
+#${fp}r{stroke-dasharray:740;stroke-dashoffset:740;animation:${fp}D 3.2s .3s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes ${fp}D{to{stroke-dashoffset:0}}
+.${fp}b{opacity:0;animation:${fp}F .5s ease forwards}
+.${fp}b1{animation-delay:.8s}.${fp}b2{animation-delay:1.5s}.${fp}b3{animation-delay:2.3s}.${fp}b4{animation-delay:2.9s}
+.${fp}g{opacity:0;animation:${fp}F .35s ease forwards}
+.${fp}g1{animation-delay:1.05s}.${fp}g2{animation-delay:1.25s}.${fp}g3{animation-delay:2.45s}.${fp}g4{animation-delay:2.65s}.${fp}g5{animation-delay:2.95s}
+.${fp}gp{animation:${fp}GP 2.2s ease-in-out infinite}
+@keyframes ${fp}GP{0%,100%{opacity:.55;stroke-width:1.8}50%{opacity:1;stroke-width:2.4}}
+.${fp}a{opacity:0;animation:${fp}F .5s 1.75s ease forwards}
+.${fp}ao{animation:${fp}P 1.5s 2.3s ease-in-out infinite}
+@keyframes ${fp}P{0%,100%{opacity:.55;r:17}50%{opacity:1;r:20}}
+#${fp}p{opacity:0;animation:${fp}F .3s .6s ease forwards}
+@keyframes ${fp}F{to{opacity:1}}
+.${fp}pin{cursor:pointer;transition:filter .18s ease}
+.${fp}pin:hover{filter:brightness(1.3) drop-shadow(0 0 4px rgba(0,97,173,.5))}
+.${fp}sonar{opacity:0;animation:${fp}SR .7s ease-out forwards}
+@keyframes ${fp}SR{0%{opacity:.7;r:8}100%{opacity:0;r:28}}
+.${fp}bpulse{fill:none;stroke:#0061AD;stroke-width:1.5;opacity:0;animation:${fp}BP 2.4s ease-out infinite}
+.${fp}b1 .${fp}bpulse{animation-delay:1.2s}
+.${fp}b2 .${fp}bpulse{animation-delay:1.9s}
+.${fp}b3 .${fp}bpulse{animation-delay:2.7s}
+.${fp}b4 .${fp}bpulse{animation-delay:3.3s}
+@keyframes ${fp}BP{0%{opacity:.6;r:10}100%{opacity:0;r:26}}
+.${fp}alarm{cursor:pointer}
+.${fp}alarm:hover .${fp}ao{animation:${fp}AH .35s ease-in-out infinite}
+@keyframes ${fp}AH{0%,100%{opacity:.9;r:14}50%{opacity:1;r:21}}
+.${fp}aripple{opacity:0}
+.${fp}aripple.active{animation:${fp}AR .55s ease-out forwards}
+@keyframes ${fp}AR{0%{opacity:.65;r:6}100%{opacity:0;r:32}}
+</style></defs>
+
+<!-- Main route -->
+<path id="${fp}r" d="${routeD}" fill="none" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- GPS beep marks with continuous pulse -->
+<g class="${fp}g ${fp}g1"><path class="${fp}gp" d="M101,149 L105,143 L109,156 L113,137 L117,149" fill="none" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g class="${fp}g ${fp}g2"><path class="${fp}gp" d="M140,115 L144,109 L148,122 L152,103 L156,115" fill="none" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.4s"/></g>
+<g class="${fp}g ${fp}g3"><path class="${fp}gp" d="M330,160 L334,154 L338,167 L342,148 L346,160" fill="none" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.8s"/></g>
+<g class="${fp}g ${fp}g4"><path class="${fp}gp" d="M370,120 L374,114 L378,127 L382,108 L386,120" fill="none" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:1.2s"/></g>
+<g class="${fp}g ${fp}g5"><path class="${fp}gp" d="M408,89 L412,83 L416,96 L420,77 L424,89" fill="none" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:1.6s"/></g>
+
+<!-- Alarm (off-course swerve) — hoverable/clickable -->
+<g class="${fp}a ${fp}alarm" id="${fp}alarmEl">
+  <circle cx="255" cy="51" r="30" fill="transparent"/>
+  <circle cx="255" cy="51" r="0" fill="#D04862" id="${fp}aripple" class="${fp}aripple"/>
+  <circle class="${fp}ao" cx="255" cy="51" r="17" fill="rgba(208,72,98,.14)" stroke="#D04862" stroke-width="2"/>
+  <circle cx="255" cy="51" r="10" fill="none" stroke="#D04862" stroke-width="1.5" stroke-dasharray="3 2.5"/>
+  <circle cx="255" cy="51" r="4" fill="#D04862"/>
+</g>
+
+<!-- Beacon A — pulse ring signals clickability -->
+<g class="${fp}b ${fp}b1 ${fp}pin" id="${fp}pinA">
+  <circle cx="45" cy="205" r="10" class="${fp}bpulse"/>
+  <circle cx="45" cy="205" r="0" fill="#0061AD" id="${fp}sonarA" class="${fp}sonar" style="animation:none"/>
+  <path d="M45,192 C37,192 31,198 31,205 C31,216 45,228 45,228 C45,228 59,216 59,205 C59,198 53,192 45,192Z" fill="#0061AD"/>
+  <circle cx="45" cy="205" r="4.5" fill="white"/>
+  <text x="45" y="220" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-weight="800" font-size="13" fill="white" pointer-events="none">A</text>
+</g>
+<!-- Beacon B -->
+<g class="${fp}b ${fp}b2 ${fp}pin" id="${fp}pinB">
+  <circle cx="198" cy="75" r="10" class="${fp}bpulse"/>
+  <circle cx="198" cy="75" r="0" fill="#0061AD" id="${fp}sonarB" class="${fp}sonar" style="animation:none"/>
+  <path d="M198,62 C190,62 184,68 184,75 C184,86 198,98 198,98 C198,98 212,86 212,75 C212,68 206,62 198,62Z" fill="#0061AD"/>
+  <circle cx="198" cy="75" r="4.5" fill="white"/>
+  <text x="198" y="90" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-weight="800" font-size="13" fill="white" pointer-events="none">B</text>
+</g>
+<!-- Beacon C -->
+<g class="${fp}b ${fp}b3 ${fp}pin" id="${fp}pinC">
+  <circle cx="305" cy="185" r="10" class="${fp}bpulse"/>
+  <circle cx="305" cy="185" r="0" fill="#0061AD" id="${fp}sonarC" class="${fp}sonar" style="animation:none"/>
+  <path d="M305,172 C297,172 291,178 291,185 C291,196 305,208 305,208 C305,208 319,196 319,185 C319,178 313,172 305,172Z" fill="#0061AD"/>
+  <circle cx="305" cy="185" r="4.5" fill="white"/>
+  <text x="305" y="200" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-weight="800" font-size="13" fill="white" pointer-events="none">C</text>
+</g>
+<!-- Beacon D -->
+<g class="${fp}b ${fp}b4 ${fp}pin" id="${fp}pinD">
+  <circle cx="440" cy="66" r="10" class="${fp}bpulse"/>
+  <circle cx="440" cy="66" r="0" fill="#0061AD" id="${fp}sonarD" class="${fp}sonar" style="animation:none"/>
+  <path d="M440,53 C432,53 426,59 426,66 C426,77 440,89 440,89 C440,89 454,77 454,66 C454,59 448,53 440,53Z" fill="#0061AD"/>
+  <circle cx="440" cy="66" r="4.5" fill="white"/>
+  <text x="440" y="81" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-weight="800" font-size="13" fill="white" pointer-events="none">D</text>
+</g>
+
+<!-- Plane (JS animates position and rotation) -->
+<g id="${fp}p" transform="translate(45,210) rotate(0)">
+  <path d="M10,0 L-6,-4 L-4,-1.5 L-11,-1.5 L-11,1.5 L-4,1.5 L-6,4 Z" fill="#1A3A5C"/>
+</g>
+</svg>
+
+<!-- Beacon / alarm info panel -->
+<div id="${fp}panel" style="display:none;border-left:3px solid #0061AD;border-radius:10px;padding:11px 14px;margin:6px 0 10px;animation:fpPanelIn .22s ease both;position:relative">
+  <style>@keyframes fpPanelIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}</style>
+  <button id="${fp}close" style="position:absolute;top:8px;right:10px;background:none;border:none;cursor:pointer;color:#aaa;font-size:13px;line-height:1;padding:0" aria-label="Close">&#x2715;</button>
+  <div id="${fp}ptitle" style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;color:#004B86;margin-bottom:4px"></div>
+  <div id="${fp}ptext" style="font-size:12.5px;color:#555;line-height:1.6"></div>
+</div>
+
+<!-- Key -->
+<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 4px 2px;border-top:1px solid #e4edf5;margin-top:2px">
+  <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+    <svg width="14" height="18" viewBox="0 0 14 18"><path d="M7,0 C3.13,0 0,3.13 0,7 C0,12.25 7,18 7,18 C7,18 14,12.25 14,7 C14,3.13 10.87,0 7,0Z" fill="#0061AD"/><circle cx="7" cy="7" r="2.5" fill="white"/></svg>
+    <span style="font-size:10px;color:#888;font-family:'Barlow',sans-serif">Beacons: formal reviews</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+    <svg width="20" height="14" viewBox="0 0 20 14"><path d="M0,7 L4,1 L8,13 L12,1 L16,7 L20,7" fill="none" stroke="#0061AD" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span style="font-size:10px;color:#888;font-family:'Barlow',sans-serif">GPS: praise confirming on track</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+    <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="rgba(208,72,98,.15)" stroke="#D04862" stroke-width="1.8"/><circle cx="8" cy="8" r="3" fill="#D04862"/></svg>
+    <span style="font-size:10px;color:#888;font-family:'Barlow',sans-serif">Alarm: course correction</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;flex-shrink:0;margin-left:auto">
+    <span style="font-size:10px;color:#aaa;font-family:'Barlow',sans-serif;font-style:italic">Click beacons or alarm to explore</span>
+  </div>
+</div>`;
+
+  // Animate plane along path
+  setTimeout(() => {
+    const routeEl = document.getElementById(`${fp}r`);
+    const planeEl = document.getElementById(`${fp}p`);
+    if (!routeEl || !planeEl) return;
+    const totalLen = routeEl.getTotalLength();
+    const duration = 3200, delay = 300;
+    const startTime = performance.now() + delay;
+    function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+    function step(now) {
+      const elapsed = now - startTime;
+      if (elapsed < 0) { requestAnimationFrame(step); return; }
+      const t = ease(Math.min(elapsed / duration, 1));
+      const len = t * totalLen;
+      const pt  = routeEl.getPointAtLength(len);
+      const pt2 = routeEl.getPointAtLength(Math.min(len + 6, totalLen));
+      const ang = Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180 / Math.PI;
+      planeEl.setAttribute('transform', `translate(${pt.x.toFixed(1)},${pt.y.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }, 100);
+
+  // Wire up beacon clicks and alarm hover
+  setTimeout(() => {
+    const panel    = document.getElementById(`${fp}panel`);
+    const ptitle   = document.getElementById(`${fp}ptitle`);
+    const ptext    = document.getElementById(`${fp}ptext`);
+    const closeBtn = document.getElementById(`${fp}close`);
+    const alarmEl  = document.getElementById(`${fp}alarmEl`);
+    const aripple  = document.getElementById(`${fp}aripple`);
+    let activePin  = null;
+    let alarmReady = false;
+
+    // Alarm becomes interactive after its fade-in completes (1.75s + 0.5s)
+    setTimeout(() => { alarmReady = true; }, 2400);
+
+    function triggerSonar(letter) {
+      const el = document.getElementById(`${fp}sonar${letter}`);
+      if (!el) return;
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = `${fp}SR .7s ease-out forwards`;
+    }
+
+    function triggerAlarmRipple() {
+      if (!aripple) return;
+      aripple.classList.remove('active');
+      void aripple.offsetWidth;
+      aripple.classList.add('active');
+    }
+
+    function showPanel(id, title, text, colour, isAlarm) {
+      ptitle.textContent = title;
+      ptext.textContent  = text;
+      panel.style.borderLeftColor = colour;
+      panel.style.background = isAlarm ? 'rgba(208,72,98,.07)' : '#EAF4FB';
+      panel.style.display = 'block';
+      panel.style.animation = 'none';
+      void panel.offsetWidth;
+      panel.style.animation = 'fpPanelIn .22s ease both';
+    }
+
+    function closePanel() {
+      playMinimise();
+      panel.style.display = 'none';
+      activePin = null;
+    }
+
+    // Beacon clicks
+    ['A','B','C','D'].forEach(letter => {
+      const pin = document.getElementById(`${fp}pin${letter}`);
+      if (!pin) return;
+      pin.addEventListener('click', () => {
+        if (activePin === letter) { closePanel(); return; }
+        activePin = letter;
+        playSonar();
+        triggerSonar(letter);
+        const info = beaconInfo[letter];
+        showPanel(letter, `${letter}: ${info.title}`, info.text, '#0061AD', false);
+      });
+    });
+
+    // Alarm hover
+    if (alarmEl) {
+      alarmEl.addEventListener('mouseenter', () => {
+        if (!alarmReady) return;
+        playAlarmWarble();
+        triggerAlarmRipple();
+      });
+
+      // Alarm click: show panel
+      alarmEl.addEventListener('click', () => {
+        if (!alarmReady) return;
+        if (activePin === 'alarm') { closePanel(); return; }
+        activePin = 'alarm';
+        playAlarmWarble();
+        triggerAlarmRipple();
+        showPanel(
+          'alarm',
+          'GPS Alarm: Off Course',
+          'An observable deviation from the expected standard. Performance, attitude or behaviour has shifted away from what was agreed. The effective leader acts immediately rather than storing this up for a formal review. The alarm is not a punishment, it is navigation: it exists to bring things back on track as quickly and constructively as possible.',
+          '#D04862',
+          true
+        );
+      });
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closePanel);
+  }, 500);
+
+  setTimeout(() => { wrap.style.opacity = '1'; }, 50);
+  return wrap;
+}
+
 // SVG helper functions
 function createSVG(w, h) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -2617,6 +2829,14 @@ function buildWheelPage(onOpen) {
 
   let hoveredId = null;
 
+  // Create hoverBar before overlay so callbacks can reference it
+  const hoverBar = document.createElement('div');
+  hoverBar.className = 'hover-bar idle';
+  const hoverBarContent = document.createElement('div');
+  hoverBarContent.className = 'hover-bar-content';
+  hoverBarContent.innerHTML = '<div class="idle-text">Hover over the wheel to see what each section covers</div>';
+  hoverBar.appendChild(hoverBarContent);
+
   const wheelSVG = getWheelSVG();
   const container = document.createElement('div');
   container.className = 'wheel-svg-container';
@@ -2645,7 +2865,7 @@ function buildWheelPage(onOpen) {
         wedgeEls.forEach(w => w.classList.remove('active'));
         hoverBar.className = 'hover-bar idle';
         hoverBar.style.background = '';
-        hoverBarContent.innerHTML = '<div class="idle-text">Hover over a section of the wheel to explore</div>';
+        hoverBarContent.innerHTML = '<div class="idle-text">Hover over the wheel to see what each section covers</div>';
       }
     },
     (id) => {
@@ -2667,7 +2887,7 @@ function buildWheelPage(onOpen) {
       } else {
         hoverBar.className = 'hover-bar idle';
         hoverBar.style.background = '';
-        hoverBarContent.innerHTML = '<div class="idle-text">Hover over a section of the wheel to explore</div>';
+        hoverBarContent.innerHTML = '<div class="idle-text">Hover over the wheel to see what each section covers</div>';
       }
     },
     () => {
@@ -2676,13 +2896,6 @@ function buildWheelPage(onOpen) {
     }
   );
   container.appendChild(overlaySVG);
-
-  const hoverBar = document.createElement('div');
-  hoverBar.className = 'hover-bar idle';
-  const hoverBarContent = document.createElement('div');
-  hoverBarContent.className = 'hover-bar-content';
-  hoverBarContent.innerHTML = '<div class="idle-text">Hover over a section of the wheel to explore</div>';
-  hoverBar.appendChild(hoverBarContent);
 
   const wheelWrap = document.createElement('div');
   wheelWrap.className = 'wheel-wrap';
