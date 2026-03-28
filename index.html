@@ -281,6 +281,31 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
   .ws-columns{grid-template-columns:1fr}
   .ws-back-btns{flex-direction:column}
 }
+
+/* ── Coming Soon Page ──────────────────────────────────────────── */
+.cs-page{background:#020810;min-height:100vh;display:flex;flex-direction:column}
+.cs-page .header{background:rgba(2,8,16,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07)}
+.cs-page .back-btn{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);box-shadow:none}
+.cs-page .back-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+.cs-page .divider{background:rgba(255,255,255,.15)}
+.cs-page .tag{color:rgba(255,255,255,.4)}
+.cs-scene{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:0}
+.cs-bg{position:absolute;inset:0;background:radial-gradient(ellipse 90% 80% at 50% 42%,#0B1E54 0%,#060F2A 52%,#020810 100%)}
+.cs-stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.cs-solar{position:absolute;inset:0;pointer-events:none;z-index:2}
+.cs-sun{position:absolute;width:160px;height:160px;z-index:5;transform:translate(-50%,-50%)}
+.cs-sun-body{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 37% 31%,#5BA8D8,#0061AD 46%,#003F73);display:flex;align-items:center;justify-content:center;overflow:hidden;animation:csSunPulse 3.4s ease-in-out infinite}
+.cs-sun-wordmark{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:800;font-size:32px;letter-spacing:.08em;color:rgba(255,255,255,0.92);text-transform:uppercase;position:relative;z-index:2;text-shadow:0 1px 8px rgba(0,30,80,.35);pointer-events:none;line-height:1}
+.cs-sun-shine{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 30deg,transparent,rgba(255,255,255,.14) 12%,transparent 26%,transparent 74%,rgba(255,255,255,.09) 88%,transparent);animation:csSunSpin 16s linear infinite;pointer-events:none;z-index:1}
+.cs-orbit-svg{position:absolute;pointer-events:none;z-index:1;transform:translate(-50%,-50%)}
+.cs-planet-wrap{position:absolute;will-change:transform}
+.cs-planet{width:70px;height:70px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;cursor:default}
+.cs-planet-label{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:9.5px;font-weight:700;color:rgba(255,255,255,.93);text-align:center;text-transform:uppercase;letter-spacing:.08em;line-height:1.3;position:relative;z-index:2;text-shadow:0 1px 4px rgba(0,0,0,.65)}
+.cs-bottom{position:relative;z-index:20;text-align:center;padding:18px 24px 44px;pointer-events:auto}
+.cs-title{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:56px;font-weight:800;color:white;letter-spacing:-.02em;line-height:1;text-shadow:0 2px 32px rgba(0,97,173,.55),0 0 80px rgba(251,140,0,.2)}
+.cs-sub{color:rgba(255,255,255,.48);font-size:15px;line-height:1.75;margin-top:10px;max-width:440px;margin-left:auto;margin-right:auto}
+@keyframes csSunPulse{0%,100%{box-shadow:0 0 44px 14px rgba(251,140,0,.55),0 0 88px 28px rgba(230,81,0,.28),0 0 160px 56px rgba(230,81,0,.1)}50%{box-shadow:0 0 64px 22px rgba(255,193,7,.65),0 0 120px 44px rgba(230,81,0,.38),0 0 200px 72px rgba(230,81,0,.14)}}
+@keyframes csSunSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -2403,19 +2428,28 @@ function buildFlightPlanVisual() {
     D: { title:'Destination Approach', text:'Sustained performance, continuously reinforced. The journey here was shaped by consistent, timely recognition and honest course corrections along the way.' }
   };
 
-  // Sonar ping sound
+  // Navigation instrument ping - clean two-partial tone with natural decay
   function playSonar() {
     try {
       const ctx = getCtx(), now = ctx.currentTime;
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(900, now);
-      osc.frequency.exponentialRampToValueAtTime(420, now + 0.45);
-      g.gain.setValueAtTime(0, now);
-      g.gain.linearRampToValueAtTime(0.022, now + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(now); osc.stop(now + 0.5);
+      // Fundamental partial
+      const osc1 = ctx.createOscillator(), g1 = ctx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.value = 880;
+      g1.gain.setValueAtTime(0, now);
+      g1.gain.linearRampToValueAtTime(0.018, now + 0.005);
+      g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+      osc1.connect(g1); g1.connect(ctx.destination);
+      osc1.start(now); osc1.stop(now + 0.7);
+      // Softer upper partial for warmth
+      const osc2 = ctx.createOscillator(), g2 = ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.value = 1320;
+      g2.gain.setValueAtTime(0, now);
+      g2.gain.linearRampToValueAtTime(0.009, now + 0.005);
+      g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+      osc2.connect(g2); g2.connect(ctx.destination);
+      osc2.start(now); osc2.stop(now + 0.4);
     } catch(e) {}
   }
 
@@ -2667,7 +2701,7 @@ function buildFlightPlanVisual() {
         if (!alarmReady) return;
         if (activePin === 'alarm') { closePanel(); return; }
         activePin = 'alarm';
-        playAlarmWarble();
+        playSonar();
         triggerAlarmRipple();
         showPanel(
           'alarm',
@@ -2891,7 +2925,8 @@ function buildWheelPage(onOpen) {
       }
     },
     () => {
-      // Centre click — placeholder for future use
+      // Centre click — Coming Soon page
+      goComingSoon();
       playChime();
     }
   );
@@ -3327,9 +3362,162 @@ function buildWorksheetPage(seg) {
   return page;
 }
 
+// ============================================================
+//  COMING SOON PAGE
+// ============================================================
+function buildComingSoonPage() {
+  const page = document.createElement('div');
+  page.className = 'page cs-page';
+
+  // Back button
+  const backBtn = document.createElement('button');
+  backBtn.className = 'back-btn';
+  backBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Return to wheel';
+  backBtn.addEventListener('click', () => { playReturn(); goHome(); });
+  page.appendChild(buildHeader(backBtn));
+
+  // Scene
+  const scene = document.createElement('div');
+  scene.className = 'cs-scene';
+  scene.innerHTML = '<div class="cs-bg"></div>';
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'cs-stars';
+  scene.appendChild(canvas);
+
+  const solar = document.createElement('div');
+  solar.className = 'cs-solar';
+
+  // Dashed orbit ring SVG
+  const orbitSVG = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  orbitSVG.className = 'cs-orbit-svg';
+  solar.appendChild(orbitSVG);
+
+  // Sun (Story logo as white silhouette on warm golden sphere)
+  const sun = document.createElement('div');
+  sun.className = 'cs-sun';
+  sun.innerHTML = `<div class="cs-sun-body"><div class="cs-sun-shine"></div><span class="cs-sun-wordmark">STORY</span></div>`;
+  solar.appendChild(sun);
+
+  // 4 planets: one per quadrant colour, equally spaced, slightly different speeds
+  const CS_PLANETS = [
+    { c:'#FA6B02', hi:'#FFA94D', dk:'#7D3300', spd:0.54, off:0           },
+    { c:'#009FA0', hi:'#3DD6D7', dk:'#005152', spd:0.41, off:Math.PI*0.5 },
+    { c:'#1A3A5C', hi:'#3A6898', dk:'#0A1A2C', spd:0.62, off:Math.PI     },
+    { c:'#0061AD', hi:'#3A9AE0', dk:'#002D5C', spd:0.47, off:Math.PI*1.5 },
+  ];
+  const planetEls = CS_PLANETS.map(p => {
+    const w = document.createElement('div');
+    w.className = 'cs-planet-wrap';
+    w.innerHTML = `<div class="cs-planet" style="background:radial-gradient(circle at 35% 30%,${p.hi},${p.c} 52%,${p.dk});box-shadow:0 0 22px 5px ${p.c}99"><span class="cs-planet-label">Under<br>Construction</span></div>`;
+    solar.appendChild(w);
+    return w;
+  });
+
+  scene.appendChild(solar);
+
+  // Title block at bottom
+  const bottom = document.createElement('div');
+  bottom.className = 'cs-bottom';
+  bottom.innerHTML = '<h2 class="cs-title">Coming Soon</h2><p class="cs-sub">More sections of the Liberator wheel are currently under development and will be available shortly.</p>';
+  scene.appendChild(bottom);
+
+  page.appendChild(scene);
+
+  // Kick off animations after the DOM has rendered
+  setTimeout(() => {
+    const sw = scene.offsetWidth  || 800;
+    const sh = scene.offsetHeight || 480;
+    const cx = sw / 2;
+    const cy = sh * 0.42;
+    const rx = Math.min(sw * 0.34, 265);
+    const ry = rx * 0.30;
+
+    // Position sun
+    sun.style.left = cx + 'px';
+    sun.style.top  = cy + 'px';
+
+    // Draw dashed orbit ellipse
+    orbitSVG.setAttribute('width',  (rx * 2 + 4).toString());
+    orbitSVG.setAttribute('height', (ry * 2 + 4).toString());
+    orbitSVG.style.left = cx + 'px';
+    orbitSVG.style.top  = cy + 'px';
+    const ell = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+    ell.setAttribute('cx', (rx + 2).toString());
+    ell.setAttribute('cy', (ry + 2).toString());
+    ell.setAttribute('rx', rx.toString());
+    ell.setAttribute('ry', ry.toString());
+    ell.setAttribute('fill',         'none');
+    ell.setAttribute('stroke',       'rgba(255,255,255,0.09)');
+    ell.setAttribute('stroke-width', '1');
+    ell.setAttribute('stroke-dasharray','6 10');
+    orbitSVG.appendChild(ell);
+
+    // Twinkling star canvas
+    canvas.width  = sw;
+    canvas.height = sh;
+    const ctx = canvas.getContext('2d');
+    const stars = Array.from({length:210}, () => ({
+      x: Math.random() * sw,
+      y: Math.random() * sh,
+      r: Math.random() * 1.5 + 0.2,
+      ph: Math.random() * Math.PI * 2,
+      spd: 0.5 + Math.random() * 1.1
+    }));
+
+    const drawStars = () => {
+      if (!page.isConnected) return;
+      const t = Date.now() / 1000;
+      ctx.clearRect(0, 0, sw, sh);
+      stars.forEach(s => {
+        const a = 0.22 + 0.62 * (0.5 + 0.5 * Math.sin(s.ph + t * s.spd));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${a.toFixed(2)})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    };
+    drawStars();
+
+    // Planet orbit animation
+    const animPlanets = () => {
+      if (!page.isConnected) return;
+      const t = Date.now() / 1000;
+      CS_PLANETS.forEach((p, i) => {
+        const ang  = p.off + t * p.spd;
+        const x    = cx + rx * Math.cos(ang);
+        const y    = cy + ry * Math.sin(ang);
+        // sinV: 1 = front/closest (bottom of ellipse), -1 = back/furthest (top)
+        const sinV = Math.sin(ang);
+        const sc   = 0.48 + 0.62 * (0.5 + 0.5 * sinV);   // 0.48 (far) to 1.10 (close)
+        const op   = (0.52 + 0.48 * (0.5 + 0.5 * sinV)).toFixed(2);
+        const zi   = sinV > 0 ? 8 : 3;                    // in front of or behind sun
+        const el   = planetEls[i];
+        el.style.left      = x + 'px';
+        el.style.top       = y + 'px';
+        el.style.transform = `translate(-50%,-50%) scale(${sc.toFixed(3)})`;
+        el.style.zIndex    = zi;
+        el.style.opacity   = op;
+      });
+      requestAnimationFrame(animPlanets);
+    };
+    animPlanets();
+
+  }, 80);
+
+  return page;
+}
+
+function goComingSoon() {
+  window.location.hash = '#/coming-soon';
+  showPage(buildComingSoonPage());
+}
+
 // Handle direct URL navigation
 function handleHash() {
   const hash = window.location.hash;
+  if (hash === '#/coming-soon') { goComingSoon(); return; }
   if (hash.startsWith('#/')) {
     const path = hash.slice(2);
     if (path.endsWith('/worksheet')) {
