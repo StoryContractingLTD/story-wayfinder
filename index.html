@@ -194,6 +194,10 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .nav-reset:hover{background:#d0dce8;color:#333}
 .nav-footer{text-align:center;padding:12px;background:linear-gradient(135deg,#004B86,#0061AD);border-radius:12px;margin-top:12px}
 .nav-footer p{color:rgba(255,255,255,.9);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.nav-plan-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;padding:13px 20px;border:none;border-radius:20px;background:linear-gradient(135deg,#1A3A5C,#0061AD);color:white;font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 6px 20px rgba(26,58,92,.28);transition:all .18s ease;position:relative;overflow:hidden}
+.nav-plan-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(26,58,92,.42)}
+.nav-plan-btn::before{content:'';position:absolute;top:-50%;left:-75%;width:50%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:skewX(-20deg);animation:navPlanShimmer 3s 1s ease-in-out infinite}
+@keyframes navPlanShimmer{0%{left:-75%}100%{left:150%}}
 
 /* Thread banner */
 .thread-banner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#004B86,#0061AD);border-radius:16px;padding:14px 22px;margin-bottom:24px;position:relative;overflow:hidden}
@@ -366,7 +370,8 @@ const SEGMENTS = [
     modelType:'flight-plan',
     bookPages:'192-194',
     noteTitle:'Feedback as a habit, not an event',
-    noteText:'The most powerful shift a leader can make is treating feedback as a continuous habit rather than a scheduled event. Catching someone doing something right, at the time, immediately, is far more effective than waiting for a formal review. The beacons matter, but it is the GPS signal between them that keeps people on course.'
+    noteText:'The most powerful shift a leader can make is treating feedback as a continuous habit rather than a scheduled event. Catching someone doing something right, at the time, immediately, is far more effective than waiting for a formal review. The beacons matter, but it is the GPS signal between them that keeps people on course.',
+    hasFlightPlanSheet: true
   },
 
   // ── Visioning (top-right, 0° to 90°, 4 segments) ──
@@ -434,7 +439,8 @@ const SEGMENTS = [
     modelTitle:'The Performance Navigator',
     modelDesc:'The Performance Navigator is a structured decision tool that helps leaders diagnose whether a performance issue is a skills gap (Can\'t Do) or an attitude issue (Won\'t Do). By working through a sequence of yes/no questions, it guides you to the right intervention rather than jumping to conclusions. Click through the navigator below to explore the process.',
     bullets:['Start by defining the specific behaviours you are seeing','Use the Acid Test to distinguish Can\'t Do from Won\'t Do','Follow the path to the right intervention, then act on it and follow through consistently'],
-    modelType:'navigator'
+    modelType:'navigator',
+    hasActionPlanner: true
   },
   {
     id:'assertive', label:'Be appropriately assertive',
@@ -458,6 +464,7 @@ const SEGMENTS = [
     bookPages:'188',
     noteTitle:'The greatest reward you have to give is yourself',
     noteText:'The most powerful thing a leader can offer is their genuine attention and honest recognition. Recognition costs nothing and yet means everything. The goal is not relentless positivity but genuine authenticity: naming what you see, both when it impresses and when it concerns you, and always from a place of positive regard.',
+    hasFeedbackPlanner: true,
     extraModels:[{
       modelTitle:'Catch Someone Doing Something Right',
       modelDesc:'Effective feedback is not just about correction. It is about actively looking for improvement, a step forward, something different, and naming it when you see it. Each step caught and reinforced encourages the next. The journey is continuous: true excellence is always a moving state, and the leader\'s role is to keep people progressing rather than praising them into a comfortable plateau.',
@@ -1191,6 +1198,23 @@ function buildNavigatorVisual() {
     } else if (node.type === 'outcome') {
       current.className = 'nav-current outcome';
       current.innerHTML = `<div class="nav-q-label">Recommended Action</div><div class="nav-outcome-text">${node.text}</div><div class="nav-outcome-note">${node.note}</div>`;
+      if (currentId !== 'end_livewith') {
+        const cantDoIds = ['end_redesign','end_train','end_monitor'];
+        const wontDoIds = ['end_feedback','end_penalties','end_remove','end_support','end_formal'];
+        const diagType = cantDoIds.includes(currentId) ? 'cant-do' : wontDoIds.includes(currentId) ? 'wont-do' : 'positive';
+        const planBtn = document.createElement('button');
+        planBtn.className = 'nav-plan-btn';
+        planBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Plan your action';
+        planBtn.addEventListener('click', () => {
+          document.dispatchEvent(new CustomEvent('liberatorNavOutcome', {
+            detail: { diagnosisType: diagType, action: node.text, note: node.note, outcomeId: currentId }
+          }));
+          const plannerEl = document.getElementById('nav-action-planner');
+          if (plannerEl) setTimeout(() => plannerEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+          playMINext();
+        });
+        current.appendChild(planBtn);
+      }
     }
 
     wrap.appendChild(current);
@@ -1217,7 +1241,32 @@ function buildNavigatorVisual() {
   }
 
   render();
-  return wrap;
+
+  const navOuter = document.createElement('div');
+  navOuter.appendChild(wrap);
+
+  // Scroll beckon toward the Action Planner below
+  const navBeckonStyle = document.createElement('style');
+  navBeckonStyle.textContent = `
+    @keyframes navBeckonBob { 0%,100%{transform:translateY(0);opacity:.45} 50%{transform:translateY(5px);opacity:.9} }
+    @keyframes navBeckonFade { from{opacity:0} to{opacity:1} }
+    .nav-beckon { display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px;animation:navBeckonFade 1.2s 1s ease both; }
+    .nav-beckon-text { font-size:11px;font-weight:600;color:#8fa0b0;letter-spacing:.12em;text-transform:uppercase; }
+    .nav-beckon-arrows { display:flex;flex-direction:column;align-items:center;gap:1px;animation:navBeckonBob 2.2s ease-in-out infinite; }
+  `;
+  navOuter.appendChild(navBeckonStyle);
+  const navBeckon = document.createElement('div');
+  navBeckon.className = 'nav-beckon';
+  navBeckon.innerHTML = `
+    <div class="nav-beckon-text">Turn your diagnosis into an action plan below</div>
+    <div class="nav-beckon-arrows">
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><polyline points="2,2 10,8 18,2" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/></svg>
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><polyline points="2,2 10,8 18,2" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/></svg>
+    </div>
+  `;
+  navOuter.appendChild(navBeckon);
+
+  return navOuter;
 }
 
 function buildConflictVisual() {
@@ -1425,6 +1474,34 @@ function buildCatchRightVisual() {
   });
   container.appendChild(journey);
   container.appendChild(panel);
+
+  // Scroll beckon: nudges people toward the Feedback Planner below
+  const beckonStyle = document.createElement('style');
+  beckonStyle.textContent = `
+    @keyframes ${uid}-beckon-bob { 0%,100%{transform:translateY(0);opacity:.45} 50%{transform:translateY(5px);opacity:.9} }
+    @keyframes ${uid}-beckon-fade { from{opacity:0} to{opacity:1} }
+    .${uid}-beckon { display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:28px;animation:${uid}-beckon-fade 1.2s 1.5s ease both; }
+    .${uid}-beckon-text { font-size:11px;font-weight:600;color:#8fa0b0;letter-spacing:.12em;text-transform:uppercase; }
+    .${uid}-beckon-arrows { display:flex;flex-direction:column;align-items:center;gap:1px;animation:${uid}-beckon-bob 2.2s ease-in-out infinite; }
+    .${uid}-beckon-arrows svg { display:block; }
+  `;
+  container.appendChild(beckonStyle);
+
+  const beckon = document.createElement('div');
+  beckon.className = `${uid}-beckon`;
+  beckon.innerHTML = `
+    <div class="${uid}-beckon-text">Plan your feedback below</div>
+    <div class="${uid}-beckon-arrows">
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="2,2 10,8 18,2" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+      </svg>
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="2,2 10,8 18,2" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+      </svg>
+    </div>
+  `;
+  container.appendChild(beckon);
+
   return container;
 }
 
@@ -2726,10 +2803,34 @@ function buildFlightPlanVisual() {
   }, 500);
 
   setTimeout(() => { wrap.style.opacity = '1'; }, 50);
+
+  // Scroll beckon toward the Flight Plan Sheet below
+  const fpBeckonStyle = document.createElement('style');
+  fpBeckonStyle.textContent = `
+    @keyframes fpBeckonBob { 0%,100%{transform:translateY(0);opacity:.45} 50%{transform:translateY(5px);opacity:.9} }
+    @keyframes fpBeckonFade { from{opacity:0} to{opacity:1} }
+    .fp-beckon { display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px;animation:fpBeckonFade 1.2s 2s ease both; }
+    .fp-beckon-text { font-size:11px;font-weight:600;color:#8fa0b0;letter-spacing:.12em;text-transform:uppercase; }
+    .fp-beckon-arrows { display:flex;flex-direction:column;align-items:center;gap:1px;animation:fpBeckonBob 2.2s ease-in-out infinite; }
+  `;
+  wrap.appendChild(fpBeckonStyle);
+  const fpBeckon = document.createElement('div');
+  fpBeckon.className = 'fp-beckon';
+  fpBeckon.innerHTML = `
+    <div class="fp-beckon-text">Chart your flight plan below</div>
+    <div class="fp-beckon-arrows">
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="2,2 10,8 18,2" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+      </svg>
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="2,2 10,8 18,2" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+      </svg>
+    </div>
+  `;
+  wrap.appendChild(fpBeckon);
+
   return wrap;
 }
-
-// SVG helper functions
 function createSVG(w, h) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -3021,12 +3122,15 @@ function buildDetailPage(seg, onBack) {
   hero.className = 'hero slide-up delay1';
   hero.style.background = qColour;
   const worksheetCallout = seg.hasWorksheet ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> This section includes an interactive Change Sheet below. Complete it and download as a PDF.</div>' : '';
+  const plannerCallout = seg.hasFeedbackPlanner ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> This section includes a Feedback Planner below. Build and download your feedback plan as a PDF.</div>' : '';
+  const flightPlanCallout = seg.hasFlightPlanSheet ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> This section includes a Flight Plan Sheet below. Map out a support journey and download it as a PDF.</div>' : '';
+  const actionPlannerCallout = seg.hasActionPlanner ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Run the Navigator above, then use the Action Planner below to turn your diagnosis into a committed plan.</div>' : '';
   hero.innerHTML = `
     <div class="hero-blob1"></div><div class="hero-blob2"></div>
     <p class="hero-eyebrow">${seg.quadrant}</p>
     <h1>${seg.label}</h1>
     <p>${seg.desc}</p>
-    ${worksheetCallout}
+    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}
   `;
 
   const modelCard = document.createElement('div');
@@ -3228,6 +3332,78 @@ function buildDetailPage(seg, onBack) {
         });
       }
     }, 100);
+  }
+
+  // Inline Action Planner (Performance Navigator)
+  if (seg.hasActionPlanner) {
+    const apDivider = document.createElement('div');
+    apDivider.className = 'ws-divider slide-up delay4';
+    apDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Action Planner</div><div class="ws-divider-line"></div>';
+    const apCard = document.createElement('div');
+    apCard.className = 'ws-card slide-up delay4';
+    apCard.innerHTML = '<h2>Action Planner</h2><p class="ws-subtitle">Use this planner after running the Performance Navigator above. Your diagnosis will carry forward automatically when you click "Plan your action" at the end of the Navigator, or you can fill it in yourself. Turn the diagnosis into a committed, time-bound plan you can download and act on.</p>';
+    const apWrap = document.createElement('div');
+    apWrap.style.marginTop = '18px';
+    apWrap.appendChild(buildActionPlanner());
+    apCard.appendChild(apWrap);
+    cont.appendChild(apDivider);
+    cont.appendChild(apCard);
+  }
+
+  // Inline Flight Plan Sheet
+  if (seg.hasFlightPlanSheet) {
+    const fpsDivider = document.createElement('div');
+    fpsDivider.className = 'ws-divider slide-up delay4';
+    fpsDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Flight Plan Sheet</div><div class="ws-divider-line"></div>';
+    const fpsCard = document.createElement('div');
+    fpsCard.className = 'ws-card slide-up delay4';
+    fpsCard.innerHTML = '<h2>Flight Plan Sheet</h2><p class="ws-subtitle">Use this sheet to map out a supported performance journey for a team member. Set the destination, plan your beacon checkpoints, and think through your GPS and alarm approach before you begin. Based on pages 192-194 of the Liberator book.</p>';
+    const fpsWrap = document.createElement('div');
+    fpsWrap.style.marginTop = '18px';
+    fpsWrap.appendChild(buildFlightPlanSheet());
+    fpsCard.appendChild(fpsWrap);
+    const fpsBook = document.createElement('div');
+    fpsBook.className = 'book-card slide-up delay4';
+    fpsBook.style.cssText = 'max-width:800px;margin:20px auto 0';
+    const fpsBookIcon = document.createElement('div');
+    fpsBookIcon.className = 'book-icon';
+    fpsBookIcon.innerHTML = `<div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+    const fpsBookInfo = document.createElement('div');
+    fpsBookInfo.className = 'book-info';
+    fpsBookInfo.innerHTML = '<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 192-194</div>';
+    fpsBook.appendChild(fpsBookIcon);
+    fpsBook.appendChild(fpsBookInfo);
+    cont.appendChild(fpsDivider);
+    cont.appendChild(fpsCard);
+    cont.appendChild(fpsBook);
+  }
+
+  // Inline Feedback Planner
+  if (seg.hasFeedbackPlanner) {
+    const fpDiv = document.createElement('div');
+    fpDiv.className = 'ws-divider slide-up delay4';
+    fpDiv.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Feedback Planner</div><div class="ws-divider-line"></div>';
+    const fpCard = document.createElement('div');
+    fpCard.className = 'ws-card slide-up delay4';
+    fpCard.innerHTML = '<h2>Feedback Planner</h2><p class="ws-subtitle">Use this planner to prepare and craft a piece of feedback before you deliver it. Work through the four steps to build a clear, well-structured feedback note you can download and keep. Based on pages 188 and 194 of the Liberator book.</p>';
+    const fpWrap = document.createElement('div');
+    fpWrap.style.marginTop = '18px';
+    fpWrap.appendChild(buildFeedbackPlanner());
+    fpCard.appendChild(fpWrap);
+    const fpBook = document.createElement('div');
+    fpBook.className = 'book-card slide-up delay4';
+    fpBook.style.cssText = 'max-width:800px;margin:20px auto 0';
+    const fpBookIcon = document.createElement('div');
+    fpBookIcon.className = 'book-icon';
+    fpBookIcon.innerHTML = `<div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+    const fpBookInfo = document.createElement('div');
+    fpBookInfo.className = 'book-info';
+    fpBookInfo.innerHTML = '<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 188, 194</div>';
+    fpBook.appendChild(fpBookIcon);
+    fpBook.appendChild(fpBookInfo);
+    cont.appendChild(fpDiv);
+    cont.appendChild(fpCard);
+    cont.appendChild(fpBook);
   }
 
   page.appendChild(buildHeader(headerBtnGroup));
@@ -3767,6 +3943,1127 @@ const WHEEL_SVG_STRING = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2
     <text transform="translate(931.24 466.83) rotate(76.57)" style="fill: #333; font-family: Montserrat-Bold, Montserrat; font-size: 36px; font-weight: 700;"><tspan x="0" y="0" style="letter-spacing: 0em;">P</tspan><tspan x="25.99" y="0" style="letter-spacing: 0em;">r</tspan><tspan x="41.18" y="0" style="letter-spacing: -.02em;">o</tspan><tspan x="64.22" y="0" style="letter-spacing: 0em;">vide </tspan><tspan x="154.4" y="0" style="letter-spacing: 0em;">c</tspan><tspan x="175.43" y="0">ontinued</tspan><tspan x="99.4" y="43.2">suppo</tspan><tspan x="216.5" y="43.2" style="letter-spacing: .02em;">r</tspan><tspan x="232.56" y="43.2">t</tspan></text>
   </g>
 </svg>`;
+
+// ── Action Planner (Performance Navigator) ──
+function buildActionPlanner() {
+  const uid = 'ap' + Math.random().toString(36).slice(2, 7);
+  let step = 1;
+  const TOTAL = 3;
+  const state = {
+    name: '', behaviour: '',
+    diagnosisType: null, recommendedAction: '', fromNavigator: false,
+    specificPlan: '', when: '', successLooks: '', reviewDate: ''
+  };
+
+  const DIAG = {
+    'cant-do': { label:"Can't Do", sub:'Skills or knowledge gap', color:'#009FA0', darkColor:'#007070' },
+    'wont-do': { label:"Won't Do", sub:'Attitude or motivation issue', color:'#fa6b02', darkColor:'#c04e00' },
+    'positive': { label:'Performance Improved', sub:'Recognition and reinforcement needed', color:'#0061AD', darkColor:'#004B86' }
+  };
+
+  const wrap = document.createElement('div');
+  wrap.id = 'nav-action-planner';
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
+    .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
+    .${uid}-pseg.done{background:#004B86}
+    .${uid}-pseg.active{background:#1A3A5C}
+    .${uid}-pgap{width:6px;flex:0 0 6px}
+    .${uid}-hd{margin-bottom:18px}
+    .${uid}-hnum{font-size:11px;font-weight:700;color:#8fa0b0;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#1A3A5C;line-height:1.2}
+    .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
+    .${uid}-lbl{font-size:12px;font-weight:600;color:#445566;margin-bottom:6px;margin-top:14px;letter-spacing:.04em;display:block}
+    .${uid}-inp{width:100%;border:2px solid #d4e3f0;border-radius:10px;padding:10px 14px;font-family:"Barlow",sans-serif;font-size:14px;color:#222;resize:vertical;transition:border-color .2s;outline:none;background:white;box-sizing:border-box}
+    .${uid}-inp:focus{border-color:#1A3A5C}
+    .${uid}-ta{min-height:86px;line-height:1.6}
+    .${uid}-hint{font-size:11.5px;color:#99aabb;margin-top:4px;font-style:italic;line-height:1.5}
+    .${uid}-from-nav{border-radius:12px;padding:13px 16px;margin-bottom:16px;animation:${uid}Fi .35s ease both}
+    .${uid}-from-nav-ey{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-bottom:5px}
+    .${uid}-from-nav-label{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:800;color:white;margin-bottom:4px}
+    .${uid}-from-nav-action{font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.55}
+    .${uid}-diag-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+    .${uid}-dc{border-radius:12px;padding:14px;cursor:pointer;border:2.5px solid transparent;transition:all .18s ease;position:relative}
+    .${uid}-dc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+    .${uid}-dc.sel{border-color:rgba(255,255,255,.85);box-shadow:0 8px 24px rgba(0,0,0,.28);transform:translateY(-2px)}
+    .${uid}-dc-label{font-weight:800;font-size:14px;color:white;margin-bottom:3px;font-family:"Barlow Condensed",sans-serif;letter-spacing:.02em;font-size:17px}
+    .${uid}-dc-sub{font-size:11.5px;color:rgba(255,255,255,.75);line-height:1.4}
+    .${uid}-rec-box{background:#EAF4FB;border-left:3px solid #1A3A5C;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:14px;font-size:13px;color:#1A3A5C;line-height:1.6}
+    .${uid}-rec-ey{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8fa0b0;margin-bottom:4px}
+    .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+    .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
+    .${uid}-ghost{background:#f0f5fa;color:#556677}
+    .${uid}-ghost:hover{background:#e0ecf5}
+    .${uid}-primary{background:#1A3A5C;color:white;box-shadow:0 4px 16px rgba(26,58,92,.22)}
+    .${uid}-primary:hover{background:#0061AD;transform:translateY(-1px)}
+    .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .${uid}-dl{background:linear-gradient(135deg,#1A3A5C,#0061AD);color:white;box-shadow:0 6px 20px rgba(26,58,92,.28);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,58,92,.4)}
+    .${uid}-preview{margin-top:22px;border-radius:14px;overflow:hidden;animation:${uid}Fi .35s ease both}
+    .${uid}-prevhd{padding:14px 18px}
+    .${uid}-prevey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px}
+    .${uid}-prevname{font-family:"Barlow Condensed",sans-serif;font-size:21px;font-weight:800;color:white;line-height:1.1}
+    .${uid}-prevbody{background:white;padding:14px 18px 12px}
+    .${uid}-prevrow{margin-bottom:10px}
+    .${uid}-prevrlbl{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#99aabb;margin-bottom:3px}
+    .${uid}-prevrval{font-size:13px;color:#222;line-height:1.6}
+    .${uid}-diag-badge{display:inline-flex;align-items:center;border-radius:6px;padding:4px 11px;font-size:12px;font-weight:700;color:white}
+    @keyframes ${uid}Fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  `;
+  wrap.appendChild(styleEl);
+
+  // Pre-fill listener from Navigator
+  const navHandler = (e) => {
+    state.diagnosisType = e.detail.diagnosisType;
+    state.recommendedAction = e.detail.action;
+    state.fromNavigator = true;
+    if (state.name.trim()) step = 2;
+    render();
+  };
+  document.addEventListener('liberatorNavOutcome', navHandler);
+
+  function diagInfo() { return DIAG[state.diagnosisType] || null; }
+
+  function buildProg() {
+    const prog = document.createElement('div'); prog.className = uid + '-prog';
+    for (let i = 1; i <= TOTAL; i++) {
+      const s = document.createElement('div'); s.className = uid + '-pseg';
+      if (i < step) s.classList.add('done'); else if (i === step) s.classList.add('active');
+      prog.appendChild(s);
+      if (i < TOTAL) { const g = document.createElement('div'); g.className = uid + '-pgap'; prog.appendChild(g); }
+    }
+    return prog;
+  }
+
+  function buildPreview() {
+    const di = diagInfo();
+    const hdColor = di ? di.color : '#1A3A5C';
+    const pr = document.createElement('div'); pr.className = uid + '-preview';
+    const hd = document.createElement('div'); hd.className = uid + '-prevhd'; hd.style.background = `linear-gradient(135deg,${di ? di.darkColor : '#004B86'},${hdColor})`;
+    hd.innerHTML = `<div class="${uid}-prevey">Action plan for</div><div class="${uid}-prevname">${state.name || 'Your team member'}</div>`;
+    pr.appendChild(hd);
+    const body = document.createElement('div'); body.className = uid + '-prevbody';
+    if (state.behaviour) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Observed behaviour</div><div class="${uid}-prevrval">${state.behaviour.substring(0,120)}${state.behaviour.length>120?'...':''}</div>`;
+      body.appendChild(r);
+    }
+    if (di && step >= 2) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Diagnosis</div><div class="${uid}-diag-badge" style="background:${di.color}">${di.label}</div>`;
+      body.appendChild(r);
+    }
+    if (state.specificPlan && step >= 2) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Action</div><div class="${uid}-prevrval">${state.specificPlan.substring(0,120)}${state.specificPlan.length>120?'...':''}</div>`;
+      body.appendChild(r);
+    }
+    if (state.reviewDate && step >= 3) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Review date</div><div class="${uid}-prevrval">${state.reviewDate}</div>`;
+      body.appendChild(r);
+    }
+    pr.appendChild(body);
+    return pr;
+  }
+
+  function render() {
+    [...wrap.children].forEach(c => { if (c !== styleEl) c.remove(); });
+    wrap.appendChild(buildProg());
+    const cont = document.createElement('div'); cont.style.animation = uid + 'Fi .3s ease both';
+    if (step === 1) s1(cont); else if (step === 2) s2(cont); else if (step === 3) s3(cont);
+    wrap.appendChild(cont);
+    if (state.name) wrap.appendChild(buildPreview());
+  }
+
+  function mkHd(num, title, sub) {
+    const el = document.createElement('div'); el.className = uid + '-hd';
+    el.innerHTML = `<div class="${uid}-hnum">Step ${num} of ${TOTAL}</div><div class="${uid}-htitle">${title}</div>${sub?'<div class="'+uid+'-hsub">'+sub+'</div>':''}`;
+    return el;
+  }
+
+  function mkInp(placeholder, val, rows, onInput) {
+    const el = rows ? document.createElement('textarea') : document.createElement('input');
+    el.className = uid + '-inp' + (rows ? ' ' + uid + '-ta' : '');
+    if (!rows) el.type = 'text';
+    el.placeholder = placeholder; el.value = val;
+    el.addEventListener('input', onInput);
+    return el;
+  }
+
+  function s1(c) {
+    c.appendChild(mkHd(1, 'Who and what?', 'Define the person and the specific behaviour you are seeing.'));
+    if (state.fromNavigator && state.diagnosisType) {
+      const di = diagInfo();
+      const banner = document.createElement('div'); banner.className = uid + '-from-nav'; banner.style.background = `linear-gradient(135deg,${di.darkColor},${di.color})`;
+      banner.innerHTML = `<div class="${uid}-from-nav-ey">Diagnosis from Navigator</div><div class="${uid}-from-nav-label">${di.label}: ${di.sub}</div><div class="${uid}-from-nav-action">${state.recommendedAction}</div>`;
+      c.appendChild(banner);
+    }
+    const ln = document.createElement('label'); ln.className = uid + '-lbl'; ln.textContent = "Team member's name"; c.appendChild(ln);
+    const iName = mkInp('e.g. Jamie, Sam...', state.name, 0, e => { state.name = e.target.value; nxt.disabled = !state.name.trim() || !state.behaviour.trim(); });
+    c.appendChild(iName);
+    const lb = document.createElement('label'); lb.className = uid + '-lbl'; lb.textContent = 'Specific behaviour observed'; c.appendChild(lb);
+    const hint = document.createElement('div'); hint.className = uid + '-hint'; hint.textContent = 'Describe what you are actually seeing or hearing. Stay at the outer layers of the Onion: behaviour, not character.'; c.appendChild(hint);
+    const iBeh = mkInp('e.g. Over the past three weeks I have noticed...', state.behaviour, 3, e => { state.behaviour = e.target.value; nxt.disabled = !state.name.trim() || !state.behaviour.trim(); });
+    c.appendChild(iBeh);
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    navRow.appendChild(document.createElement('span'));
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.textContent = 'Next: Diagnosis \u2192'; nxt.disabled = !state.name.trim() || !state.behaviour.trim();
+    nxt.addEventListener('click', () => { playMINext(); step = 2; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s2(c) {
+    c.appendChild(mkHd(2, 'Diagnosis and plan', state.fromNavigator ? 'Your Navigator diagnosis is shown below. Confirm it and write your specific plan.' : 'Select the diagnosis type, then write your plan.'));
+    const di = diagInfo();
+    if (state.fromNavigator && di) {
+      const banner = document.createElement('div'); banner.className = uid + '-from-nav'; banner.style.background = `linear-gradient(135deg,${di.darkColor},${di.color})`;
+      banner.innerHTML = `<div class="${uid}-from-nav-ey">Navigator diagnosis</div><div class="${uid}-from-nav-label">${di.label}</div><div class="${uid}-from-nav-action">${state.recommendedAction}</div>`;
+      c.appendChild(banner);
+    } else {
+      const ll = document.createElement('label'); ll.className = uid + '-lbl'; ll.textContent = 'What is your diagnosis?'; c.appendChild(ll);
+      const cards = document.createElement('div'); cards.className = uid + '-diag-cards';
+      [['cant-do', DIAG['cant-do']], ['wont-do', DIAG['wont-do']]].forEach(([id, info]) => {
+        const card = document.createElement('div'); card.className = uid + '-dc'; card.style.background = info.color;
+        if (state.diagnosisType === id) card.classList.add('sel');
+        card.innerHTML = `<div class="${uid}-dc-label">${info.label}</div><div class="${uid}-dc-sub">${info.sub}</div>`;
+        card.addEventListener('click', () => {
+          state.diagnosisType = id; playStrokesExpand();
+          cards.querySelectorAll('.' + uid + '-dc').forEach(el => el.classList.remove('sel'));
+          card.classList.add('sel');
+        });
+        cards.appendChild(card);
+      });
+      c.appendChild(cards);
+      const lrec = document.createElement('label'); lrec.className = uid + '-lbl'; lrec.textContent = 'Recommended approach (from Navigator or your own judgement)'; c.appendChild(lrec);
+      const iRec = mkInp('What does the Navigator recommend, or what do you judge the right approach to be?', state.recommendedAction, 2, e => { state.recommendedAction = e.target.value; });
+      c.appendChild(iRec);
+    }
+    const lsp = document.createElement('label'); lsp.className = uid + '-lbl'; lsp.textContent = 'Your specific plan: what exactly will you do?'; c.appendChild(lsp);
+    const iSp = mkInp(di ? di.label + ': ' + state.recommendedAction.substring(0, 60) + '...' : 'Describe the specific action you will take...', state.specificPlan, 3, e => { state.specificPlan = e.target.value; nxt.disabled = !state.specificPlan.trim(); });
+    c.appendChild(iSp);
+    const lw = document.createElement('label'); lw.className = uid + '-lbl'; lw.textContent = 'When will you do this?'; c.appendChild(lw);
+    const iW = mkInp('e.g. This week, before our 1:1 on Thursday...', state.when, 0, e => { state.when = e.target.value; });
+    c.appendChild(iW);
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost'; back.innerHTML = '\u2190 Back';
+    back.addEventListener('click', () => { playMIBack(); step = 1; render(); }); navRow.appendChild(back);
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.textContent = 'Next: Follow-through \u2192'; nxt.disabled = !state.specificPlan.trim();
+    nxt.addEventListener('click', () => { playMINext(); step = 3; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s3(c) {
+    c.appendChild(mkHd(3, 'Follow-through', 'How will you know it is working, and when will you check in?'));
+    const lsl = document.createElement('label'); lsl.className = uid + '-lbl'; lsl.textContent = 'What will improvement look like? How will you know it is working?'; c.appendChild(lsl);
+    const iSl = mkInp('Describe the specific observable changes you expect to see...', state.successLooks, 3, e => { state.successLooks = e.target.value; }); c.appendChild(iSl);
+    const lrd = document.createElement('label'); lrd.className = uid + '-lbl'; lrd.textContent = 'Review date: when will you formally check in on progress?'; c.appendChild(lrd);
+    const iRd = mkInp('e.g. Two weeks from now, 10 June, our next 1:1...', state.reviewDate, 0, e => { state.reviewDate = e.target.value; }); c.appendChild(iRd);
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const leftBtns = document.createElement('div'); leftBtns.className = uid + '-navl';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost'; back.innerHTML = '\u2190 Back';
+    back.addEventListener('click', () => { playMIBack(); step = 2; render(); });
+    const restart = document.createElement('button'); restart.className = uid + '-btn ' + uid + '-ghost'; restart.innerHTML = '\u21BA Start again';
+    restart.addEventListener('click', () => {
+      playMIBack();
+      Object.assign(state, { name:'', behaviour:'', diagnosisType:null, recommendedAction:'', fromNavigator:false, specificPlan:'', when:'', successLooks:'', reviewDate:'' });
+      step = 1; render();
+    });
+    leftBtns.appendChild(back); leftBtns.appendChild(restart);
+    const dlBtn = document.createElement('button'); dlBtn.className = uid + '-btn ' + uid + '-dl';
+    dlBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download Action Plan';
+    dlBtn.addEventListener('click', () => { playMIDownload(); downloadActionPlannerPDF(state); });
+    navRow.appendChild(leftBtns); navRow.appendChild(dlBtn); c.appendChild(navRow);
+  }
+
+  render();
+  return wrap;
+}
+
+function downloadActionPlannerPDF(state) {
+  try {
+    const W = 595.28, H = 841.89, M = 50;
+    let objCount = 0; const objects = [];
+    function addObj(data) { objCount++; objects.push({ id: objCount, data }); return objCount; }
+    function escPDF(str) { return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str) {
+      if (!str) return '';
+      return String(str).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2013|\u2014/g,'-').replace(/\u2026/g,'...').replace(/[^\x00-\x7F]/g,'');
+    }
+    function wrapText(text, maxChars) {
+      if (!text) return [''];
+      const words = sanitize(text).split(/\s+/); const lines = []; let line = '';
+      words.forEach(w => { if ((line+' '+w).trim().length > maxChars) { lines.push(line.trim()); line = w; } else { line = (line+' '+w).trim(); } });
+      if (line) lines.push(line.trim());
+      return lines.length ? lines : [''];
+    }
+    function hexRGB(hex) {
+      if (!hex||hex[0]!=='#') return '0.10 0.23 0.36';
+      return (parseInt(hex.slice(1,3),16)/255).toFixed(2)+' '+(parseInt(hex.slice(3,5),16)/255).toFixed(2)+' '+(parseInt(hex.slice(5,7),16)/255).toFixed(2);
+    }
+    const DIAG = {
+      'cant-do':{ label:"Can't Do", sub:'Skills or knowledge gap', color:'#009FA0' },
+      'wont-do':{ label:"Won't Do", sub:'Attitude or motivation issue', color:'#fa6b02' },
+      'positive':{ label:'Performance Improved', sub:'Recognition needed', color:'#0061AD' }
+    };
+    const di = state.diagnosisType ? DIAG[state.diagnosisType] : null;
+    const diagColor = di ? hexRGB(di.color) : '0.10 0.23 0.36';
+    const navy = '0.10 0.23 0.36'; const blue = '0.00 0.38 0.68';
+    const white = '1 1 1'; const grey = '0.45 0.45 0.45'; const light = '0.93 0.96 0.99';
+    const lh = 15;
+    let s = ''; let y = H - M;
+
+    // Header
+    s += `${navy} rg\n${M} ${H-M-48} ${W-2*M} 48 re f\n${white} rg\n`;
+    s += `BT /F1 15 Tf ${M+12} ${H-M-30} Td (${escPDF('Story Liberator - Action Planner')}) Tj ET\n`;
+    s += `BT /F2 8 Tf ${W-M-178} ${H-M-30} Td (${escPDF('Performance Navigator | Liberator Programme')}) Tj ET\n`;
+    s += `${diagColor} rg\n${M} ${H-M-58} ${W-2*M} 10 re f\n`;
+    y = H - M - 76;
+
+    // Name
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('ACTION PLAN FOR')}) Tj ET\n`; y -= 7;
+    s += `${light} rg\n${M} ${y-36} ${W-2*M} 36 re f\n${navy} rg\n`;
+    s += `BT /F1 15 Tf ${M+10} ${y-23} Td (${escPDF(sanitize(state.name)||'(No name given)')}) Tj ET\n`; y -= 50;
+
+    // Behaviour
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('OBSERVED BEHAVIOUR')}) Tj ET\n`; y -= 7;
+    const bl = wrapText(state.behaviour||'(Not recorded)', 80); const bh = Math.max(44, bl.length*lh+18);
+    s += `${light} rg\n${M} ${y-bh} ${W-2*M} ${bh} re f\n0.2 0.2 0.2 rg\n`;
+    let by2 = y-14; bl.forEach(l => { s += `BT /F2 10 Tf ${M+10} ${by2} Td (${escPDF(l)}) Tj ET\n`; by2-=lh; }); y -= bh+14;
+
+    // Diagnosis
+    if (di) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('DIAGNOSIS')}) Tj ET\n`; y -= 7;
+      s += `${diagColor} rg\n${M} ${y-32} 220 32 re f\n${white} rg\n`;
+      s += `BT /F1 12 Tf ${M+10} ${y-20} Td (${escPDF(di.label)}) Tj ET\n`;
+      s += `${grey} rg\nBT /F2 9 Tf ${M+236} ${y-20} Td (${escPDF(di.sub)}) Tj ET\n`;
+      y -= 46;
+    }
+
+    // Recommended approach
+    if (state.recommendedAction) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('RECOMMENDED APPROACH')}) Tj ET\n`; y -= 7;
+      const rl = wrapText(state.recommendedAction, 80); const rh = Math.max(36, rl.length*lh+18);
+      s += `${light} rg\n${M} ${y-rh} ${W-2*M} ${rh} re f\n`;
+      s += `${diagColor} rg\n${M} ${y-rh} 5 ${rh} re f\n0.2 0.2 0.2 rg\n`;
+      let ry = y-14; rl.forEach(l => { s += `BT /F2 10 Tf ${M+13} ${ry} Td (${escPDF(l)}) Tj ET\n`; ry-=lh; }); y -= rh+14;
+    }
+
+    // Specific plan
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('YOUR SPECIFIC PLAN')}) Tj ET\n`; y -= 7;
+    const pl = wrapText(state.specificPlan||'(Not recorded)', 80); const ph = Math.max(52, pl.length*lh+20);
+    s += `${navy} rg\n${M} ${y-ph} ${W-2*M} ${ph} re f\n${white} rg\n`;
+    let py = y-16; pl.forEach(l => { s += `BT /F2 11 Tf ${M+12} ${py} Td (${escPDF(l)}) Tj ET\n`; py-=lh+1; }); y -= ph+14;
+
+    // When + review in two columns
+    const colW = (W-2*M-10)/2;
+    if (state.when || state.reviewDate) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('WHEN')}) Tj ET\n`;
+      s += `BT /F1 10 Tf ${M+colW+10} ${y} Td (${escPDF('REVIEW DATE')}) Tj ET\n`; y -= 7;
+      s += `${light} rg\n${M} ${y-30} ${colW} 30 re f\n${M+colW+10} ${y-30} ${colW} 30 re f\n0.2 0.2 0.2 rg\n`;
+      if (state.when) s += `BT /F2 10 Tf ${M+10} ${y-19} Td (${escPDF(sanitize(state.when).substring(0,42))}) Tj ET\n`;
+      if (state.reviewDate) s += `BT /F2 10 Tf ${M+colW+20} ${y-19} Td (${escPDF(sanitize(state.reviewDate).substring(0,42))}) Tj ET\n`;
+      y -= 44;
+    }
+
+    // Success
+    if (state.successLooks) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('WHAT IMPROVEMENT LOOKS LIKE')}) Tj ET\n`; y -= 7;
+      const sl = wrapText(state.successLooks, 80); const sh = Math.max(36, sl.length*lh+18);
+      s += `${light} rg\n${M} ${y-sh} ${W-2*M} ${sh} re f\n`;
+      s += `${blue} rg\n${M} ${y-sh} 5 ${sh} re f\n0.2 0.2 0.2 rg\n`;
+      let sy = y-14; sl.forEach(l => { s += `BT /F2 10 Tf ${M+13} ${sy} Td (${escPDF(l)}) Tj ET\n`; sy-=lh; });
+    }
+
+    s += `${grey} rg\nBT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Action Planner - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId   = addObj('');
+    const font1Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const streamBytes = new TextEncoder().encode(s);
+    const streamId  = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${s}endstream`);
+    const pageId    = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R >> >> >>`);
+    objects[1].data = `<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>`;
+
+    let pdf = '%PDF-1.4\n'; const offsets = [];
+    objects.forEach(obj => { offsets.push(pdf.length); pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`; });
+    const xo = pdf.length;
+    pdf += `xref\n0 ${objCount+1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10,'0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount+1} /Root ${catalogId} 0 R >>\nstartxref\n${xo}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type:'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = 'Action-Plan-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) { console.error('PDF error', e); }
+}
+
+// ── Flight Plan Sheet ──
+function buildFlightPlanSheet() {
+  const uid = 'fps' + Math.random().toString(36).slice(2, 7);
+  let step = 1;
+  const TOTAL = 3;
+  const state = {
+    name: '', destination: '', timeline: '',
+    beacons: [{ date: '', notes: '' }, { date: '', notes: '' }, { date: '', notes: '' }],
+    gps: '', alarm: '', correction: ''
+  };
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
+    .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
+    .${uid}-pseg.done{background:#004B86}
+    .${uid}-pseg.active{background:#0061AD}
+    .${uid}-pgap{width:6px;flex:0 0 6px}
+
+    .${uid}-hd{margin-bottom:18px}
+    .${uid}-hnum{font-size:11px;font-weight:700;color:#8fa0b0;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#004B86;line-height:1.2}
+    .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
+
+    .${uid}-lbl{font-size:12px;font-weight:600;color:#445566;margin-bottom:6px;margin-top:14px;letter-spacing:.04em;display:block}
+    .${uid}-inp{width:100%;border:2px solid #d4e3f0;border-radius:10px;padding:10px 14px;font-family:"Barlow",sans-serif;font-size:14px;color:#222;resize:vertical;transition:border-color .2s;outline:none;background:white;box-sizing:border-box}
+    .${uid}-inp:focus{border-color:#0061AD}
+    .${uid}-ta{min-height:80px;line-height:1.6}
+    .${uid}-hint{font-size:11.5px;color:#99aabb;margin-top:4px;font-style:italic;line-height:1.5}
+
+    .${uid}-beacon-row{display:grid;grid-template-columns:160px 1fr;gap:10px;align-items:start;padding:13px 14px;border-radius:12px;background:#EAF4FB;margin-bottom:8px;border-left:3px solid #0061AD;position:relative}
+    .${uid}-beacon-num{position:absolute;top:-10px;left:12px;background:#0061AD;color:white;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:2px 10px;border-radius:20px}
+    .${uid}-beacon-inner{padding-top:8px}
+
+    .${uid}-icon-row{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:12px;margin-bottom:10px;background:#EAF4FB}
+    .${uid}-icon-box{flex:0 0 36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+    .${uid}-icon-content{flex:1}
+    .${uid}-icon-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+    .${uid}-icon-hint{font-size:11.5px;color:#667788;font-style:italic;line-height:1.5;margin-bottom:8px}
+
+    .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+    .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
+    .${uid}-ghost{background:#f0f5fa;color:#556677}
+    .${uid}-ghost:hover{background:#e0ecf5}
+    .${uid}-primary{background:#004B86;color:white;box-shadow:0 4px 16px rgba(0,75,134,.22)}
+    .${uid}-primary:hover{background:#0061AD;transform:translateY(-1px)}
+    .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .${uid}-dl{background:linear-gradient(135deg,#004B86,#0061AD);color:white;box-shadow:0 6px 20px rgba(0,97,173,.28);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,97,173,.4)}
+
+    .${uid}-preview{margin-top:22px;border-radius:14px;overflow:hidden;animation:${uid}Fi .35s ease both}
+    .${uid}-prevhd{padding:14px 18px;background:linear-gradient(135deg,#004B86,#0061AD)}
+    .${uid}-prevey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px}
+    .${uid}-prevname{font-family:"Barlow Condensed",sans-serif;font-size:21px;font-weight:800;color:white;line-height:1.1}
+    .${uid}-prevdest{font-size:12px;color:rgba(255,255,255,.75);margin-top:5px;line-height:1.5}
+    .${uid}-prevbody{background:white;padding:14px 18px 12px}
+    .${uid}-prevrow{margin-bottom:10px}
+    .${uid}-prevrlbl{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#99aabb;margin-bottom:3px;display:flex;align-items:center;gap:6px}
+    .${uid}-prevrval{font-size:13px;color:#222;line-height:1.6}
+    .${uid}-beacon-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+    .${uid}-bchip{background:#EAF4FB;border:1.5px solid #0061AD;border-radius:6px;padding:4px 10px;font-size:11.5px;color:#004B86;font-weight:600}
+    .${uid}-gps-tag{display:inline-flex;align-items:center;gap:5px;background:#EAF4FB;border-radius:6px;padding:4px 10px;font-size:12px;color:#004B86}
+    .${uid}-alarm-tag{display:inline-flex;align-items:center;gap:5px;background:#fff0f2;border-radius:6px;padding:4px 10px;font-size:12px;color:#D04862}
+
+    @keyframes ${uid}Fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  `;
+  wrap.appendChild(styleEl);
+
+  function buildProg() {
+    const prog = document.createElement('div');
+    prog.className = uid + '-prog';
+    for (let i = 1; i <= TOTAL; i++) {
+      const seg = document.createElement('div');
+      seg.className = uid + '-pseg';
+      if (i < step) seg.classList.add('done');
+      else if (i === step) seg.classList.add('active');
+      prog.appendChild(seg);
+      if (i < TOTAL) { const g = document.createElement('div'); g.className = uid + '-pgap'; prog.appendChild(g); }
+    }
+    return prog;
+  }
+
+  function buildPreview() {
+    const pr = document.createElement('div');
+    pr.className = uid + '-preview';
+    const hd = document.createElement('div');
+    hd.className = uid + '-prevhd';
+    hd.innerHTML = `<div class="${uid}-prevey">Flight plan for</div><div class="${uid}-prevname">${state.name || 'Your team member'}</div>${state.destination ? '<div class="'+uid+'-prevdest">Destination: ' + state.destination + '</div>' : ''}`;
+    pr.appendChild(hd);
+    const body = document.createElement('div');
+    body.className = uid + '-prevbody';
+
+    if (state.timeline) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Timeline</div><div class="${uid}-prevrval">${state.timeline}</div>`;
+      body.appendChild(r);
+    }
+
+    const filledBeacons = state.beacons.filter(b => b.date || b.notes);
+    if (filledBeacons.length) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl"><svg width="11" height="14" viewBox="0 0 14 18" fill="#0061AD"><path d="M7,0C3.13,0,0,3.13,0,7C0,12.25,7,18,7,18C7,18,14,12.25,14,7C14,3.13,10.87,0,7,0Z"/><circle cx="7" cy="7" r="2.5" fill="white"/></svg>Beacons</div><div class="${uid}-beacon-chips">` +
+        filledBeacons.map((b, i) => `<div class="${uid}-bchip">Beacon ${state.beacons.indexOf(b)+1}${b.date ? ': ' + b.date : ''}</div>`).join('') + '</div>';
+      body.appendChild(r);
+    }
+
+    if (state.gps && step >= 3) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl"><svg width="14" height="10" viewBox="0 0 20 14" fill="none"><path d="M0,7L4,1L8,13L12,1L16,7L20,7" stroke="#0061AD" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>GPS</div><div class="${uid}-gps-tag">${state.gps.substring(0, 80)}${state.gps.length > 80 ? '...' : ''}</div>`;
+      body.appendChild(r);
+    }
+    if (state.alarm && step >= 3) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="rgba(208,72,98,.15)" stroke="#D04862" stroke-width="1.8"/><circle cx="8" cy="8" r="3" fill="#D04862"/></svg>Alarm trigger</div><div class="${uid}-alarm-tag">${state.alarm.substring(0, 80)}${state.alarm.length > 80 ? '...' : ''}</div>`;
+      body.appendChild(r);
+    }
+
+    pr.appendChild(body);
+    return pr;
+  }
+
+  function render() {
+    [...wrap.children].forEach(c => { if (c !== styleEl) c.remove(); });
+    wrap.appendChild(buildProg());
+    const cont = document.createElement('div');
+    cont.style.animation = uid + 'Fi .3s ease both';
+    if (step === 1) s1(cont);
+    else if (step === 2) s2(cont);
+    else if (step === 3) s3(cont);
+    wrap.appendChild(cont);
+    if (step >= 1 && state.name) wrap.appendChild(buildPreview());
+  }
+
+  function mkHd(num, title, sub) {
+    const el = document.createElement('div'); el.className = uid + '-hd';
+    el.innerHTML = `<div class="${uid}-hnum">Step ${num} of ${TOTAL}</div><div class="${uid}-htitle">${title}</div>${sub ? '<div class="'+uid+'-hsub">'+sub+'</div>' : ''}`;
+    return el;
+  }
+
+  function mkInp(placeholder, val, rows, onInput) {
+    const el = rows ? document.createElement('textarea') : document.createElement('input');
+    el.className = uid + '-inp' + (rows ? ' ' + uid + '-ta' : '');
+    if (!rows) el.type = 'text';
+    el.placeholder = placeholder;
+    el.value = val;
+    el.addEventListener('input', onInput);
+    return el;
+  }
+
+  function s1(c) {
+    c.appendChild(mkHd(1, 'Set the destination', 'Who is this for, and what are they working toward?'));
+
+    const ln = document.createElement('label'); ln.className = uid + '-lbl'; ln.textContent = "Team member's name"; c.appendChild(ln);
+    const iName = mkInp('e.g. Jamie, Sam...', state.name, 0, e => { state.name = e.target.value; nxt.disabled = !state.name.trim(); });
+    c.appendChild(iName);
+
+    const ld = document.createElement('label'); ld.className = uid + '-lbl'; ld.textContent = 'Destination: what does success look like?'; c.appendChild(ld);
+    const iDest = mkInp('Describe the goal, standard or outcome they are working toward...', state.destination, 3, e => { state.destination = e.target.value; });
+    c.appendChild(iDest);
+    const hint1 = document.createElement('div'); hint1.className = uid + '-hint';
+    hint1.textContent = 'Be specific: a clear destination makes every other navigation decision easier.'; c.appendChild(hint1);
+
+    const lt = document.createElement('label'); lt.className = uid + '-lbl'; lt.textContent = 'Timeline (optional)'; c.appendChild(lt);
+    const iTime = mkInp('e.g. End of Q2, within 3 months...', state.timeline, 0, e => { state.timeline = e.target.value; });
+    c.appendChild(iTime);
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const spacer = document.createElement('span'); navRow.appendChild(spacer);
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.textContent = 'Next: Beacons \u2192'; nxt.disabled = !state.name.trim();
+    nxt.addEventListener('click', () => { playMINext(); step = 2; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s2(c) {
+    c.appendChild(mkHd(2, 'Plan your beacons', 'Beacons are your formal review checkpoints: the moments you stop, assess progress, and re-route if needed. Set up to three.'));
+
+    state.beacons.forEach((beacon, i) => {
+      const row = document.createElement('div'); row.className = uid + '-beacon-row';
+      const num = document.createElement('div'); num.className = uid + '-beacon-num'; num.textContent = 'Beacon ' + (i + 1);
+      row.appendChild(num);
+      const inner = document.createElement('div'); inner.className = uid + '-beacon-inner';
+      const ld = document.createElement('label'); ld.className = uid + '-lbl'; ld.style.marginTop = '0'; ld.textContent = 'Date or timeframe';
+      const iDate = mkInp('e.g. Week 4, 15 May...', beacon.date, 0, e => { state.beacons[i].date = e.target.value; });
+      inner.appendChild(ld); inner.appendChild(iDate);
+      const ln = document.createElement('label'); ln.className = uid + '-lbl'; ln.textContent = 'What will you review at this beacon? (optional)';
+      const iNotes = mkInp('Progress against the destination, any re-routing needed...', beacon.notes, 2, e => { state.beacons[i].notes = e.target.value; });
+      inner.appendChild(ln); inner.appendChild(iNotes);
+      row.appendChild(inner); c.appendChild(row);
+    });
+
+    const hint = document.createElement('div'); hint.className = uid + '-hint';
+    hint.textContent = 'Beacons do not change the destination. They are checkpoints, not endpoints.'; c.appendChild(hint);
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back'; back.addEventListener('click', () => { playMIBack(); step = 1; render(); });
+    navRow.appendChild(back);
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.textContent = 'Next: Navigation plan \u2192';
+    nxt.addEventListener('click', () => { playMINext(); step = 3; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s3(c) {
+    c.appendChild(mkHd(3, 'Your navigation plan', 'How will you keep the journey on course between beacons?'));
+
+    const gpsRow = document.createElement('div'); gpsRow.className = uid + '-icon-row';
+    const gpsIcon = document.createElement('div'); gpsIcon.className = uid + '-icon-box';
+    gpsIcon.style.background = '#EAF4FB';
+    gpsIcon.innerHTML = '<svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0,7L4,1L8,13L12,1L16,7L20,7" stroke="#0061AD" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const gpsContent = document.createElement('div'); gpsContent.className = uid + '-icon-content';
+    const gpsLabel = document.createElement('div'); gpsLabel.className = uid + '-icon-label'; gpsLabel.style.color = '#0061AD'; gpsLabel.textContent = 'GPS Signal';
+    const gpsHint = document.createElement('div'); gpsHint.className = uid + '-icon-hint'; gpsHint.textContent = 'What will you look for to catch them doing something right between beacons? What does being on course look like day to day?';
+    const gpsInp = mkInp('e.g. I will watch for occasions when they take initiative without prompting...', state.gps, 3, e => { state.gps = e.target.value; });
+    gpsContent.appendChild(gpsLabel); gpsContent.appendChild(gpsHint); gpsContent.appendChild(gpsInp);
+    gpsRow.appendChild(gpsIcon); gpsRow.appendChild(gpsContent); c.appendChild(gpsRow);
+
+    const alarmRow = document.createElement('div'); alarmRow.className = uid + '-icon-row';
+    alarmRow.style.background = '#fff8f9';
+    const alarmIcon = document.createElement('div'); alarmIcon.className = uid + '-icon-box';
+    alarmIcon.style.background = '#fff0f2';
+    alarmIcon.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="rgba(208,72,98,.15)" stroke="#D04862" stroke-width="1.8"/><circle cx="8" cy="8" r="3" fill="#D04862"/></svg>';
+    const alarmContent = document.createElement('div'); alarmContent.className = uid + '-icon-content';
+    const alarmLabel = document.createElement('div'); alarmLabel.className = uid + '-icon-label'; alarmLabel.style.color = '#D04862'; alarmLabel.textContent = 'Alarm Trigger';
+    const alarmHint = document.createElement('div'); alarmHint.className = uid + '-icon-hint'; alarmHint.textContent = 'What would off course look like for this person? What is your early warning sign that something has shifted?';
+    const alarmInp = mkInp('e.g. Missing agreed deadlines, withdrawal from team conversations...', state.alarm, 3, e => { state.alarm = e.target.value; });
+    alarmContent.appendChild(alarmLabel); alarmContent.appendChild(alarmHint); alarmContent.appendChild(alarmInp);
+    alarmRow.appendChild(alarmIcon); alarmRow.appendChild(alarmContent); c.appendChild(alarmRow);
+
+    const corrRow = document.createElement('div'); corrRow.className = uid + '-icon-row';
+    const corrIcon = document.createElement('div'); corrIcon.className = uid + '-icon-box';
+    corrIcon.style.background = '#EAF4FB';
+    corrIcon.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A3A5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.64"/></svg>';
+    const corrContent = document.createElement('div'); corrContent.className = uid + '-icon-content';
+    const corrLabel = document.createElement('div'); corrLabel.className = uid + '-icon-label'; corrLabel.style.color = '#1A3A5C'; corrLabel.textContent = 'Course Correction';
+    const corrHint = document.createElement('div'); corrHint.className = uid + '-icon-hint'; corrHint.textContent = 'If the alarm triggers, what is your immediate response? How will you bring them back on track without waiting for the next beacon?';
+    const corrInp = mkInp('e.g. Have a direct conversation within 48 hours, focused on the specific behaviour...', state.correction, 3, e => { state.correction = e.target.value; });
+    corrContent.appendChild(corrLabel); corrContent.appendChild(corrHint); corrContent.appendChild(corrInp);
+    corrRow.appendChild(corrIcon); corrRow.appendChild(corrContent); c.appendChild(corrRow);
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const leftBtns = document.createElement('div'); leftBtns.className = uid + '-navl';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back'; back.addEventListener('click', () => { playMIBack(); step = 2; render(); });
+    const restart = document.createElement('button'); restart.className = uid + '-btn ' + uid + '-ghost';
+    restart.innerHTML = '\u21BA Start again'; restart.addEventListener('click', () => {
+      playMIBack();
+      state.name = ''; state.destination = ''; state.timeline = '';
+      state.beacons = [{ date: '', notes: '' }, { date: '', notes: '' }, { date: '', notes: '' }];
+      state.gps = ''; state.alarm = ''; state.correction = '';
+      step = 1; render();
+    });
+    leftBtns.appendChild(back); leftBtns.appendChild(restart);
+    const dlBtn = document.createElement('button'); dlBtn.className = uid + '-btn ' + uid + '-dl';
+    dlBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download Flight Plan';
+    dlBtn.addEventListener('click', () => { playMIDownload(); downloadFlightPlanPDF(state); });
+    navRow.appendChild(leftBtns); navRow.appendChild(dlBtn); c.appendChild(navRow);
+  }
+
+  render();
+  return wrap;
+}
+
+function downloadFlightPlanPDF(state) {
+  try {
+    const W = 595.28, H = 841.89, M = 50;
+    let objCount = 0;
+    const objects = [];
+    function addObj(data) { objCount++; objects.push({ id: objCount, data }); return objCount; }
+    function escPDF(str) { return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str) {
+      if (!str) return '';
+      return String(str).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2013|\u2014/g,'-').replace(/\u2026/g,'...').replace(/[^\x00-\x7F]/g,'');
+    }
+    function wrapText(text, maxChars) {
+      if (!text) return [''];
+      const words = sanitize(text).split(/\s+/); const lines = []; let line = '';
+      words.forEach(w => { if ((line+' '+w).trim().length > maxChars) { lines.push(line.trim()); line = w; } else { line = (line+' '+w).trim(); } });
+      if (line) lines.push(line.trim());
+      return lines.length ? lines : [''];
+    }
+
+    const navy  = '0.00 0.22 0.39';
+    const blue  = '0.00 0.38 0.68';
+    const red   = '0.82 0.28 0.38';
+    const white = '1 1 1';
+    const grey  = '0.45 0.45 0.45';
+    const light = '0.93 0.96 0.99';
+    const lh = 15;
+    let s = ''; let y = H - M;
+
+    // Header bar
+    s += `${navy} rg\n${M} ${H-M-48} ${W-2*M} 48 re f\n${white} rg\n`;
+    s += `BT /F1 16 Tf ${M+12} ${H-M-30} Td (${escPDF('Story Liberator - Flight Plan Sheet')}) Tj ET\n`;
+    s += `BT /F2 8 Tf ${W-M-168} ${H-M-30} Td (${escPDF('Liberator Programme | p.192-194')}) Tj ET\n`;
+    // Blue accent strip
+    s += `${blue} rg\n${M} ${H-M-58} ${W-2*M} 10 re f\n`;
+    y = H - M - 76;
+
+    // Team member + destination block
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('FLIGHT PLAN FOR')}) Tj ET\n`; y -= 7;
+    s += `${light} rg\n${M} ${y-36} ${W-2*M} 36 re f\n${navy} rg\n`;
+    s += `BT /F1 15 Tf ${M+10} ${y-23} Td (${escPDF(sanitize(state.name) || '(No name given)')}) Tj ET\n`; y -= 50;
+
+    if (state.destination) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('DESTINATION')}) Tj ET\n`; y -= 7;
+      const dl = wrapText(state.destination, 80); const dh = Math.max(36, dl.length*lh+18);
+      s += `${navy} rg\n${M} ${y-dh} ${W-2*M} ${dh} re f\n${white} rg\n`;
+      let dy = y-15; dl.forEach(l => { s += `BT /F2 11 Tf ${M+10} ${dy} Td (${escPDF(l)}) Tj ET\n`; dy-=lh; }); y -= dh+14;
+    }
+
+    if (state.timeline) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('TIMELINE')}) Tj ET\n`; y -= 7;
+      s += `${light} rg\n${M} ${y-28} ${W-2*M} 28 re f\n0.2 0.2 0.2 rg\n`;
+      s += `BT /F2 10 Tf ${M+10} ${y-18} Td (${escPDF(sanitize(state.timeline))}) Tj ET\n`; y -= 42;
+    }
+
+    // Beacons
+    const filledBeacons = state.beacons.filter(b => b.date || b.notes);
+    if (filledBeacons.length) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('BEACONS: FORMAL REVIEW CHECKPOINTS')}) Tj ET\n`; y -= 8;
+      const bColW = (W - 2*M - (filledBeacons.length-1)*8) / filledBeacons.length;
+      let bx = M;
+      filledBeacons.forEach((b, i) => {
+        const idx = state.beacons.indexOf(b);
+        const bLines = wrapText(b.notes || '', 30);
+        const bh = Math.max(56, bLines.length*13+36);
+        s += `${blue} rg\n${bx} ${y-bh} ${bColW} ${bh} re f\n`;
+        s += `${white} rg\nBT /F1 9 Tf ${bx+8} ${y-14} Td (${escPDF('Beacon ' + (idx+1))}) Tj ET\n`;
+        if (b.date) s += `BT /F2 9 Tf ${bx+8} ${y-26} Td (${escPDF(sanitize(b.date))}) Tj ET\n`;
+        if (b.notes) { let ny = y-38; bLines.forEach(l => { s += `BT /F2 8 Tf ${bx+8} ${ny} Td (${escPDF(l)}) Tj ET\n`; ny-=13; }); }
+        bx += bColW + 8;
+      });
+      y -= Math.max(56, 8*13+36) + 16;
+    }
+
+    // GPS Signal
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('GPS SIGNAL: CONTINUOUS RECOGNITION PLAN')}) Tj ET\n`; y -= 7;
+    const gl = wrapText(state.gps || '(Not completed)', 80); const gh = Math.max(44, gl.length*lh+18);
+    s += `${light} rg\n${M} ${y-gh} ${W-2*M} ${gh} re f\n`;
+    s += `${blue} rg\n${M} ${y-gh} 6 ${gh} re f\n0.2 0.2 0.2 rg\n`;
+    let gy = y-14; gl.forEach(l => { s += `BT /F2 10 Tf ${M+14} ${gy} Td (${escPDF(l)}) Tj ET\n`; gy-=lh; }); y -= gh+14;
+
+    // Alarm
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('ALARM TRIGGER: WHAT OFF COURSE LOOKS LIKE')}) Tj ET\n`; y -= 7;
+    const al = wrapText(state.alarm || '(Not completed)', 80); const ah = Math.max(44, al.length*lh+18);
+    s += `0.98 0.94 0.95 rg\n${M} ${y-ah} ${W-2*M} ${ah} re f\n`;
+    s += `${red} rg\n${M} ${y-ah} 6 ${ah} re f\n0.2 0.2 0.2 rg\n`;
+    let ay = y-14; al.forEach(l => { s += `BT /F2 10 Tf ${M+14} ${ay} Td (${escPDF(l)}) Tj ET\n`; ay-=lh; }); y -= ah+14;
+
+    // Course correction
+    if (state.correction) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('COURSE CORRECTION PLAN')}) Tj ET\n`; y -= 7;
+      const cl = wrapText(state.correction, 80); const ch = Math.max(44, cl.length*lh+18);
+      s += `${light} rg\n${M} ${y-ch} ${W-2*M} ${ch} re f\n`;
+      s += `${navy} rg\n${M} ${y-ch} 6 ${ch} re f\n0.2 0.2 0.2 rg\n`;
+      let cy = y-14; cl.forEach(l => { s += `BT /F2 10 Tf ${M+14} ${cy} Td (${escPDF(l)}) Tj ET\n`; cy-=lh; });
+    }
+
+    // Footer
+    s += `${grey} rg\nBT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Flight Plan Sheet - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId   = addObj('');
+    const font1Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const streamBytes = new TextEncoder().encode(s);
+    const streamId  = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${s}endstream`);
+    const pageId    = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R >> >> >>`);
+    objects[1].data = `<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>`;
+
+    let pdf = '%PDF-1.4\n'; const offsets = [];
+    objects.forEach(obj => { offsets.push(pdf.length); pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`; });
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objCount+1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10,'0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount+1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type:'application/pdf' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href = url;
+    a.download = 'Flight-Plan-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) { console.error('PDF error', e); }
+}
+
+// ── Feedback Planner ──
+function buildFeedbackPlanner() {
+  const uid = 'fbp' + Math.random().toString(36).slice(2, 7);
+  let step = 1;
+  const TOTAL = 4;
+  const state = { name: '', context: '', observation: '', strokeType: null, words: '', timing: '' };
+
+  const STROKES = [
+    { id:'pos-cond',   label:'Positive Conditional',   badge:'Most powerful',    desc:'Specific recognition linked directly to what they did. The most effective tool in empowering leadership.',                                                                            starter:'I noticed that you... and the impact of this was...',           color:'#009FA0' },
+    { id:'pos-uncond', label:'Positive Unconditional',  badge:'Use authentically', desc:'Recognition of who they are as a person, not just what they did. Meaningful when genuine, but not a substitute for Positive Conditional.',                                            starter:'I want you to know that you are...',                             color:'#0061AD' },
+    { id:'neg-cond',   label:'Negative Conditional',   badge:'Use with care',     desc:'Addressing a specific behaviour that needs to change. Stays at the outer layers of the Onion: what they did, not who they are.',                                                       starter:'When you... the effect this has is... I need you to...',         color:'#1A3A5C' },
+    { id:'neg-uncond', label:'Negative Unconditional', badge:'Not recommended',   desc:'Targets who someone is as a person rather than what they did. Can cause lasting damage to confidence and trust. Consider reframing as Negative Conditional.', starter: null, color:'#6b7280', warning: true }
+  ];
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
+    .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
+    .${uid}-pseg.done{background:#1A3A5C}
+    .${uid}-pseg.active{background:#0061AD}
+    .${uid}-pgap{width:6px;flex:0 0 6px}
+
+    .${uid}-hd{margin-bottom:18px}
+    .${uid}-hnum{font-size:11px;font-weight:700;color:#8fa0b0;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#004B86;line-height:1.2}
+    .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
+
+    .${uid}-lbl{font-size:12px;font-weight:600;color:#445566;margin-bottom:6px;margin-top:14px;letter-spacing:.04em;display:block}
+    .${uid}-inp{width:100%;border:2px solid #d4e3f0;border-radius:10px;padding:10px 14px;font-family:"Barlow",sans-serif;font-size:14px;color:#222;resize:vertical;transition:border-color .2s;outline:none;background:white;box-sizing:border-box}
+    .${uid}-inp:focus{border-color:#0061AD}
+    .${uid}-ta{min-height:88px;line-height:1.6}
+    .${uid}-hint{font-size:11.5px;color:#99aabb;margin-top:4px;margin-bottom:8px;line-height:1.5;font-style:italic}
+
+    .${uid}-strokes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+    .${uid}-sc{border-radius:12px;padding:14px 14px 12px;cursor:pointer;border:2.5px solid transparent;transition:all .2s ease;position:relative;overflow:hidden}
+    .${uid}-sc:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.22)}
+    .${uid}-sc.sel{border-color:rgba(255,255,255,.88);box-shadow:0 8px 28px rgba(0,0,0,.34);transform:translateY(-2px)}
+    .${uid}-scbadge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);border-radius:4px;padding:2px 7px;margin-bottom:8px}
+    .${uid}-sclabel{font-weight:700;font-size:13px;color:white;margin-bottom:5px}
+    .${uid}-scdesc{font-size:11px;color:rgba(255,255,255,.78);line-height:1.5}
+    .${uid}-scstart{margin-top:8px;font-size:11px;color:rgba(255,255,255,.6);font-style:italic;border-top:1px solid rgba(255,255,255,.18);padding-top:7px;line-height:1.45}
+
+    .${uid}-warn{background:#fff8f0;border:1.5px solid #fa6b02;border-radius:10px;padding:13px 16px;margin-top:12px;font-size:12.5px;color:#6d2e00;line-height:1.65;display:none}
+    .${uid}-warn.show{display:block;animation:${uid}Fi .25s ease both}
+    .${uid}-warn strong{color:#c44800;display:block;margin-bottom:3px;font-size:13px}
+
+    .${uid}-starter{background:#EAF4FB;border-radius:9px;padding:11px 14px;font-size:12.5px;color:#004B86;font-style:italic;line-height:1.55;margin-bottom:12px;border-left:3px solid #0061AD}
+    .${uid}-starter em{font-style:normal;display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8fa0b0;margin-bottom:5px;font-weight:700}
+
+    .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+    .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
+    .${uid}-ghost{background:#f0f5fa;color:#556677}
+    .${uid}-ghost:hover{background:#e0ecf5}
+    .${uid}-primary{background:#1A3A5C;color:white;box-shadow:0 4px 16px rgba(26,58,92,.25)}
+    .${uid}-primary:hover{background:#0061AD;transform:translateY(-1px)}
+    .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .${uid}-dl{background:linear-gradient(135deg,#1A3A5C,#0061AD);color:white;box-shadow:0 6px 20px rgba(0,97,173,.28);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,97,173,.4)}
+
+    .${uid}-preview{margin-top:22px;border-radius:14px;overflow:hidden;animation:${uid}Fi .35s ease both}
+    .${uid}-prevhd{padding:14px 18px}
+    .${uid}-prevey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:4px}
+    .${uid}-prevname{font-family:"Barlow Condensed",sans-serif;font-size:21px;font-weight:800;color:white;line-height:1.1}
+    .${uid}-prevbody{background:white;padding:16px 18px 14px}
+    .${uid}-prevrow{margin-bottom:11px}
+    .${uid}-prevrlbl{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#99aabb;margin-bottom:3px}
+    .${uid}-prevrval{font-size:13.5px;color:#222;line-height:1.6}
+    .${uid}-prevtype{display:inline-flex;align-items:center;border-radius:6px;padding:4px 11px;font-size:12px;font-weight:700;color:white}
+    .${uid}-prevwords{background:#f0f6fb;border-radius:8px;padding:12px 14px;font-size:14px;color:#1A3A5C;font-style:italic;line-height:1.65;min-height:44px}
+    .${uid}-prevwords.empty{color:#aabbc4;font-style:italic}
+
+    @keyframes ${uid}Fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  `;
+  wrap.appendChild(styleEl);
+
+  function getStroke() { return state.strokeType ? STROKES.find(s => s.id === state.strokeType) : null; }
+
+  function buildProg() {
+    const prog = document.createElement('div');
+    prog.className = uid + '-prog';
+    for (let i = 1; i <= TOTAL; i++) {
+      const seg = document.createElement('div');
+      seg.className = uid + '-pseg';
+      if (i < step) seg.classList.add('done');
+      else if (i === step) seg.classList.add('active');
+      prog.appendChild(seg);
+      if (i < TOTAL) { const g = document.createElement('div'); g.className = uid + '-pgap'; prog.appendChild(g); }
+    }
+    return prog;
+  }
+
+  function buildPreviewEl() {
+    const stroke = getStroke();
+    const color = stroke ? stroke.color : '#1A3A5C';
+    const pr = document.createElement('div');
+    pr.className = uid + '-preview';
+    const hd = document.createElement('div');
+    hd.className = uid + '-prevhd';
+    hd.style.background = color;
+    hd.innerHTML = `<div class="${uid}-prevey">Feedback note for</div><div class="${uid}-prevname">${state.name || 'Your team member'}</div>`;
+    const body = document.createElement('div');
+    body.className = uid + '-prevbody';
+    if (state.context) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Situation</div><div class="${uid}-prevrval">${state.context}</div>`;
+      body.appendChild(r);
+    }
+    if (state.observation) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Observation</div><div class="${uid}-prevrval">${state.observation}</div>`;
+      body.appendChild(r);
+    }
+    if (stroke) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Feedback type</div><div class="${uid}-prevtype" style="background:${color}">${stroke.label}</div>`;
+      body.appendChild(r);
+    }
+    if (step >= 4) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      const wEl = document.createElement('div');
+      wEl.className = uid + '-prevwords' + (state.words ? '' : ' empty');
+      wEl.id = uid + '-prevwords';
+      wEl.textContent = state.words ? '"' + state.words + '"' : 'Write your feedback above and it will appear here...';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Your feedback note</div>`;
+      r.appendChild(wEl);
+      body.appendChild(r);
+    }
+    if (state.timing && step >= 4) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Delivery</div><div class="${uid}-prevrval">${state.timing}</div>`;
+      body.appendChild(r);
+    }
+    pr.appendChild(hd); pr.appendChild(body);
+    return pr;
+  }
+
+  function render() {
+    [...wrap.children].forEach(c => { if (c !== styleEl) c.remove(); });
+    wrap.appendChild(buildProg());
+    const cont = document.createElement('div');
+    cont.style.animation = uid + 'Fi .3s ease both';
+    if (step === 1) s1(cont);
+    else if (step === 2) s2(cont);
+    else if (step === 3) s3(cont);
+    else if (step === 4) s4(cont);
+    wrap.appendChild(cont);
+    if (step >= 2) wrap.appendChild(buildPreviewEl());
+  }
+
+  function mkHd(num, title, sub) {
+    const el = document.createElement('div'); el.className = uid + '-hd';
+    el.innerHTML = `<div class="${uid}-hnum">Step ${num} of ${TOTAL}</div><div class="${uid}-htitle">${title}</div>${sub ? '<div class="'+uid+'-hsub">'+sub+'</div>' : ''}`;
+    return el;
+  }
+
+  function mkNav(c, onBack, onNext, nextLbl, nextDis) {
+    const n = document.createElement('div'); n.className = uid + '-nav';
+    const spacer = document.createElement('span');
+    if (onBack) {
+      const b = document.createElement('button'); b.className = uid + '-btn ' + uid + '-ghost';
+      b.innerHTML = '\u2190 Back'; b.addEventListener('click', onBack); n.appendChild(b);
+    } else { n.appendChild(spacer); }
+    const nx = document.createElement('button'); nx.className = uid + '-btn ' + uid + '-primary';
+    nx.textContent = nextLbl + ' \u2192'; nx.disabled = nextDis;
+    nx.addEventListener('click', onNext); n.appendChild(nx); c.appendChild(n);
+    return nx;
+  }
+
+  function s1(c) {
+    c.appendChild(mkHd(1, 'Set the scene', 'Who is this feedback for, and what prompted it?'));
+    const ln = document.createElement('label'); ln.className = uid + '-lbl'; ln.textContent = "Team member's name"; c.appendChild(ln);
+    const iName = document.createElement('input'); iName.className = uid + '-inp'; iName.type = 'text';
+    iName.placeholder = 'e.g. Jamie, Sam...'; iName.value = state.name;
+    iName.addEventListener('input', () => { state.name = iName.value; nxt.disabled = !state.name.trim(); });
+    c.appendChild(iName);
+    const lc = document.createElement('label'); lc.className = uid + '-lbl'; lc.textContent = 'Situation or context'; c.appendChild(lc);
+    const iCtx = document.createElement('textarea'); iCtx.className = uid + '-inp ' + uid + '-ta';
+    iCtx.placeholder = 'Briefly describe the situation or event that prompted this feedback...'; iCtx.value = state.context;
+    iCtx.addEventListener('input', () => { state.context = iCtx.value; }); c.appendChild(iCtx);
+    const nxt = mkNav(c, null, () => { playMINext(); step = 2; render(); }, 'Next', !state.name.trim());
+  }
+
+  function s2(c) {
+    c.appendChild(mkHd(2, 'What did you observe?', 'Describe the specific behaviour or action. Stay at the outer layers of the Onion: what you saw or heard, not your interpretation of who they are.'));
+    const hint = document.createElement('div'); hint.className = uid + '-hint';
+    hint.textContent = 'Tip: Starting with "I noticed..." or "I observed..." keeps this grounded in what you actually saw or heard.'; c.appendChild(hint);
+    const lo = document.createElement('label'); lo.className = uid + '-lbl'; lo.textContent = 'Specific observation'; c.appendChild(lo);
+    const iObs = document.createElement('textarea'); iObs.className = uid + '-inp ' + uid + '-ta'; iObs.style.minHeight = '100px';
+    iObs.placeholder = 'e.g. I noticed that you stepped in to support a colleague during the handover without being asked, and stayed until the work was complete...'; iObs.value = state.observation;
+    iObs.addEventListener('input', () => { state.observation = iObs.value; nxt.disabled = !state.observation.trim(); }); c.appendChild(iObs);
+    const nxt = mkNav(c, () => { playMIBack(); step = 1; render(); }, () => { playMINext(); step = 3; render(); }, 'Next: Choose type', !state.observation.trim());
+  }
+
+  function s3(c) {
+    c.appendChild(mkHd(3, 'Choose the type of feedback', 'Select the stroke type that best fits your intention. Positive Conditional is the most powerful and is usually the right choice.'));
+    const grid = document.createElement('div'); grid.className = uid + '-strokes';
+    let warnEl;
+    STROKES.forEach(stroke => {
+      const card = document.createElement('div'); card.className = uid + '-sc'; card.style.background = stroke.color;
+      if (state.strokeType === stroke.id) card.classList.add('sel');
+      card.innerHTML = `<div class="${uid}-scbadge">${stroke.badge}</div><div class="${uid}-sclabel">${stroke.label}</div><div class="${uid}-scdesc">${stroke.desc}</div>${stroke.starter ? '<div class="'+uid+'-scstart">'+stroke.starter+'</div>' : ''}`;
+      card.addEventListener('click', () => {
+        state.strokeType = stroke.id; playStrokesExpand();
+        grid.querySelectorAll('.' + uid + '-sc').forEach(el => el.classList.remove('sel'));
+        card.classList.add('sel');
+        if (warnEl) warnEl.classList.toggle('show', stroke.warning === true);
+        nxt.disabled = false;
+      });
+      grid.appendChild(card);
+    });
+    c.appendChild(grid);
+    warnEl = document.createElement('div');
+    warnEl.className = uid + '-warn' + (state.strokeType === 'neg-uncond' ? ' show' : '');
+    warnEl.innerHTML = '<strong>Consider reframing this.</strong> A Negative Unconditional stroke targets who someone is rather than what they did. This can cause lasting damage to trust and confidence. Ask yourself: could you describe the specific behaviour instead, and use Negative Conditional?';
+    c.appendChild(warnEl);
+    const nxt = mkNav(c, () => { playMIBack(); step = 2; render(); }, () => { playMINext(); step = 4; render(); }, 'Next: Your words', !state.strokeType);
+  }
+
+  function s4(c) {
+    const stroke = getStroke();
+    c.appendChild(mkHd(4, 'Your feedback note', "Use the sentence starter as a guide, not a script. Write naturally and in a way that sounds like you."));
+    if (stroke && stroke.starter) {
+      const st = document.createElement('div'); st.className = uid + '-starter';
+      st.innerHTML = `<em>Sentence starter: ${stroke.label}</em>${stroke.starter}`; c.appendChild(st);
+    }
+    const lw = document.createElement('label'); lw.className = uid + '-lbl'; lw.textContent = 'Write your feedback'; c.appendChild(lw);
+    const iWords = document.createElement('textarea'); iWords.className = uid + '-inp ' + uid + '-ta'; iWords.style.minHeight = '110px';
+    iWords.placeholder = stroke && stroke.starter ? stroke.starter : 'Write your feedback here...'; iWords.value = state.words;
+    iWords.addEventListener('input', () => {
+      state.words = iWords.value;
+      const pw = wrap.querySelector('#' + uid + '-prevwords');
+      if (pw) { pw.classList.toggle('empty', !state.words); pw.textContent = state.words ? '"' + state.words + '"' : 'Write your feedback above and it will appear here...'; }
+    });
+    c.appendChild(iWords);
+    const lt = document.createElement('label'); lt.className = uid + '-lbl'; lt.textContent = 'When will you deliver this? (optional)'; c.appendChild(lt);
+    const iTiming = document.createElement('input'); iTiming.className = uid + '-inp'; iTiming.type = 'text';
+    iTiming.placeholder = 'e.g. Before end of day, In our 1:1 on Thursday...'; iTiming.value = state.timing;
+    iTiming.addEventListener('input', () => { state.timing = iTiming.value; }); c.appendChild(iTiming);
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const leftBtns = document.createElement('div'); leftBtns.className = uid + '-navl';
+    const backBtn = document.createElement('button'); backBtn.className = uid + '-btn ' + uid + '-ghost';
+    backBtn.innerHTML = '\u2190 Back'; backBtn.addEventListener('click', () => { playMIBack(); step = 3; render(); });
+    const restartBtn = document.createElement('button'); restartBtn.className = uid + '-btn ' + uid + '-ghost';
+    restartBtn.innerHTML = '\u21BA Start again'; restartBtn.addEventListener('click', () => { playMIBack(); state.name=''; state.context=''; state.observation=''; state.strokeType=null; state.words=''; state.timing=''; step=1; render(); });
+    leftBtns.appendChild(backBtn); leftBtns.appendChild(restartBtn);
+    const dlBtn = document.createElement('button'); dlBtn.className = uid + '-btn ' + uid + '-dl';
+    dlBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download Feedback Plan';
+    dlBtn.addEventListener('click', () => { playMIDownload(); downloadFeedbackPlannerPDF(state, stroke); });
+    navRow.appendChild(leftBtns); navRow.appendChild(dlBtn); c.appendChild(navRow);
+  }
+
+  render();
+  return wrap;
+}
+
+function downloadFeedbackPlannerPDF(state, stroke) {
+  try {
+    const W = 595.28, H = 841.89, M = 50;
+    let objCount = 0;
+    const objects = [];
+    function addObj(data) { objCount++; objects.push({ id: objCount, data }); return objCount; }
+
+    function escPDF(str) { return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str) {
+      if (!str) return '';
+      return String(str).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2013|\u2014/g,'-').replace(/\u2026/g,'...').replace(/[^\x00-\x7F]/g,'');
+    }
+    function wrapText(text, maxChars) {
+      if (!text) return [''];
+      const words = sanitize(text).split(/\s+/); const lines = []; let line = '';
+      words.forEach(w => { if ((line+' '+w).trim().length > maxChars) { lines.push(line.trim()); line = w; } else { line = (line+' '+w).trim(); } });
+      if (line) lines.push(line.trim());
+      return lines.length ? lines : [''];
+    }
+    function hexRGB(hex) {
+      if (!hex || hex[0]!=='#') return '0.10 0.23 0.36';
+      return (parseInt(hex.slice(1,3),16)/255).toFixed(2)+' '+(parseInt(hex.slice(3,5),16)/255).toFixed(2)+' '+(parseInt(hex.slice(5,7),16)/255).toFixed(2);
+    }
+
+    const sColor = stroke ? hexRGB(stroke.color) : '0.10 0.23 0.36';
+    const sLabel = stroke ? sanitize(stroke.label) : 'Not selected';
+    const blue = '0.00 0.38 0.68'; const dark = '0.10 0.23 0.36';
+    const white = '1 1 1'; const grey = '0.45 0.45 0.45'; const light = '0.93 0.96 0.99';
+    const lh = 15;
+    let s = ''; let y = H - M;
+
+    // Header bar
+    s += `${dark} rg\n${M} ${H-M-44} ${W-2*M} 44 re f\n${white} rg\n`;
+    s += `BT /F1 15 Tf ${M+12} ${H-M-28} Td (${escPDF('Story Liberator - Feedback Planner')}) Tj ET\n`;
+    s += `BT /F2 8 Tf ${W-M-158} ${H-M-28} Td (${escPDF('Liberator Programme | p.188, 194')}) Tj ET\n`;
+    // Stroke type colour band
+    s += `${sColor} rg\n${M} ${H-M-56} ${W-2*M} 12 re f\n`;
+    y = H - M - 74;
+
+    // Who
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('FEEDBACK FOR')}) Tj ET\n`; y -= 7;
+    s += `${light} rg\n${M} ${y-34} ${W-2*M} 34 re f\n${dark} rg\n`;
+    s += `BT /F1 14 Tf ${M+10} ${y-21} Td (${escPDF(sanitize(state.name) || '(No name given)')}) Tj ET\n`; y -= 48;
+
+    // Context
+    if (state.context) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('SITUATION / CONTEXT')}) Tj ET\n`; y -= 7;
+      const cl = wrapText(state.context, 80); const ch = Math.max(36, cl.length*lh+18);
+      s += `${light} rg\n${M} ${y-ch} ${W-2*M} ${ch} re f\n0.2 0.2 0.2 rg\n`;
+      let cy = y-14; cl.forEach(l => { s += `BT /F2 10 Tf ${M+10} ${cy} Td (${escPDF(l)}) Tj ET\n`; cy-=lh; }); y -= ch+16;
+    }
+
+    // Observation
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('WHAT I OBSERVED')}) Tj ET\n`; y -= 7;
+    const ol = wrapText(state.observation || '(No observation recorded)', 80); const oh = Math.max(52, ol.length*lh+18);
+    s += `${light} rg\n${M} ${y-oh} ${W-2*M} ${oh} re f\n0.2 0.2 0.2 rg\n`;
+    let oy2 = y-14; ol.forEach(l => { s += `BT /F2 10 Tf ${M+10} ${oy2} Td (${escPDF(l)}) Tj ET\n`; oy2-=lh; }); y -= oh+16;
+
+    // Feedback type
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('FEEDBACK TYPE')}) Tj ET\n`; y -= 7;
+    s += `${sColor} rg\n${M} ${y-30} 230 30 re f\n${white} rg\n`;
+    s += `BT /F1 11 Tf ${M+10} ${y-19} Td (${escPDF(sLabel)}) Tj ET\n`;
+    if (stroke && stroke.starter) {
+      s += `${grey} rg\n`; const sl = wrapText('Sentence starter: ' + stroke.starter, 82);
+      let sy = y-38; sl.forEach(l => { s += `BT /F2 9 Tf ${M} ${sy} Td (${escPDF(l)}) Tj ET\n`; sy-=13; }); y -= 30+sl.length*13+36;
+    } else { y -= 46; }
+
+    // Feedback note
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('YOUR FEEDBACK NOTE')}) Tj ET\n`; y -= 7;
+    const wl = wrapText(state.words || '(No feedback note written)', 78); const wh = Math.max(70, wl.length*lh+24);
+    s += `${sColor} rg\n${M} ${y-wh} ${W-2*M} ${wh} re f\n${white} rg\n`;
+    let wy = y-16; wl.forEach(l => { s += `BT /F2 11 Tf ${M+12} ${wy} Td (${escPDF(l)}) Tj ET\n`; wy-=lh+1; }); y -= wh+16;
+
+    // Delivery note
+    if (state.timing) {
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('DELIVERY NOTE')}) Tj ET\n`; y -= 7;
+      s += `${light} rg\n${M} ${y-30} ${W-2*M} 30 re f\n0.2 0.2 0.2 rg\n`;
+      s += `BT /F2 10 Tf ${M+10} ${y-19} Td (${escPDF(sanitize(state.timing))}) Tj ET\n`;
+    }
+
+    // Footer
+    s += `${grey} rg\nBT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Feedback Planner - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId = addObj('');
+    const font1Id = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const streamBytes = new TextEncoder().encode(s);
+    const streamId = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${s}endstream`);
+    const pageId = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R >> >> >>`);
+    objects[1].data = `<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>`;
+
+    let pdf = '%PDF-1.4\n'; const offsets = [];
+    objects.forEach(obj => { offsets.push(pdf.length); pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`; });
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objCount+1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10,'0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount+1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = 'Feedback-Plan-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) { console.error('PDF error', e); }
+}
 
 // ── PDF Generator ──
 function downloadChangeSheetPDF(issue, less, more) {
