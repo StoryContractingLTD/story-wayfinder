@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -242,9 +242,9 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .ws-back-btns{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
 
 /* Magnify toggle button */
-.magnify-btn{display:inline-flex;align-items:center;gap:7px;background:white;border:2px solid #d0dce8;border-radius:20px;padding:8px 14px;cursor:pointer;font-family:'Barlow',sans-serif;font-weight:600;font-size:13px;color:#004B86;box-shadow:0 4px 16px rgba(0,97,173,.08);transition:all .18s ease;white-space:nowrap}
-.magnify-btn:hover{border-color:#0061AD;transform:translateY(-2px)}
-.magnify-btn.active{background:#0061AD;border-color:#0061AD;color:white;box-shadow:0 4px 16px rgba(0,97,173,.22)}
+.magnify-btn{display:inline-flex;align-items:center;gap:7px;background:#fff8f0;border:2px solid #f5a84e;border-radius:20px;padding:8px 14px;cursor:pointer;font-family:'Barlow',sans-serif;font-weight:600;font-size:13px;color:#b05e00;box-shadow:0 4px 16px rgba(245,168,78,.12);transition:all .18s ease;white-space:nowrap}
+.magnify-btn:hover{border-color:#e07b00;background:#fef0dc;transform:translateY(-2px)}
+.magnify-btn.active{background:#f5a84e;border-color:#e07b00;color:white;box-shadow:0 4px 16px rgba(245,168,78,.35)}
 .magnify-btn svg{flex-shrink:0;transition:transform .18s ease}
 .magnify-btn:hover svg{transform:scale(1.1)}
 .header-btn-group{display:flex;align-items:center;gap:10px}
@@ -310,6 +310,21 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .cs-sub{color:rgba(255,255,255,.48);font-size:15px;line-height:1.75;margin-top:10px;max-width:440px;margin-left:auto;margin-right:auto}
 @keyframes csSunPulse{0%,100%{box-shadow:0 0 44px 14px rgba(251,140,0,.55),0 0 88px 28px rgba(230,81,0,.28),0 0 160px 56px rgba(230,81,0,.1)}50%{box-shadow:0 0 64px 22px rgba(255,193,7,.65),0 0 120px 44px rgba(230,81,0,.38),0 0 200px 72px rgba(230,81,0,.14)}}
 @keyframes csSunSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* Idle nudge */
+.idle-nudge{position:fixed;bottom:32px;right:32px;z-index:50;max-width:300px;background:white;border-radius:20px;box-shadow:0 12px 40px rgba(0,97,173,.18),0 2px 8px rgba(0,0,0,.06);padding:20px 20px 16px;opacity:0;transform:translateY(16px);transition:opacity 2.8s ease-in-out,transform 2.8s ease-in-out;pointer-events:none}
+.idle-nudge.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.idle-nudge-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px}
+.idle-nudge-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:17px;color:#004B86;letter-spacing:.01em;line-height:1.2}
+.idle-nudge-close{width:26px;height:26px;border-radius:50%;background:#f0f4f8;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#8fa0b0;font-size:13px;flex-shrink:0;transition:background .15s ease}
+.idle-nudge-close:hover{background:#dde6f0;color:#555}
+.idle-nudge-text{font-size:13px;color:#888;line-height:1.6;margin-bottom:14px}
+.idle-nudge-links{display:flex;flex-direction:column;gap:6px}
+.idle-nudge-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:12px;cursor:pointer;transition:background .15s ease;text-decoration:none;border:none;background:transparent;width:100%;text-align:left}
+.idle-nudge-link:hover{background:#f0f4f8}
+.idle-nudge-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.idle-nudge-label{font-size:13px;font-weight:600;color:#004B86;line-height:1.3;display:block}
+.idle-nudge-sub{font-size:11.5px;color:#8fa0b0;margin-top:1px;display:block}
 </style>
 </head>
 <body>
@@ -1260,8 +1275,8 @@ function buildNavigatorVisual() {
   navBeckon.innerHTML = `
     <div class="nav-beckon-text">Turn your diagnosis into an action plan below</div>
     <div class="nav-beckon-arrows">
-      <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><polyline points="2,2 10,8 18,2" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/></svg>
-      <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><polyline points="2,2 10,8 18,2" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/></svg>
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><polyline points="2,2 10,8 18,2" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/></svg>
+      <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><polyline points="2,2 10,8 18,2" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/></svg>
     </div>
   `;
   navOuter.appendChild(navBeckon);
@@ -3338,7 +3353,7 @@ function buildDetailPage(seg, onBack) {
   if (seg.hasActionPlanner) {
     const apDivider = document.createElement('div');
     apDivider.className = 'ws-divider slide-up delay4';
-    apDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Action Planner</div><div class="ws-divider-line"></div>';
+    apDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Action Planner</div><div class="ws-divider-line"></div>';
     const apCard = document.createElement('div');
     apCard.className = 'ws-card slide-up delay4';
     apCard.innerHTML = '<h2>Action Planner</h2><p class="ws-subtitle">Use this planner after running the Performance Navigator above. Your diagnosis will carry forward automatically when you click "Plan your action" at the end of the Navigator, or you can fill it in yourself. Turn the diagnosis into a committed, time-bound plan you can download and act on.</p>';
@@ -3970,15 +3985,15 @@ function buildActionPlanner() {
     .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
     .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
     .${uid}-pseg.done{background:#004B86}
-    .${uid}-pseg.active{background:#1A3A5C}
+    .${uid}-pseg.active{background:#0061AD}
     .${uid}-pgap{width:6px;flex:0 0 6px}
     .${uid}-hd{margin-bottom:18px}
     .${uid}-hnum{font-size:11px;font-weight:700;color:#8fa0b0;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
-    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#1A3A5C;line-height:1.2}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#004B86;line-height:1.2}
     .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
     .${uid}-lbl{font-size:12px;font-weight:600;color:#445566;margin-bottom:6px;margin-top:14px;letter-spacing:.04em;display:block}
     .${uid}-inp{width:100%;border:2px solid #d4e3f0;border-radius:10px;padding:10px 14px;font-family:"Barlow",sans-serif;font-size:14px;color:#222;resize:vertical;transition:border-color .2s;outline:none;background:white;box-sizing:border-box}
-    .${uid}-inp:focus{border-color:#1A3A5C}
+    .${uid}-inp:focus{border-color:#0061AD}
     .${uid}-ta{min-height:86px;line-height:1.6}
     .${uid}-hint{font-size:11.5px;color:#99aabb;margin-top:4px;font-style:italic;line-height:1.5}
     .${uid}-from-nav{border-radius:12px;padding:13px 16px;margin-bottom:16px;animation:${uid}Fi .35s ease both}
@@ -3991,18 +4006,18 @@ function buildActionPlanner() {
     .${uid}-dc.sel{border-color:rgba(255,255,255,.85);box-shadow:0 8px 24px rgba(0,0,0,.28);transform:translateY(-2px)}
     .${uid}-dc-label{font-weight:800;font-size:14px;color:white;margin-bottom:3px;font-family:"Barlow Condensed",sans-serif;letter-spacing:.02em;font-size:17px}
     .${uid}-dc-sub{font-size:11.5px;color:rgba(255,255,255,.75);line-height:1.4}
-    .${uid}-rec-box{background:#EAF4FB;border-left:3px solid #1A3A5C;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:14px;font-size:13px;color:#1A3A5C;line-height:1.6}
+    .${uid}-rec-box{background:#EAF4FB;border-left:3px solid #0061AD;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:14px;font-size:13px;color:#004B86;line-height:1.6}
     .${uid}-rec-ey{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8fa0b0;margin-bottom:4px}
     .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
     .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
     .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
     .${uid}-ghost{background:#f0f5fa;color:#556677}
     .${uid}-ghost:hover{background:#e0ecf5}
-    .${uid}-primary{background:#1A3A5C;color:white;box-shadow:0 4px 16px rgba(26,58,92,.22)}
-    .${uid}-primary:hover{background:#0061AD;transform:translateY(-1px)}
+    .${uid}-primary{background:#0061AD;color:white;box-shadow:0 4px 16px rgba(0,97,173,.28)}
+    .${uid}-primary:hover{background:#004B86;transform:translateY(-1px)}
     .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
-    .${uid}-dl{background:linear-gradient(135deg,#1A3A5C,#0061AD);color:white;box-shadow:0 6px 20px rgba(26,58,92,.28);display:flex;align-items:center;gap:7px}
-    .${uid}-dl:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,58,92,.4)}
+    .${uid}-dl{background:#0061AD;color:white;box-shadow:0 6px 20px rgba(0,97,173,.32);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{background:#004B86;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,97,173,.42)}
     .${uid}-preview{margin-top:22px;border-radius:14px;overflow:hidden;animation:${uid}Fi .35s ease both}
     .${uid}-prevhd{padding:14px 18px}
     .${uid}-prevey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px}
@@ -4041,7 +4056,7 @@ function buildActionPlanner() {
 
   function buildPreview() {
     const di = diagInfo();
-    const hdColor = di ? di.color : '#1A3A5C';
+    const hdColor = di ? di.color : '#0061AD';
     const pr = document.createElement('div'); pr.className = uid + '-preview';
     const hd = document.createElement('div'); hd.className = uid + '-prevhd'; hd.style.background = `linear-gradient(135deg,${di ? di.darkColor : '#004B86'},${hdColor})`;
     hd.innerHTML = `<div class="${uid}-prevey">Action plan for</div><div class="${uid}-prevname">${state.name || 'Your team member'}</div>`;
@@ -4220,7 +4235,7 @@ function downloadActionPlannerPDF(state) {
     let s = ''; let y = H - M;
 
     // Header
-    s += `${navy} rg\n${M} ${H-M-48} ${W-2*M} 48 re f\n${white} rg\n`;
+    s += `${blue} rg\n${M} ${H-M-48} ${W-2*M} 48 re f\n${white} rg\n`;
     s += `BT /F1 15 Tf ${M+12} ${H-M-30} Td (${escPDF('Story Liberator - Action Planner')}) Tj ET\n`;
     s += `BT /F2 8 Tf ${W-M-178} ${H-M-30} Td (${escPDF('Performance Navigator | Liberator Programme')}) Tj ET\n`;
     s += `${diagColor} rg\n${M} ${H-M-58} ${W-2*M} 10 re f\n`;
@@ -4228,7 +4243,7 @@ function downloadActionPlannerPDF(state) {
 
     // Name
     s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('ACTION PLAN FOR')}) Tj ET\n`; y -= 7;
-    s += `${light} rg\n${M} ${y-36} ${W-2*M} 36 re f\n${navy} rg\n`;
+    s += `${light} rg\n${M} ${y-36} ${W-2*M} 36 re f\n${blue} rg\n`;
     s += `BT /F1 15 Tf ${M+10} ${y-23} Td (${escPDF(sanitize(state.name)||'(No name given)')}) Tj ET\n`; y -= 50;
 
     // Behaviour
@@ -4258,7 +4273,7 @@ function downloadActionPlannerPDF(state) {
     // Specific plan
     s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('YOUR SPECIFIC PLAN')}) Tj ET\n`; y -= 7;
     const pl = wrapText(state.specificPlan||'(Not recorded)', 80); const ph = Math.max(52, pl.length*lh+20);
-    s += `${navy} rg\n${M} ${y-ph} ${W-2*M} ${ph} re f\n${white} rg\n`;
+    s += `${blue} rg\n${M} ${y-ph} ${W-2*M} ${ph} re f\n${white} rg\n`;
     let py = y-16; pl.forEach(l => { s += `BT /F2 11 Tf ${M+12} ${py} Td (${escPDF(l)}) Tj ET\n`; py-=lh+1; }); y -= ph+14;
 
     // When + review in two columns
@@ -4358,11 +4373,11 @@ function buildFlightPlanSheet() {
     .${uid}-primary{background:#004B86;color:white;box-shadow:0 4px 16px rgba(0,75,134,.22)}
     .${uid}-primary:hover{background:#0061AD;transform:translateY(-1px)}
     .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
-    .${uid}-dl{background:linear-gradient(135deg,#004B86,#0061AD);color:white;box-shadow:0 6px 20px rgba(0,97,173,.28);display:flex;align-items:center;gap:7px}
-    .${uid}-dl:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,97,173,.4)}
+    .${uid}-dl{background:#0061AD;color:white;box-shadow:0 6px 20px rgba(0,97,173,.28);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{background:#004B86;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,97,173,.4)}
 
     .${uid}-preview{margin-top:22px;border-radius:14px;overflow:hidden;animation:${uid}Fi .35s ease both}
-    .${uid}-prevhd{padding:14px 18px;background:linear-gradient(135deg,#004B86,#0061AD)}
+    .${uid}-prevhd{padding:14px 18px;background:#0061AD}
     .${uid}-prevey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px}
     .${uid}-prevname{font-family:"Barlow Condensed",sans-serif;font-size:21px;font-weight:800;color:white;line-height:1.1}
     .${uid}-prevdest{font-size:12px;color:rgba(255,255,255,.75);margin-top:5px;line-height:1.5}
@@ -4604,7 +4619,7 @@ function downloadFlightPlanPDF(state) {
     let s = ''; let y = H - M;
 
     // Header bar
-    s += `${navy} rg\n${M} ${H-M-48} ${W-2*M} 48 re f\n${white} rg\n`;
+    s += `${blue} rg\n${M} ${H-M-48} ${W-2*M} 48 re f\n${white} rg\n`;
     s += `BT /F1 16 Tf ${M+12} ${H-M-30} Td (${escPDF('Story Liberator - Flight Plan Sheet')}) Tj ET\n`;
     s += `BT /F2 8 Tf ${W-M-168} ${H-M-30} Td (${escPDF('Liberator Programme | p.192-194')}) Tj ET\n`;
     // Blue accent strip
@@ -4619,7 +4634,7 @@ function downloadFlightPlanPDF(state) {
     if (state.destination) {
       s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('DESTINATION')}) Tj ET\n`; y -= 7;
       const dl = wrapText(state.destination, 80); const dh = Math.max(36, dl.length*lh+18);
-      s += `${navy} rg\n${M} ${y-dh} ${W-2*M} ${dh} re f\n${white} rg\n`;
+      s += `${blue} rg\n${M} ${y-dh} ${W-2*M} ${dh} re f\n${white} rg\n`;
       let dy = y-15; dl.forEach(l => { s += `BT /F2 11 Tf ${M+10} ${dy} Td (${escPDF(l)}) Tj ET\n`; dy-=lh; }); y -= dh+14;
     }
 
@@ -4667,7 +4682,7 @@ function downloadFlightPlanPDF(state) {
       s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('COURSE CORRECTION PLAN')}) Tj ET\n`; y -= 7;
       const cl = wrapText(state.correction, 80); const ch = Math.max(44, cl.length*lh+18);
       s += `${light} rg\n${M} ${y-ch} ${W-2*M} ${ch} re f\n`;
-      s += `${navy} rg\n${M} ${y-ch} 6 ${ch} re f\n0.2 0.2 0.2 rg\n`;
+      s += `${blue} rg\n${M} ${y-ch} 6 ${ch} re f\n0.2 0.2 0.2 rg\n`;
       let cy = y-14; cl.forEach(l => { s += `BT /F2 10 Tf ${M+14} ${cy} Td (${escPDF(l)}) Tj ET\n`; cy-=lh; });
     }
 
@@ -4719,7 +4734,7 @@ function buildFeedbackPlanner() {
   styleEl.textContent = `
     .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
     .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
-    .${uid}-pseg.done{background:#1A3A5C}
+    .${uid}-pseg.done{background:#0061AD}
     .${uid}-pseg.active{background:#0061AD}
     .${uid}-pgap{width:6px;flex:0 0 6px}
 
@@ -4755,11 +4770,11 @@ function buildFeedbackPlanner() {
     .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
     .${uid}-ghost{background:#f0f5fa;color:#556677}
     .${uid}-ghost:hover{background:#e0ecf5}
-    .${uid}-primary{background:#1A3A5C;color:white;box-shadow:0 4px 16px rgba(26,58,92,.25)}
-    .${uid}-primary:hover{background:#0061AD;transform:translateY(-1px)}
+    .${uid}-primary{background:#0061AD;color:white;box-shadow:0 4px 16px rgba(0,97,173,.28)}
+    .${uid}-primary:hover{background:#004B86;transform:translateY(-1px)}
     .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
-    .${uid}-dl{background:linear-gradient(135deg,#1A3A5C,#0061AD);color:white;box-shadow:0 6px 20px rgba(0,97,173,.28);display:flex;align-items:center;gap:7px}
-    .${uid}-dl:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,97,173,.4)}
+    .${uid}-dl{background:#0061AD;color:white;box-shadow:0 6px 20px rgba(0,97,173,.32);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{background:#004B86;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,97,173,.42)}
 
     .${uid}-preview{margin-top:22px;border-radius:14px;overflow:hidden;animation:${uid}Fi .35s ease both}
     .${uid}-prevhd{padding:14px 18px}
@@ -4795,7 +4810,7 @@ function buildFeedbackPlanner() {
 
   function buildPreviewEl() {
     const stroke = getStroke();
-    const color = stroke ? stroke.color : '#1A3A5C';
+    const color = stroke ? stroke.color : '#0061AD';
     const pr = document.createElement('div');
     pr.className = uid + '-preview';
     const hd = document.createElement('div');
@@ -4990,7 +5005,7 @@ function downloadFeedbackPlannerPDF(state, stroke) {
     let s = ''; let y = H - M;
 
     // Header bar
-    s += `${dark} rg\n${M} ${H-M-44} ${W-2*M} 44 re f\n${white} rg\n`;
+    s += `${blue} rg\n${M} ${H-M-44} ${W-2*M} 44 re f\n${white} rg\n`;
     s += `BT /F1 15 Tf ${M+12} ${H-M-28} Td (${escPDF('Story Liberator - Feedback Planner')}) Tj ET\n`;
     s += `BT /F2 8 Tf ${W-M-158} ${H-M-28} Td (${escPDF('Liberator Programme | p.188, 194')}) Tj ET\n`;
     // Stroke type colour band
@@ -5399,6 +5414,86 @@ welcomeBtn.addEventListener('click', function() {
 
 window.addEventListener('hashchange', handleHash);
 handleHash();
+
+// ── Idle Nudge ──
+(function() {
+  const NUDGE_ITEMS = [
+    { id:'be-explicit',  label:'Be explicit',               sub:'The Onion Model and Change Sheet', colour:'#1A3A5C' },
+    { id:'get-to-root',  label:'Get to the root of issues', sub:'Performance Navigator',            colour:'#1A3A5C' },
+    { id:'empower-team', label:'Empower team members',      sub:'Situational Leadership',           colour:'#0061AD' }
+  ];
+  let nudgeTimer = null, fadeTimer = null, nudgeEl = null;
+
+  function buildNudge() {
+    const el = document.createElement('div');
+    el.className = 'idle-nudge'; el.id = 'idle-nudge';
+    el.innerHTML =
+      '<div class="idle-nudge-header">' +
+        '<span class="idle-nudge-title">Not sure where to start?</span>' +
+        '<button class="idle-nudge-close" id="idle-nudge-close" aria-label="Dismiss">&#x2715;</button>' +
+      '</div>' +
+      '<p class="idle-nudge-text">Here are three great places to begin exploring the Liberator wheel.</p>' +
+      '<div class="idle-nudge-links">' +
+        NUDGE_ITEMS.map(function(s) {
+          return '<a class="idle-nudge-link" href="#/' + s.id + '" data-nudge-link>' +
+            '<span class="idle-nudge-dot" style="background:' + s.colour + '"></span>' +
+            '<span><span class="idle-nudge-label">' + s.label + '</span>' +
+            '<span class="idle-nudge-sub">' + s.sub + '</span></span></a>';
+        }).join('') +
+      '</div>';
+    document.body.appendChild(el);
+    el.querySelector('#idle-nudge-close').addEventListener('click', hideNudge);
+    el.querySelectorAll('[data-nudge-link]').forEach(function(a) { a.addEventListener('click', hideNudge); });
+    return el;
+  }
+
+  function isHomePage() {
+    var hash = window.location.hash.replace('#/','').trim();
+    if (!hash) return true;
+    return !SEGMENTS.find(function(s){ return s.id === hash; });
+  }
+
+  function showNudge() {
+    var overlay = document.getElementById('welcome');
+    if (overlay && !overlay.classList.contains('dismissed')) return;
+    if (!isHomePage()) return;
+    if (!nudgeEl) nudgeEl = buildNudge();
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        nudgeEl.classList.add('visible');
+        clearTimeout(fadeTimer);
+        fadeTimer = setTimeout(hideNudge, 15000);
+      });
+    });
+  }
+
+  function hideNudge() {
+    clearTimeout(fadeTimer);
+    if (!nudgeEl || !nudgeEl.classList.contains('visible')) return;
+    nudgeEl.style.transition = 'opacity 1.2s ease-in-out, transform 1.2s ease-in-out';
+    nudgeEl.style.opacity = '0';
+    nudgeEl.style.transform = 'translateY(12px)';
+    setTimeout(function() {
+      if (nudgeEl) { nudgeEl.classList.remove('visible'); nudgeEl.style.opacity = ''; nudgeEl.style.transform = ''; nudgeEl.style.transition = ''; }
+    }, 1200);
+  }
+
+  function resetTimer() {
+    clearTimeout(nudgeTimer); hideNudge();
+    if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
+  }
+
+  ['mousemove','keydown','mousedown','touchstart','scroll'].forEach(function(evt) {
+    window.addEventListener(evt, resetTimer, { passive:true });
+  });
+  window.addEventListener('hashchange', function() {
+    clearTimeout(nudgeTimer); hideNudge();
+    if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
+  });
+  document.getElementById('welcome-btn').addEventListener('click', function() {
+    nudgeTimer = setTimeout(showNudge, 10000);
+  });
+})();
 </script>
 </body>
 </html>
