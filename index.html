@@ -326,6 +326,12 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .idle-nudge-label{font-size:13px;font-weight:600;color:#004B86;line-height:1.3;display:block}
 .idle-nudge-sub{font-size:11.5px;color:#8fa0b0;margin-top:1px;display:block}
 </style>
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:TrainingTitle msdt:dt="string">Liberator Toolkit</mso:TrainingTitle>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
 </head>
 <body>
 <div class="welcome-overlay" id="welcome">
@@ -3078,8 +3084,26 @@ function buildWheelPage(onOpen) {
   c2.className = 'card';
   c2.innerHTML = '<h2>How to use</h2><p>Hover over any section of the wheel to see which quadrant it belongs to and what it covers. Click to open a detailed page with a leadership model, explanation, and key takeaways you can apply in your role.</p>';
 
+  const c3 = document.createElement('div');
+  c3.className = 'card';
+  c3.style.cssText = 'padding:0;overflow:hidden;';
+  c3.innerHTML = `
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:inherit;">
+      <iframe
+        src="https://www.youtube.com/embed/RyFKGWdKaBQ?rel=0&si=j4UodxnXf5xfdjFX"
+        title="Story Liberator | Coming soon"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;">
+      </iframe>
+    </div>
+  `;
+
   infoCol.appendChild(c1);
   infoCol.appendChild(c2);
+  infoCol.appendChild(c3);
 
   const layout = document.createElement('div');
   layout.className = 'wheel-layout';
