@@ -325,6 +325,30 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .idle-nudge-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .idle-nudge-label{font-size:13px;font-weight:600;color:#004B86;line-height:1.3;display:block}
 .idle-nudge-sub{font-size:11.5px;color:#8fa0b0;margin-top:1px;display:block}
+
+/* ── Reflection: playing-card stack ─────────────────────────────── */
+.rf-deck-wrap{position:relative;width:100%;max-width:360px;margin:0 auto;height:340px}
+.rf-card{position:absolute;left:50%;top:0;width:300px;margin-left:-150px;border-radius:18px;background:white;box-shadow:0 6px 24px rgba(0,97,173,.16),0 1px 3px rgba(0,0,0,.06);padding:24px 22px 20px;transition:transform .35s cubic-bezier(.4,1.4,.6,1),box-shadow .25s ease;backface-visibility:hidden;border:1px solid #f0f3f7}
+.rf-card[data-pos="0"]{z-index:5;transform:translate(0,0) rotate(0deg);cursor:pointer;animation:rfNudge 6s 3s ease infinite}
+.rf-card[data-pos="0"]:hover{transform:translate(0,-3px) rotate(0deg);box-shadow:0 12px 36px rgba(0,97,173,.22),0 1px 3px rgba(0,0,0,.06);animation:none}
+.rf-card[data-pos="1"]{z-index:4;transform:translate(8px,6px) rotate(2.6deg);pointer-events:none}
+.rf-card[data-pos="2"]{z-index:3;transform:translate(-7px,12px) rotate(-2.4deg);pointer-events:none}
+.rf-card[data-pos="3"]{z-index:2;transform:translate(5px,18px) rotate(1.7deg);pointer-events:none}
+.rf-card.dealt{animation:rfDeal .55s cubic-bezier(.4,0,.6,1) forwards!important;pointer-events:none}
+@keyframes rfDeal{0%{transform:translate(0,0) rotate(0deg);opacity:1}40%{transform:translate(-180px,-30px) rotate(-22deg);opacity:1}100%{transform:translate(-360px,-90px) rotate(-45deg);opacity:0}}
+@keyframes rfNudge{0%,82%,100%{transform:translate(0,0) rotate(0deg)}84%{transform:translate(3px,-1px) rotate(.5deg)}87%{transform:translate(-2px,0) rotate(-.4deg)}90%{transform:translate(3px,-1px) rotate(.5deg)}93%{transform:translate(0,0) rotate(0deg)}}
+.rf-card-logo{margin-bottom:14px}
+.rf-card-counter{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#aab4c2;margin-bottom:10px}
+.rf-card-question{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:21px;font-weight:800;color:#004B86;line-height:1.25;margin-bottom:12px}
+.rf-card-hint{font-size:12.5px;color:#666;line-height:1.62;border-top:1px solid #f0f0f0;padding-top:11px}
+.rf-card-cta{display:flex;align-items:center;justify-content:flex-end;gap:5px;margin-top:14px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#aab4c2;animation:rfCtaPulse 2.4s 1.2s ease infinite}
+@keyframes rfCtaPulse{0%,100%{opacity:.45}50%{opacity:1}}
+.rf-done{position:absolute;left:50%;top:0;width:300px;margin-left:-150px;border-radius:18px;background:linear-gradient(135deg,#004B86,#0061AD);padding:28px 24px;text-align:center;color:white;display:none;box-shadow:0 8px 28px rgba(0,75,134,.25);animation:rfDoneIn .4s ease both}
+@keyframes rfDoneIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.rf-done-title{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;margin-bottom:8px}
+.rf-done-sub{font-size:13px;opacity:.86;line-height:1.65;margin-bottom:18px}
+.rf-done-restart{border:2px solid rgba(255,255,255,.4);background:transparent;color:white;border-radius:20px;padding:8px 22px;font-family:"Barlow",sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.rf-done-restart:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.7)}
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -399,12 +423,16 @@ const SEGMENTS = [
   {
     id:'authentic-style', label:'Have authentic personal style',
     quadrant:'Visioning', startAngle:0, endAngle:22.5,
-    tagline:'Leading as yourself, not a character',
-    desc:'Authenticity in leadership comes from self-awareness, consistency, and the courage to show up as you truly are. People follow leaders they trust, and trust begins with genuineness.',
-    modelTitle:'The Johari Window (Luft & Ingham)',
-    modelDesc:'The Johari Window is a framework for understanding self-awareness and how others perceive us. It maps what is known and unknown to self and others across four panes. Effective leaders actively expand the Open area through seeking feedback and appropriate self-disclosure.',
-    bullets:['Seek feedback to reduce your Blind Spot','Share appropriately to shrink the Hidden area','Self-awareness is an ongoing practice, not a destination'],
-    modelType:'johari'
+    tagline:'Leading as yourself, on solid ground',
+    desc:'Authenticity in leadership is not a question of personality, it is a question of consistency. People follow leaders they understand, and understanding begins when a leader is clear about who they are, what they stand for, and how they will behave. The most testing time for this is often a leader\'s first months in a role, when the team is watching closely and forming their early impressions.',
+    modelTitle:'A leadership continuum',
+    modelDesc:'A leader\'s relationship with their team sits somewhere on a continuum, from Hostile at one extreme to Buddy at the other. Both ends fall away into a chasm: hostile distance damages trust, and forced matey-ness erodes authority. The solid ground between them, where a leader is Approachable and Friendly, is where genuine leadership presence is built. From this position, a leader can stay connected with people while still holding clear personal standards and dealing with any inappropriate behaviour when it arises, without ever being seen as two-faced.',
+    bullets:['Approachable and friendly is the solid ground: aloof and matey are the chasms either side','A new leader is being read constantly in their first months: consistency, not charm, is what builds trust','Authenticity holds when standards are visible and applied the same way, regardless of mood or who is in the room'],
+    noteTitle:'Genuine, not generic',
+    noteText:'Being authentic does not mean being unfiltered. It means being recognisably yourself across every interaction, regardless of mood, audience, or how you feel about the person in front of you. When the team can predict the standards you hold to, even when they cannot predict the day, they begin to trust the leader and not just the moment. That predictability, rooted in High Challenge and High Support with Positive Regard and Genuineness, is what turns personal style into leadership presence.',
+    bookPages:'73-75',
+    modelType:'approachability',
+    hasStyleReflection: true
   },
   {
     id:'step-back', label:'Step back and watch',
@@ -760,6 +788,7 @@ function buildModelVisual(seg) {
   wrap.className = 'model-visual';
   const builders = {
     johari: buildJohariVisual,
+    approachability: buildApproachabilityVisual,
     balcony: buildBalconyVisual,
     matrix: buildMatrixVisual,
     vision: buildVisionVisual,
@@ -806,6 +835,130 @@ function buildJohariVisual() {
   style.textContent = '@keyframes springIn{0%{opacity:0;transform:scale(.84)}70%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}';
   d.appendChild(style);
   return d;
+}
+
+
+function playTooltipReveal(){
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    const osc=ctx.createOscillator(), g=ctx.createGain();
+    osc.type='sine'; osc.frequency.value=528;
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.013,now+.008); g.gain.exponentialRampToValueAtTime(.0001,now+.22);
+    osc.connect(g); g.connect(ctx.destination); osc.start(now); osc.stop(now+.25);
+  }catch(e){}
+}
+function playCardFlip(){
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    [{f:659,t:0},{f:784,t:.06}].forEach(({f,t})=>{
+      const osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=f;
+      g.gain.setValueAtTime(0,now+t); g.gain.linearRampToValueAtTime(.015,now+t+.008); g.gain.exponentialRampToValueAtTime(.0001,now+t+.18);
+      osc.connect(g); g.connect(ctx.destination); osc.start(now+t); osc.stop(now+t+.2);
+    });
+  }catch(e){}
+}
+function buildApproachabilityVisual() {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;opacity:0;transition:opacity .4s ease;position:relative';
+
+  const ZONES = [
+    { label:'Hostile',      x:20,  y:268, w:108, h:38, color:'#C0392B',
+      desc:'Creates fear and withdrawal. People comply but never truly commit.' },
+    { label:'Aloof',        x:130, y:168, w:82,  h:38, color:'#888',
+      desc:'Hard to read and harder to reach. Teams fill the silence with their own anxiety.' },
+    { label:'Remote',       x:222, y:76,  w:96,  h:38, color:'#888',
+      desc:'Professional distance that can feel like indifference when the pressure is on.' },
+    { label:'Approachable', x:330, y:76,  w:148, h:38, color:'#0061AD',
+      desc:'Open, available, and consistent. The foundation on which team trust is built.' },
+    { label:'Friendly',     x:450, y:168, w:96,  h:38, color:'#0061AD',
+      desc:'Warm and genuine. People feel seen and valued without the lines becoming blurred.' },
+    { label:'Buddy',        x:558, y:268, w:108, h:38, color:'#C0392B',
+      desc:'Blurs the line between leader and friend. Authority quietly erodes when it is most needed.' }
+  ];
+
+  wrap.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 736.91 308.98" style="width:100%;height:auto;max-width:560px;display:block;margin:0 auto">
+  <style>
+    .al-line{opacity:0;animation:alFade .8s .2s ease forwards}
+    .al-shadow{opacity:0;animation:alFade .8s 1s ease forwards}
+    .al-text{opacity:0;animation:alFade .8s 1.5s ease forwards}
+    .al-zones{opacity:0;animation:alFade .2s 1.8s ease forwards}
+    @keyframes alFade{to{opacity:1}}
+    .al-zone{cursor:pointer;transition:opacity .15s}
+    .al-zone:hover{opacity:1}
+  </style>
+  <g class="al-shadow">
+    <g style="opacity:.26"><path d="M636.28,265.67c4.71-3.65,5.76-8.9,7.49-15.24,1.31-4.81,2.53-8.25,3.63-10.96,0,0,5.64-10.78,5.21-13.04-.04-.19-.15-.78-.45-.84-.26-.06-.55.33-.6.39-.71.88-9.89,7.68-15.82,4.64-3.17-1.63-5.78-5.14-5.79-9.19-.02-5.5,4.77-10.55,10.61-10.77,5.55-.21,9.93,4.03,11.12,8.46.15.56.07,3.12.62,3.72.53.33.62-.28.65-.56,1.13-8.31,1.58-13.12-1.52-17.63-3.3-4.8-9.58-7.53-15.25-6.87-9.98,1.16-16.05,12.58-16.59,21.17-.08,1.34-.09,3.51,5.09,18.03,3.96,11.08,6.83,17.83,7.15,20.65.17,1.49.65,2.92,1.26,4.29l.59,1.3c.46,1.02,1.24,1.88,2.26,2.36.17.08.3.12.35.08Z" style="fill:#fa6b02"/></g>
+    <g style="opacity:.26"><path d="M108.05,272.39c5.16-3.99,6.3-9.74,8.19-16.67,1.44-5.26,2.77-9.03,3.97-11.99,0,0,6.17-11.79,5.69-14.26-.04-.21-.16-.85-.49-.92-.29-.06-.6.36-.66.43-.77.97-10.82,8.4-17.31,5.07-3.47-1.78-6.32-5.62-6.33-10.05-.02-6.02,5.22-11.54,11.6-11.78,6.08-.23,10.86,4.41,12.16,9.26.16.61.08,3.41.68,4.07.58.37.67-.31.72-.62,1.23-9.09,1.73-14.35-1.66-19.28-3.61-5.25-10.48-8.24-16.68-7.52-10.92,1.27-17.55,13.76-18.15,23.16-.09,1.46-.1,3.84,5.57,19.72,4.33,12.12,7.47,19.51,7.82,22.59.19,1.63.71,3.2,1.38,4.69l.64,1.43c.5,1.12,1.36,2.06,2.47,2.59.18.09.32.13.38.09Z" style="fill:#fa6b02"/></g>
+  </g>
+  <g class="al-line">
+    <path d="M3.4,140.41c1.38-1.8,9.94,5.49,23.73,7.4,4.85.67,8.74,1.16,12.81-.82,3.72-1.81,4.92-4.39,7.58-4.08,2.82.33,3.44,3.46,6.95,6.59,3.84,3.42,8.25,4.27,10.95,4.79,9.46,1.82,19.55-2.49,25.93-8.61,6.3-6.05,5.96-10.98,10.29-11.65,5.88-.91,7.58,8.01,17.21,9.35,1.1.15,10.5,1.46,15.86-3.56,1.06-1,2.12-2.38,4.04-2.66,2.42-.35,4.01,1.37,6.9,3.07,0,0,4.46,2.61,10.85,3.5,1.5.21,6.76.93,12.32-1.3,7.68-3.08,8.9-8.9,13.8-8.69,3.58.15,3.87,3.3,8.89,6.05.9.49,5.94,2.8,12.69,2.46,1.34-.07,3.94-.3,7-1.3,10.59-3.48,12.7-11.95,17.73-10.85,3.74.82,3.24,4.95,8.85,7.66.49.24,6.9,3.23,12.91.66,5.45-2.33,5.89-7.23,9.56-7.19,2.79.03,3.58,2.88,7.3,5.36,5.85,3.91,12.94,2.91,14.8,2.64,11.68-1.66,14.88-12.39,21.93-10.75,3.3.77,2.59,3.11,8.25,6.03,1.54.8,6.8,3.31,13.5,2.93,6.42-.36,6.51-2.96,11.71-2.93,6.59.03,7.27,4.2,14.73,5.23,7.36,1.02,13.72-2.07,15.26-2.84,6.9-3.44,7.34-7.44,11.5-7.46,4.47-.03,5.48,4.57,11.75,8.06,8.06,4.48,17.01,2.78,18.68,2.42,12.25-2.59,15.03-12.97,22.27-11.38,4.55,1,4.47,5.33,11.76,7.74,2.45.81,6.39,2.11,10.33.59,5.17-2,6.27-7.31,9.23-6.87,1.93.29,1.83,2.61,4.41,4.64,3.83,3.02,9.93,2.52,13.87,1,7.08-2.73,7.53-8.88,11.86-8.74,3.48.11,3.52,4.09,9.18,7.35,4.13,2.38,11.17,4.32,16.76,1.73,4.19-1.94,5.25-5.36,8.21-4.96,2.34.31,3,2.64,5.05,4.66,5.24,5.14,16.02,4.81,22.91,1.56,9.03-4.26,9.32-12.57,15.19-12.54,4.25.03,4.48,4.38,11.76,7.74,7.15,3.3,14.55,2.61,17.07,2.38,8.24-.77,10.64-3.81,15.24-1.87,3.76,1.59,3.65,4.25,7.62,5.37,4.84,1.36,9.55-1.32,10.72-1.99,6.02-3.43,5.44-7.88,8.95-8.5,4.99-.88,6.98,7.97,16.21,10.76,5.96,1.8,11.52.04,13.59-.62,10.01-3.17,11.43-10.43,17.39-9.89,4.55.41,4.33,4.7,11.43,8.05.82.39,8.45,3.86,17.09,1.73,8.29-2.05,12.4-8.01,14.07-6.75,1.5,1.13-.99,6.56-2.19,9.64-3.43,8.85-2.56,18.73-.66,38.12,1,10.2,2.49,19.67,5.47,38.6.91,5.79,3.04,19.11-.54,33.28-.96,3.81-2.47,8.18-6.42,10.82-4.31,2.88-9.47,2.31-12.98,1.93-1.58-.17-3.51-.5-14.1-4.57-9.5-3.64-11.82-4.86-16.36-4.95-1.8-.04-4.69-.07-8.11,1.08-7.46,2.51-7.88,7.43-16.13,11.22-3.14,1.44-5.69,2.61-9.11,2.35-5.43-.41-8.42-4.08-10.92-2.54-1.38.84-2.02,2.9-1.73,4.48.64,3.47,5.66,3.88,5.97,6.62.25,2.21-2.76,4.23-4.01,5.07-5.83,3.91-14.89,4.51-21.66.09-.62-.41-6.44-4.28-5.63-7.26.63-2.32,4.73-2.03,13.08-5.8,3.06-1.38,5.05-2.28,6.88-3.7,4.94-3.82,6.03-9.32,7.85-15.96,5-18.3,7.83-17.26,9.49-29.49,1.18-8.71,1.78-13.74-1.46-18.46-3.46-5.03-10.03-7.89-15.97-7.2-10.46,1.21-16.81,13.18-17.38,22.18-.09,1.4-.1,3.68,5.33,18.88,5.26,14.73,8.69,22.17,7.16,23.13-.73.46-2.31-.73-4.14-2.37-10.14-9.08-10.78-16.58-18.11-24.71-2.48-2.76-6.62-5.52-14.91-11.05-11.16-7.45-12.97-6.98-17.17-11.11-5.31-5.22-3.73-7.26-11.09-21.29-9.67-18.46-16.18-22.14-20.4-23.47-2.87-.91-6.55-1.31-7.11-.18-.52,1.05,2.1,2.56,3.07,6.22.19.72.95,3.57-.15,5.81-2.69,5.5-14.75,3.72-16.57,3.45-3.03-.45-8.15-1.2-8.94-4.11-.56-2.04,1.28-4.19,2.07-5.12,2.66-3.12,6.18-3.13,8.51-3.98,5.49-2.02,6.33-8.86,10.95-23.63,6.02-19.24,8.74-20.86,7.16-26.96-1.49-5.75-6.47-14.26-13.54-13.92-5.9.28-12.35,6.68-11.34,13.61.9,6.18,7.31,9.79,12.35,10.01,8.38.38,15.75-8.45,15.94-16.72.25-10.66-11.44-19.59-21.51-18.33-11.57,1.45-16.88,15.85-16.48,25.11.21,4.91,2.26,8.82,6.36,16.65,6.79,12.97,13.43,18.47,11.32,24.86-.23.71-1.05,3.18-3.01,3.8-4.67,1.49-12.13-8.7-15.77-14.95-9.08-15.55-3.33-21.7-10.34-37.76-5.58-12.79-14.33-20.57-23.5-28.72-7.12-6.33-15.02-11.79-24.81-15.51-4.15-1.57-15.07-5.72-18.38-1.77-.94,1.12-1.43,3.09-.76,4.51,1.43,3.04,7.38,1.89,8.29,4.42.63,1.75-1.62,4.03-2.05,4.47-3.58,3.63-8.97,3.37-18.82,2.75-8.09-.51-9.6-1.58-10.27-2.85-.93-1.76-.43-4.25.8-5.8,1.73-2.18,4.46-1.94,7.5-2.72,4.42-1.13,7.11-3.78,10.86-7.48,6.04-5.96,7.7-12.93,11.04-26.86,2.17-9.08,1.81-11.65.68-13.88-1.91-3.76-6.8-8.08-12.43-6.78-5.39,1.24-8.85,7.03-8.08,12.4.87,6.02,6.76,9.5,11.39,9.67,7.9.29,14.76-9.01,14.34-17.08-.54-10.22-12.73-18.27-22.54-15.77-9.82,2.5-13.39,14.61-13.17,21.96.1,3.28,1.97,7.73,5.71,16.63,5.27,12.52,7.8,17.9,5.96,19.55-1.06.94-3.11.24-6.48-.9-5.92-2-9.83-4.99-10.07-5.17,0,0-8.21-6.25-21.26-12.52-4.65-2.23-12.76-6.13-22.96-5.93-15.16.29-26.56,9.35-29.06,11.53-7.83,6.81-9.1,13.17-19.21,17.93-3.57,1.68-9.79,3.89-9.53,6.22.08.78,1.21,1.73,3.46,3.64,2.22,1.89,2.94,2.12,3.15,2.99.43,1.73-1.53,3.92-3.36,5.08-2.86,1.81-4.87.76-12.27.57-7.68-.2-10.61.81-11.96-1.19-.97-1.45-.5-3.55.12-4.84,1.57-3.27,5.56-2.95,9.5-4.93,3.33-1.67,6.08-6.85,11.43-17.16,5.38-10.35,5.97-13.48,6.21-15.03.46-3.04,1.1-7.63-.97-12.63-.2-.49-4.76-11.19-11.37-10.31-4.9.65-8.71,7.38-7.78,13.37.76,4.92,4.72,9.33,9.12,9.93,7.21.99,14.56-8.41,14.98-17.07.48-9.7-7.69-19.47-16.94-19.83-10.77-.42-17.99,12.11-18.96,20.84-.84,7.55,2.7,14.89,6.52,22.79,4.34,8.98,7.94,12.19,6.67,16.98-.84,3.18-3.16,4.53-9.93,9.12-13.33,9.03-20.06,13.63-23.08,17.83-2.48,3.44-3.97,8.48-6.94,18.57-3.34,11.33-3.17,15.76-7.68,22.1-2.59,3.64-5.38,6.04-8.63,8.83-4.75,4.08-6.76,4.7-14.5,10.94-1.24,1-5.01,4.09-7.99,9.17-2.01,3.42-1.91,4.75-1.43,5.46,1.04,1.54,3.95.1,5.77,1.76,1.7,1.55,1.73,5.15.45,7.45-2.77,5-12.24,4.81-18.18,3.09-4.31-1.25-10.42-4.37-10.15-7.37.08-.89.71-1.69,8.89-6.23,6.53-3.63,7.14-3.68,8.21-4.96,2.73-3.26,1.12-5.72,2.6-13.18,1.14-5.72,2.29-5.34,5.58-15.69,2.01-6.33,3.01-9.56,2.58-12.22-.81-5.03-4.97-12.54-11.96-12.59-6.79-.05-13.05,6.97-11.99,13.91,1.02,6.66,8.29,10.1,13.64,10.05,8.52-.08,15.36-9.04,15.64-17.37.37-10.89-10.49-20.17-20.18-19.59-11.63.7-18,15.4-18.1,25.07-.07,6.71,2.88,12.69,6.9,20.86,5.28,10.73,9.33,13.8,7.93,18.3-1.29,4.17-5.86,5.1-13.48,9.03,0,0-7.43,3.82-21.73,15.6-11.72,9.64-14.5,25.44-19.89,44.41-1.7,5.98-3.37,11.97-4.99,17.97,0,0-1.08,4.02-3.33,10.18-2.74,7.53-3.74,8.5-4.55,9.08-4.27,3.08-9.8.03-11.11,2.55-.72,1.39.25,3.69,1.49,4.89,1.62,1.56,3.36.95,3.83,2.04.66,1.54-2,4.76-5.3,6.19-1.68.73-2.55.57-7.28.62-8.51.09-9.9.64-12.46-.67-.53-.27-4.49-2.35-4.25-4.61.24-2.26,4.59-3.73,10.94-5.87,5.13-1.73,6.64-1.7,7.94-3.49,1.28-1.77.69-3.08,1.7-7.64.41-1.86,1.06-4.13,2.18-7.01,2.86-7.36,4.19-7.19,5.9-12.97,1.39-4.68,3.19-10.77.74-17.17-.46-1.21-4.01-10.48-11.28-10.66-6.06-.15-12.39,6.06-11.9,13.03.49,7.01,7.63,11.38,13.05,11.3,8.48-.11,14.68-11.12,14.74-20.07.08-10.9-8.9-21.74-18.7-22.12-11.9-.46-20.78,14.69-21.41,25.83-.67,11.81,7.57,25.4,8.49,26.89,2.99,4.83,7.87,11.03,6.65,17.96-.42,2.38-1.29,3.34-1.88,3.8-3.15,2.51-8.86-.54-13.58-2.13-8.68-2.92-16.37-1.71-23.4-.6-15.72,2.48-19.15,11.82-38.32,14.72-4.28.65-6.75.58-9.17-.53-7.03-3.24-9.1-13.25-10.34-24.27-2.64-23.39-.68-43.21.47-52.75,1.68-13.95,1.64-28.1,3.75-41.99.34-2.26,1.04-6.23-.31-10.97-1.3-4.58-3.53-6.49-2.82-7.41Z" style="fill:none;stroke:#1A3A5C;stroke-miterlimit:10;stroke-width:2px"/>
+    <path d="M648.81,216.81c-1.24-4.64-5.82-9.09-11.64-8.87-6.12.23-11.13,5.52-11.11,11.28.01,4.24,2.74,7.92,6.06,9.62,5.96,3.06,15,.41,17.35-5.06,1.23-2.87-.43-6.12-.66-6.98Z" style="fill:none;stroke:#1A3A5C;stroke-miterlimit:10;stroke-width:2px"/>
+  </g>
+  <g class="al-text" style="font-family:Barlow,Arial,sans-serif">
+    <text x="55"  y="300" font-size="13" font-weight="700" fill="#C0392B">Hostile</text>
+    <text x="163" y="200" font-size="13" font-weight="700" fill="#888">Aloof</text>
+    <text x="252" y="108" font-size="13" font-weight="700" fill="#888">Remote</text>
+    <text x="355" y="108" font-size="13" font-weight="700" fill="#0061AD">Approachable</text>
+    <text x="482" y="200" font-size="13" font-weight="700" fill="#0061AD">Friendly</text>
+    <text x="590" y="300" font-size="13" font-weight="700" fill="#C0392B">Buddy</text>
+  </g>
+  <g class="al-zones" id="al-hit-zones"></g>
+</svg>`;
+
+  // Caption strip below SVG
+  const caption = document.createElement('div');
+  caption.id = 'al-caption';
+  caption.style.cssText = 'min-height:44px;margin-top:10px;padding:10px 16px;border-radius:12px;background:#f0f6fc;font-size:13px;color:#004B86;line-height:1.6;text-align:center;transition:opacity .2s ease;opacity:0;font-style:italic;max-width:560px;margin-left:auto;margin-right:auto';
+  wrap.appendChild(caption);
+
+  setTimeout(() => {
+    wrap.style.opacity = '1';
+
+    const ZONES = [
+      { label:'Hostile',      x:20,  y:268, w:108, h:38, color:'#C0392B',
+        desc:'Creates fear and withdrawal. People comply but never truly commit.' },
+      { label:'Aloof',        x:130, y:168, w:82,  h:38, color:'#888',
+        desc:'Hard to read and harder to reach. Teams fill the silence with their own anxiety.' },
+      { label:'Remote',       x:222, y:76,  w:96,  h:38, color:'#888',
+        desc:'Professional distance that can feel like indifference when the pressure is on.' },
+      { label:'Approachable', x:330, y:76,  w:148, h:38, color:'#0061AD',
+        desc:'Open, available, and consistent. The foundation on which team trust is built.' },
+      { label:'Friendly',     x:450, y:168, w:96,  h:38, color:'#0061AD',
+        desc:'Warm and genuine. People feel seen and valued without the lines becoming blurred.' },
+      { label:'Buddy',        x:558, y:268, w:108, h:38, color:'#C0392B',
+        desc:'Blurs the line between leader and friend. Authority quietly erodes when it is most needed.' }
+    ];
+
+    const NS = 'http://www.w3.org/2000/svg';
+    const hitzones = wrap.querySelector('#al-hit-zones');
+    if (!hitzones) return;
+
+    ZONES.forEach(z => {
+      const rect = document.createElementNS(NS, 'rect');
+      rect.setAttribute('x', z.x);
+      rect.setAttribute('y', z.y);
+      rect.setAttribute('width', z.w);
+      rect.setAttribute('height', z.h);
+      rect.setAttribute('fill', 'transparent');
+      rect.setAttribute('rx', '6');
+      rect.style.cssText = 'cursor:pointer';
+
+      rect.addEventListener('mouseenter', () => {
+        caption.style.opacity = '1';
+        caption.style.borderLeft = '3px solid ' + z.color;
+        caption.style.color = z.color;
+        caption.textContent = z.label + ': ' + z.desc;
+        playTooltipReveal();
+      });
+      rect.addEventListener('mouseleave', () => {
+        caption.style.opacity = '0';
+      });
+
+      hitzones.appendChild(rect);
+    });
+  }, 300);
+  return wrap;
 }
 
 function buildBalconyVisual() {
@@ -3305,6 +3458,114 @@ function buildDetailPage(seg, onBack) {
       cont.appendChild(emDivider);
       cont.appendChild(emGrid);
     });
+  }
+
+  // Style reflection activity (authentic-style segment)
+  if (seg.hasStyleReflection) {
+    const rfDivider = document.createElement('div');
+    rfDivider.className = 'ws-divider slide-up delay4';
+    rfDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Personal reflection</div><div class="ws-divider-line"></div>';
+
+    const rfOuter = document.createElement('div');
+    rfOuter.className = 'model-card slide-up delay4';
+    rfOuter.style.cssText = 'padding:28px';
+
+    const rfTitle = document.createElement('div');
+    rfTitle.style.cssText = 'font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:20px;font-weight:800;color:#004B86;margin-bottom:4px;text-align:center';
+    rfTitle.textContent = 'Reflect on your authentic style';
+
+    const rfSub = document.createElement('div');
+    rfSub.style.cssText = 'font-size:13px;color:#888;margin-bottom:24px;line-height:1.6;text-align:center;max-width:420px;margin-left:auto;margin-right:auto';
+    rfSub.textContent = 'Four prompts for your own thinking. Click the top card to deal it away and reveal the next.';
+
+    rfOuter.appendChild(rfTitle);
+    rfOuter.appendChild(rfSub);
+
+    const STORY_SVG = '<svg viewBox="0 0 2081 472" style="height:24px;display:block" xmlns="http://www.w3.org/2000/svg"><path fill="#0061AD" d="M1392,473C928,473,464.6,473,1.1,473C1.1,315.7,1.1,158.5,1.1,1.1C694.7,1.1,1388.3,1.1,2082,1.1C2082,158.4,2082,315.7,2082,473C1852.1,473,1622.3,473,1392,473M1552.1,236.6C1558.3,230.1,1565.3,224.2,1570.5,217C1587.8,192.6,1593.4,164.9,1588.7,135.6C1585,112.6,1574.7,92.8,1555.2,78.8C1537.1,65.8,1516.2,62.3,1494.8,62.2C1430.1,61.9,1365.4,62.1,1300.8,62.1C1299,62.1,1297.2,62.1,1295.6,62.1C1271,177.8,1246.7,292.7,1222.2,408C1257.2,408,1291.8,408,1326.5,407.9C1327.6,407.9,1329.5,406,1329.8,404.8C1332.7,392,1335.3,379.2,1338,366.4C1344.7,334.3,1351.3,302.2,1358.2,270.2C1358.4,269,1360.2,267.3,1361.3,267.2C1374.9,266.4,1386.8,269.8,1394.3,282.2C1398.8,289.6,1403.4,297,1406.8,304.8C1420.9,337.5,1434.6,370.4,1448.2,403.2C1449.7,406.7,1451.2,408.1,1455.3,408.1C1489.5,407.9,1523.6,408,1557.8,408C1559.4,408,1561,408,1563.4,408C1555.7,389.3,1548.5,371.1,1540.8,353.3C1529.2,326.6,1516.8,300.3,1498.9,277.2C1495,272.1,1490.5,267.6,1486.1,262.5C1510,258.5,1532.4,252,1552.1,236.6M1064.4,404.9C1103,392.3,1134.2,369.2,1158.9,337.3C1180.5,309.4,1193.6,277.7,1200.1,243C1206.2,210.3,1206,177.8,1194.8,146.2C1179.7,103.6,1151,74.7,1106.8,62.9C1073.5,54.1,1039.6,54.6,1005.8,59.9C960.6,67,923.1,88.7,894.3,123.8C850.5,177.1,833.9,238.8,845.4,306.8C852.4,348.4,876,378.9,914.6,397.1C945.4,411.6,978.2,415,1011.7,413.6C1029.3,412.8,1046.7,410.6,1064.4,404.9M373.3,145.4C374.8,151.2,376.4,157.1,378,163.4C410.7,161.7,443.8,159.9,477.3,158.1C476.4,152.6,475.8,148,474.9,143.5C470.7,122.5,461.7,103.9,445.4,89.4C427.4,73.4,405.6,65.5,382.3,61.1C358.7,56.5,334.8,55.7,310.8,57C286.9,58.4,263.9,63.4,242.4,74.3C200.5,95.6,179.7,138,189.1,183.4C193.8,206.7,208.6,222.5,227.9,234.8C251,249.4,276.6,258.6,302.1,268C315.5,272.9,329.2,277.1,340.8,285.7C347.1,290.4,351.9,296.2,353,304.3C354.9,317.9,348,330.6,334.8,337.9C320.9,345.6,305.9,346.3,290.7,344.9C268.5,342.7,254.3,330.2,249.5,308.6C247.9,301.6,247.7,294.2,246.8,286.6C213.7,288.8,180.6,291,146.2,293.3C147.2,303.9,147.2,314.2,149.2,324.2C154.7,351.6,168.1,374.4,191.7,390.2C215.1,405.8,241.9,410.5,269.1,412.8C293.2,414.9,317.3,414.3,341.3,411.1C371,407.1,397.5,396.4,419.1,375.5C450.7,345,461.4,308.4,448.8,266C442,242.9,425.6,227,405.9,214.2C382.8,199.3,357.1,190,331.7,179.9C319.9,175.2,308.3,169.6,297.4,163.2C289.3,158.5,285.1,150.7,287.9,140.7C290.5,131.2,297.1,125.5,305.8,122C315.1,118.4,324.9,118.1,334.7,119C352.2,120.5,365.8,127.8,373.3,145.4M1696.5,408C1722.3,408,1748.2,408,1774,408.1C1777.1,408.1,1778.5,407.5,1779.2,403.9C1786.3,369.2,1793.5,334.6,1801.2,300C1803.4,289.6,1803.3,278.3,1811.6,270C1813.5,268.1,1815,265.8,1816.6,263.7C1864.7,201.5,1912.9,139.3,1961,77.1C1964.7,72.4,1968.3,67.5,1972.1,62.5C1971.2,62.2,1970.9,62.1,1970.6,62.1C1931.4,62.1,1892.3,62,1853.1,62.2C1851.4,62.2,1849.1,63.6,1848,65.1C1824.1,99.1,1800.4,133.1,1776.6,167.2C1771.4,174.7,1766.1,182.2,1760.5,190.1C1759.4,187.7,1758.6,186,1757.9,184.4C1741.6,144.9,1725.2,105.5,1709,66.1C1707.7,62.9,1706.1,62,1702.8,62C1668.3,62.1,1633.8,62.1,1599.3,62.1C1598.2,62.1,1597.1,62.2,1595.7,62.3C1596.2,63.6,1596.5,64.5,1596.9,65.4C1609.5,91.2,1622.2,117.1,1634.8,143C1655.6,185.5,1676.4,228.1,1697.1,270.7C1698.1,272.8,1699,275.5,1698.5,277.7C1690.9,313.8,1683.1,349.9,1675.3,386C1673.8,393.2,1672.4,400.4,1670.9,408C1679.5,408,1687.5,408,1696.5,408M829.5,62.1C810,62.1,790.5,62.1,771,62.1C693.4,62.1,615.7,62.1,538.1,62C534.5,62,532.6,62.3,531.8,66.7C529,81.8,525.5,96.8,522.3,111.9C519.9,123.5,517.5,135.1,515.1,147.1C551,147.1,586.4,147.1,622.3,147.1C612.9,191,603.4,234.3,594.1,277.7C584.8,321,575.6,364.3,566.3,408C601.3,408,636,408,670.6,407.8C671.8,407.8,673.6,405.7,673.9,404.3C681.3,371.2,688.6,338,695.7,304.9C704.9,262.7,713.9,220.4,723,178.2C725.2,167.8,727.6,157.5,730,147C767.4,147,804.5,147,842,147C848,118.6,853.9,90.5,859.9,62.1C849.8,62.1,840.2,62.1,829.5,62.1z"/><path fill="#FEFFFF" d="M1551.8,236.8C1532.4,252,1510,258.5,1486.1,262.5C1490.5,267.6,1495,272.1,1498.9,277.2C1516.8,300.3,1529.2,326.6,1540.8,353.3C1548.5,371.1,1555.7,389.3,1563.4,408C1561,408,1559.4,408,1557.8,408C1523.6,408,1489.5,407.9,1455.3,408.1C1451.2,408.1,1449.7,406.7,1448.2,403.2C1434.6,370.4,1420.9,337.5,1406.8,304.8C1403.4,297,1398.8,289.6,1394.3,282.2C1386.8,269.8,1374.9,266.4,1361.3,267.2C1360.2,267.3,1358.4,269,1358.2,270.2C1351.3,302.2,1344.7,334.3,1338,366.4C1335.3,379.2,1332.7,392,1329.8,404.8C1329.5,406,1327.6,407.9,1326.5,407.9C1291.8,408,1257.2,408,1222.2,408C1246.7,292.7,1271,177.8,1295.6,62.1C1297.2,62.1,1299,62.1,1300.8,62.1C1365.4,62.1,1430.1,61.9,1494.8,62.2C1516.2,62.3,1537.1,65.8,1555.2,78.8C1574.7,92.8,1585,112.6,1588.7,135.6C1593.4,164.9,1587.8,192.6,1570.5,217C1565.3,224.2,1558.3,230.1,1551.8,236.8M1402.5,202.9C1417.4,202.2,1432.4,202.2,1447.3,200.8C1461.3,199.5,1473.4,193.2,1481.9,181.6C1493.4,165.6,1493.9,136.1,1463,133.4C1438.2,131.3,1413.1,132,1387.9,131.5C1382.8,155.6,1377.8,179,1372.7,202.9C1382.6,202.9,1392.1,202.9,1402.5,202.9z"/><path fill="#FEFFFF" d="M1064,405C1046.7,410.6,1029.3,412.8,1011.7,413.6C978.2,415,945.4,411.6,914.6,397.1C876,378.9,852.4,348.4,845.4,306.8C833.9,238.8,850.5,177.1,894.3,123.8C923.1,88.7,960.6,67,1005.8,59.9C1039.6,54.6,1073.5,54.1,1106.8,62.9C1151,74.7,1179.7,103.6,1194.8,146.2C1206,177.8,1206.2,210.3,1200.1,243C1193.6,277.7,1180.5,309.4,1158.9,337.3C1134.2,369.2,1103,392.3,1064,405M978.7,330C1007.1,341.4,1038.2,334,1058.6,311.4C1075.1,293.2,1084.6,271.5,1091,248.3C1096.6,227.8,1101.2,207.1,1098.1,185.5C1093.8,155.3,1071,135.2,1040.5,135C1014,134.8,993.9,146.9,979.2,167.9C956.5,200.4,947.1,237.3,946.8,276.3C946.6,299.5,956.3,318.5,978.7,330z"/><path fill="#FEFEFF" d="M373.2,145C365.8,127.8,352.2,120.5,334.7,119C324.9,118.1,315.1,118.4,305.8,122C297.1,125.5,290.5,131.2,287.9,140.7C285.1,150.7,289.3,158.5,297.4,163.2C308.3,169.6,319.9,175.2,331.7,179.9C357.1,190,382.8,199.3,405.9,214.2C425.6,227,442,242.9,448.8,266C461.4,308.4,450.7,345,419.1,375.5C397.5,396.4,371,407.1,341.3,411.1C317.3,414.3,293.2,414.9,269.1,412.8C241.9,410.5,215.1,405.8,191.7,390.2C168.1,374.4,154.7,351.6,149.2,324.2C147.2,314.2,147.2,303.9,146.2,293.3C180.6,291,213.7,288.8,246.8,286.6C247.7,294.2,247.9,301.6,249.5,308.6C254.3,330.2,268.5,342.7,290.7,344.9C305.9,346.3,320.9,345.6,334.8,337.9C348,330.6,354.9,317.9,353,304.3C351.9,296.2,347.1,290.4,340.8,285.7C329.2,277.1,315.5,272.9,302.1,268C276.6,258.6,251,249.4,227.9,234.8C208.6,222.5,193.8,206.7,189.1,183.4C179.7,138,200.5,95.6,242.4,74.3C263.9,63.4,286.9,58.4,310.8,57C334.8,55.7,358.7,56.5,382.3,61.1C405.6,65.5,427.4,73.4,445.4,89.4C461.7,103.9,470.7,122.5,474.9,143.5C475.8,148,476.4,152.6,477.3,158.1C443.8,159.9,410.7,161.7,378,163.4C376.4,157.1,374.8,151.2,373.2,145z"/><path fill="#FEFEFF" d="M1696,408C1687.5,408,1679.5,408,1670.9,408C1672.4,400.4,1673.8,393.2,1675.3,386C1683.1,349.9,1690.9,313.8,1698.5,277.7C1699,275.5,1698.1,272.8,1697.1,270.7C1676.4,228.1,1655.6,185.5,1634.8,143C1622.2,117.1,1609.5,91.2,1596.9,65.4C1596.5,64.5,1596.2,63.6,1595.7,62.3C1597.1,62.2,1598.2,62.1,1599.3,62.1C1633.8,62.1,1668.3,62.1,1702.8,62C1706.1,62,1707.7,62.9,1709,66.1C1725.2,105.5,1741.6,144.9,1757.9,184.4C1758.6,186,1759.4,187.7,1760.5,190.1C1766.1,182.2,1771.4,174.7,1776.6,167.2C1800.4,133.1,1824.1,99.1,1848,65.1C1849.1,63.6,1851.4,62.2,1853.1,62.2C1892.3,62,1931.4,62.1,1970.6,62.1C1970.9,62.1,1971.2,62.2,1972.1,62.5C1968.3,67.5,1964.7,72.4,1961,77.1C1912.9,139.3,1864.7,201.5,1816.6,263.7C1815,265.8,1813.5,268.1,1811.6,270C1803.3,278.3,1803.4,289.6,1801.2,300C1793.5,334.6,1786.3,369.2,1779.2,403.9C1778.5,407.5,1777.1,408.1,1774,408.1C1748.2,408,1722.3,408,1696,408z"/><path fill="#FFF" d="M829.5,62.1C840.2,62.1,849.8,62.1,859.9,62.1C853.9,90.5,848,118.6,842,147C804.5,147,767.4,147,730,147C727.6,157.5,725.2,167.8,723,178.2C713.9,220.4,704.9,262.7,695.7,304.9C688.6,338,681.3,371.2,673.9,404.3C673.6,405.7,671.8,407.8,670.6,407.8C636,408,601.3,408,566.3,408C575.6,364.3,584.8,321,594.1,277.7C603.4,234.3,612.9,191,622.3,147.1C586.4,147.1,551,147.1,515.1,147.1C517.5,135.1,519.9,123.5,522.3,111.9C525.5,96.8,529,81.8,531.8,66.7C532.6,62.3,534.5,62,538.1,62C615.7,62.1,693.4,62.1,771,62.1C790.5,62.1,810,62.1,829.5,62.1z"/><path fill="#0161AD" d="M1402,202.9C1392.1,202.9,1382.6,202.9,1372.7,202.9C1377.8,179,1382.8,155.6,1387.9,131.5C1413.1,132,1438.2,131.3,1463,133.4C1493.9,136.1,1493.4,165.6,1481.9,181.6C1473.4,193.2,1461.3,199.5,1447.3,200.8C1432.4,202.2,1417.4,202.2,1402,202.9z"/><path fill="#0161AD" d="M978.4,329.8C956.3,318.5,946.6,299.5,946.8,276.3C947.1,237.3,956.5,200.4,979.2,167.9C993.9,146.9,1014,134.8,1040.5,135C1071,135.2,1093.8,155.3,1098.1,185.5C1101.2,207.1,1096.6,227.8,1091,248.3C1084.6,271.5,1075.1,293.2,1058.6,311.4C1038.2,334,1007.1,341.4,978.4,329.8z"/></svg>';
+
+    const prompts = [
+      { q: 'Where on this continuum do you naturally sit day to day?',
+         hint: 'Think about the version of yourself that your team sees most often. Not your best day, not your worst, but the consistent everyday signal you send about who you are as a leader.' },
+      { q: 'How might your team describe your style when you are under pressure?',
+         hint: 'Pressure pulls leaders toward the edges. Some become more distant, others overcompensate with forced informality. Which way do you drift, and how visible is it to those around you?' },
+      { q: 'What is one behaviour that tells your team you are genuinely approachable?',
+         hint: 'Think of something specific and observable, not a value or intention. What do people actually see or experience that signals the door is open?' },
+      { q: 'What would shift for your team if you moved one step closer to the centre?',
+         hint: 'If you sit toward Hostile or Aloof, think about what becomes possible when people feel safer. If toward Buddy, think about what becomes possible when you can hold a difficult conversation without it damaging the relationship.' }
+    ];
+
+    const deck = document.createElement('div');
+    deck.className = 'rf-deck-wrap';
+
+    let dealtCount = 0;
+
+    function buildCard(idx) {
+      const p = prompts[idx];
+      const card = document.createElement('div');
+      card.className = 'rf-card';
+      card.setAttribute('data-pos', idx);
+      card.setAttribute('data-idx', idx);
+      card.innerHTML =
+        '<div class="rf-card-logo">' + STORY_SVG + '</div>' +
+        '<div class="rf-card-counter">Prompt ' + (idx+1) + ' of ' + prompts.length + '</div>' +
+        '<div class="rf-card-question">' + p.q + '</div>' +
+        '<div class="rf-card-hint">' + p.hint + '</div>' +
+        '<div class="rf-card-cta"><span>Click to deal</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>';
+      return card;
+    }
+
+    const doneBanner = document.createElement('div');
+    doneBanner.className = 'rf-done';
+    doneBanner.innerHTML = '<div class="rf-done-title">Thank you for reflecting</div><div class="rf-done-sub">Authentic leadership grows through exactly this kind of honest self-examination. Come back to these prompts after your next challenging week.</div><button class="rf-done-restart">&#8635; Deal again</button>';
+
+    function renderDeck() {
+      deck.innerHTML = '';
+      // Build cards back-to-front so DOM order matches z-index
+      for (let i = prompts.length - 1; i >= 0; i--) {
+        deck.appendChild(buildCard(i));
+      }
+      deck.appendChild(doneBanner);
+      attachClick();
+    }
+
+    function attachClick() {
+      const front = deck.querySelector('.rf-card[data-pos="0"]');
+      if (!front) return;
+      front.addEventListener('click', function onClick() {
+        playCardFlip();
+        front.classList.add('dealt');
+        front.removeEventListener('click', onClick);
+
+        // Advance the position of all remaining cards
+        deck.querySelectorAll('.rf-card:not(.dealt)').forEach(c => {
+          const pos = parseInt(c.getAttribute('data-pos'), 10);
+          c.setAttribute('data-pos', Math.max(0, pos - 1));
+        });
+
+        dealtCount++;
+
+        front.addEventListener('animationend', () => {
+          front.style.display = 'none';
+          if (dealtCount >= prompts.length) {
+            doneBanner.style.display = 'block';
+          } else {
+            attachClick();
+          }
+        }, { once: true });
+      });
+    }
+
+    doneBanner.querySelector('.rf-done-restart').addEventListener('click', () => {
+      dealtCount = 0;
+      doneBanner.style.display = 'none';
+      renderDeck();
+    });
+
+    renderDeck();
+    rfOuter.appendChild(deck);
+
+    cont.appendChild(rfDivider);
+    cont.appendChild(rfOuter);
   }
 
   // Inline Change Sheet (only for sections that have one)
