@@ -2307,6 +2307,10 @@ function buildLeadershipStylesVisual() {
     const cell = document.createElement('div');
     cell.className = `${uid}-cell`;
     cell.style.background = c.bg;
+    // Right-column cells get right-aligned text so the centre circle does not obscure it
+    if (c.xPos === 'high') {
+      cell.style.textAlign = 'right';
+    }
     cell.innerHTML = `<div class="${uid}-cell-label">${c.label}</div><div class="${uid}-cell-desc">${c.desc}</div><div class="${uid}-pill">See example</div><div class="${uid}-dot"></div>`;
 
     cell.addEventListener('mouseenter', () => {
