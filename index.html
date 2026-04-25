@@ -6069,7 +6069,12 @@ handleHash();
   }
 
   ['mousemove','keydown','mousedown','touchstart','scroll'].forEach(function(evt) {
-    window.addEventListener(evt, resetTimer, { passive:true });
+    window.addEventListener(evt, function(e) {
+      // Don't dismiss the nudge if the user is interacting with it.
+      // This lets them move their cursor onto a suggestion to click it.
+      if (nudgeEl && nudgeEl.classList.contains('visible') && e.target && nudgeEl.contains(e.target)) return;
+      resetTimer();
+    }, { passive:true });
   });
   window.addEventListener('hashchange', function() {
     clearTimeout(nudgeTimer); hideNudge();
