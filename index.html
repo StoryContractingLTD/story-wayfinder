@@ -349,6 +349,14 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .rf-done-sub{font-size:13px;opacity:.86;line-height:1.65;margin-bottom:18px}
 .rf-done-restart{border:2px solid rgba(255,255,255,.4);background:transparent;color:white;border-radius:20px;padding:8px 22px;font-family:"Barlow",sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
 .rf-done-restart:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.7)}
+
+/* Full-width model layout (for richly interactive models) */
+.detail-grid.fullwidth{display:flex;flex-direction:column;gap:24px}
+.detail-grid.fullwidth .model-card{width:100%}
+.detail-grid.fullwidth .right-col{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:24px;width:100%}
+@media (max-width:820px){
+  .detail-grid.fullwidth .right-col{grid-template-columns:1fr}
+}
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -437,12 +445,16 @@ const SEGMENTS = [
   {
     id:'step-back', label:'Step back and watch',
     quadrant:'Visioning', startAngle:22.5, endAngle:45,
-    tagline:'Observing before intervening',
-    desc:'Great leaders know when not to act. Stepping back gives space for others to step forward, and allows you to see patterns, dynamics, and opportunities that are invisible when you are in the middle of things.',
-    modelTitle:'Balcony and Dance Floor (Heifetz & Linsky)',
-    modelDesc:'This metaphor describes two leadership perspectives: being on the dance floor (in the action) and going to the balcony (observing from above). Leaders who can move between both perspectives make better decisions because they see both the detail and the bigger picture.',
-    bullets:['Regularly move between action and observation','Notice patterns that only become visible from a distance','Create deliberate pauses before reacting'],
-    modelType:'balcony'
+    tagline:'Listen, question, observe, consult',
+    desc:'Leader-Developers add value by seeing where improvements can be made. That begins with stepping back to gather data, observing carefully, asking good questions, and consulting widely before acting. The traps are easy to fall into: moving forward blindly on assumptions, the hero syndrome of expecting miracles in the first hours, or arriving with a ready-made solution before the problem is properly understood.',
+    modelTitle:'Reflecting through your colour energies',
+    modelDesc:'How we listen, question, observe and consult is shaped by our preferences. Each of the four colour energies brings genuine strengths to this work, and each carries traps if it is overused. Click each energy to surface a few prompts for honest self-reflection on how your preferences support or get in the way of stepping back well.',
+    bullets:['Gather data through observation, good questioning, and listening to others','Avoid moving forward blindly, the hero syndrome, or solutioning before understanding','Recognise that perception shapes how you read every situation'],
+    noteTitle:'Perception shapes everything',
+    noteText:'Two people can stand back and watch the same situation and notice entirely different things. That is not a flaw in the model: it is the model. Stepping back well is not just about pausing before you act, it is about understanding how your own preferences filter what you see and hear, and deliberately consulting others whose preferences are different to widen the picture.',
+    bookPages:'75-76',
+    modelType:'balcony',
+    fullWidthModel:true
   },
   {
     id:'right-course', label:'Decide the right course of action',
@@ -962,19 +974,303 @@ function buildApproachabilityVisual() {
 }
 
 function buildBalconyVisual() {
-  const svg = createSVG(400, 200);
-  // Balcony
-  addRect(svg, 120, 10, 160, 50, '#004B86', 8);
-  addText(svg, 200, 40, 'BALCONY', 'white', 13, 700);
-  // Arrow down
-  addLine(svg, 200, 60, 200, 100, '#aaa', 2, '6,4');
-  addText(svg, 200, 88, '↕', '#666', 18);
-  // Dance floor
-  addRect(svg, 60, 110, 280, 70, '#0061AD', 12);
-  addText(svg, 200, 140, 'DANCE FLOOR', 'white', 14, 700);
-  addText(svg, 200, 158, 'In the action', 'rgba(255,255,255,.7)', 11);
-  addText(svg, 200, 28, 'Observing the patterns', 'rgba(255,255,255,.7)', 10);
-  return svg;
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;max-width:620px;margin:0 auto;opacity:0;transition:opacity .4s ease';
+
+  const ENERGIES = [
+    { id:'blue',   label:'Cool Blue',  color:'#0089cf', textColor:'white',
+      cx:668.7,  cy:249.7,
+      strength:'You bring care for accuracy, structure and thorough analysis. You instinctively gather information, check facts, and look for what others miss.',
+      trap:'You can step so far back that the moment for action passes. Completeness can become a reason to keep observing rather than to share what you see.',
+      prompt:'Where might your need to be sure of the facts before speaking be holding back insight that the team needs from you now?' },
+    { id:'red',    label:'Fiery Red',  color:'#c83434', textColor:'white',
+      cx:1252.7, cy:249.7,
+      strength:'You cut through detail to the heart of an issue. You ask direct questions, expect clear answers, and move things forward when others are still circling.',
+      trap:'You can mistake speed for clarity. Arriving with a ready-made solution before the problem is understood is the hero syndrome the book warns against.',
+      prompt:'When did you last hold back a decision long enough to genuinely test whether your first read of the situation was right?' },
+    { id:'green',  label:'Earth Green', color:'#7ea800', textColor:'white',
+      cx:669,    cy:828.8,
+      strength:'You attune to people, atmosphere, and what is left unsaid. You listen patiently, hold space, and read the relational dynamics that others miss.',
+      trap:'Concern for harmony can pull you away from naming difficult truths. You may consult so widely that decisions stall in the search for everyone\'s comfort.',
+      prompt:'When you are observing, are you noticing what is really happening, or unconsciously protecting people from what you have seen?' },
+    { id:'yellow', label:'Sunshine Yellow', color:'#f7c84a', textColor:'#3a2f00',
+      cx:1253,   cy:828.8,
+      strength:'You build rapport quickly and draw out information through warmth and conversation. People open up to you and tell you things they would not tell others.',
+      trap:'You can fill silence rather than sit with it. Your enthusiasm to share ideas and possibilities can crowd out the quieter observations of others.',
+      prompt:'In your last few consultations, were you genuinely listening to understand, or listening for the moment to contribute your own thinking?' }
+  ];
+
+  // Centre of the middle circle in viewBox coords
+  const C = { cx: 960, cy: 540, r: 260 };
+
+  wrap.innerHTML = `<div style="position:relative;width:100%;padding-bottom:97.8%">
+    <svg id="se-svg" xmlns="http://www.w3.org/2000/svg" viewBox="510 100 900 880" style="position:absolute;inset:0;width:100%;height:100%">
+      <defs>
+        <filter id="se-soft" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3"/>
+        </filter>
+      </defs>
+      <!-- Soft drop-shadow circles -->
+      <g class="se-shadow">
+        <circle cx="674.7" cy="257.7" r="116" fill="#0089cf" opacity=".22"/>
+        <circle cx="1259"  cy="257.7" r="116" fill="#c83434" opacity=".22"/>
+        <circle cx="674.7" cy="820"   r="116" fill="#7ea800" opacity=".22"/>
+        <circle cx="1259"  cy="819"   r="116" fill="#f7c84a" opacity=".22"/>
+        <circle cx="967"   cy="550.7" r="260" fill="#d8cece" opacity=".18"/>
+      </g>
+      <!-- Centre circle (background fill animates between colours) -->
+      <g class="se-centre-grp">
+        <circle id="se-centre-fill" cx="960" cy="540" r="260" fill="white"/>
+        <circle id="se-centre-stroke" cx="960" cy="540" r="260" fill="none" stroke="#1A3A5C" stroke-width="5.6"/>
+      </g>
+      <!-- Energy circles (the morphing ones) -->
+      <g class="se-energies">
+        <circle class="se-energy" data-id="blue"   cx="668.7"  cy="249.7" r="116" fill="#0089cf" stroke="#1A3A5C" stroke-width="7.2"/>
+        <circle class="se-energy" data-id="red"    cx="1252.7" cy="249.7" r="116" fill="#c83434" stroke="#1A3A5C" stroke-width="7.2"/>
+        <circle class="se-energy" data-id="green"  cx="669"    cy="828.8" r="116" fill="#7ea800" stroke="#1A3A5C" stroke-width="7.2"/>
+        <circle class="se-energy" data-id="yellow" cx="1253"   cy="828.8" r="116" fill="#f7c84a" stroke="#1A3A5C" stroke-width="7.2"/>
+      </g>
+      <!-- Static labels on the four outer circles, two lines each -->
+      <g class="se-labels" pointer-events="none">
+        <text class="se-static-label" data-for="blue"   x="668.7"  y="240" text-anchor="middle" font-family="Barlow,sans-serif" font-size="36" font-weight="800" fill="white">Cool</text>
+        <text class="se-static-label" data-for="blue"   x="668.7"  y="280" text-anchor="middle" font-family="Barlow,sans-serif" font-size="36" font-weight="800" fill="white">Blue</text>
+        <text class="se-static-label" data-for="red"    x="1252.7" y="240" text-anchor="middle" font-family="Barlow,sans-serif" font-size="36" font-weight="800" fill="white">Fiery</text>
+        <text class="se-static-label" data-for="red"    x="1252.7" y="280" text-anchor="middle" font-family="Barlow,sans-serif" font-size="36" font-weight="800" fill="white">Red</text>
+        <text class="se-static-label" data-for="green"  x="669"    y="819" text-anchor="middle" font-family="Barlow,sans-serif" font-size="36" font-weight="800" fill="white">Earth</text>
+        <text class="se-static-label" data-for="green"  x="669"    y="859" text-anchor="middle" font-family="Barlow,sans-serif" font-size="36" font-weight="800" fill="white">Green</text>
+        <text class="se-static-label" data-for="yellow" x="1253"   y="819" text-anchor="middle" font-family="Barlow,sans-serif" font-size="36" font-weight="800" fill="#3a2f00">Sunshine</text>
+        <text class="se-static-label" data-for="yellow" x="1253"   y="859" text-anchor="middle" font-family="Barlow,sans-serif" font-size="36" font-weight="800" fill="#3a2f00">Yellow</text>
+      </g>
+      <!-- Centre content (foreignObject so we can use real HTML for layout/wrapping) -->
+      <foreignObject id="se-centre-fo" x="780" y="360" width="360" height="360" pointer-events="none">
+        <div xmlns="http://www.w3.org/1999/xhtml" id="se-centre-content" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Barlow,sans-serif;padding:22px;box-sizing:border-box;color:#1A3A5C;overflow:hidden">
+          <div style="font-family:&apos;Barlow Condensed&apos;,sans-serif;font-size:34px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#1A3A5C;margin-bottom:14px">Click an energy</div>
+          <div style="font-size:21px;line-height:1.45;color:#444;font-weight:500">Each colour brings a different way of stepping back, listening and questioning.</div>
+        </div>
+      </foreignObject>
+    </svg>
+  </div>
+  <div id="se-prompt" style="margin-top:18px;padding:16px 20px;border-radius:14px;background:#f0f6fc;font-size:14px;color:#004B86;line-height:1.6;text-align:left;border-left:3px solid #1A3A5C;opacity:0;transition:all .35s ease;min-height:18px"></div>`;
+
+  // ── Styles ──
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .se-energy{cursor:pointer;transition:transform .3s ease,filter .3s ease,opacity .3s ease;transform-origin:center;transform-box:fill-box}
+    .se-energy:hover{filter:brightness(1.08)}
+    .se-energy.dimmed{opacity:.28}
+    .se-shadow{opacity:0;animation:seFadeIn 1s .15s ease forwards}
+    .se-centre-grp{opacity:0;transform-origin:960px 540px;animation:seCentreIn .6s .35s cubic-bezier(.34,1.56,.64,1) forwards}
+    #se-centre-fill{transition:fill .55s ease}
+    #se-centre-stroke{transition:stroke .55s ease}
+    .se-energies circle{opacity:0;transform-origin:center;transform-box:fill-box}
+    .se-energies circle:nth-of-type(1){animation:seEnergyIn .55s .55s cubic-bezier(.34,1.56,.64,1) forwards}
+    .se-energies circle:nth-of-type(2){animation:seEnergyIn .55s .68s cubic-bezier(.34,1.56,.64,1) forwards}
+    .se-energies circle:nth-of-type(3){animation:seEnergyIn .55s .81s cubic-bezier(.34,1.56,.64,1) forwards}
+    .se-energies circle:nth-of-type(4){animation:seEnergyIn .55s .94s cubic-bezier(.34,1.56,.64,1) forwards}
+    .se-static-label{opacity:0;animation:seFadeIn .4s 1.2s ease forwards;transition:opacity .25s ease}
+    .se-static-label.hidden{opacity:0!important}
+    @keyframes seFadeIn{to{opacity:1}}
+    @keyframes seCentreIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+    @keyframes seEnergyIn{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+    /* Beckon: gentle scale + glow that draws the eye */
+    @keyframes seBeckon{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 currentColor)}50%{transform:scale(1.085);filter:drop-shadow(0 0 22px currentColor)}}
+    .se-energy.beckon{animation:seBeckon 2.2s ease infinite}
+    .se-energy.beckon[data-id="blue"]{color:#0089cf}
+    .se-energy.beckon[data-id="red"]{color:#c83434}
+    .se-energy.beckon[data-id="green"]{color:#7ea800}
+    .se-energy.beckon[data-id="yellow"]{color:#f7c84a}
+    /* Travel animation: morph from outer to centre */
+    .se-energy.travelling{animation:seTravel .55s cubic-bezier(.5,0,.3,1) forwards;z-index:5}
+    @keyframes seTravel{
+      0%{transform:translate(0,0) scale(1);opacity:1}
+      55%{opacity:1}
+      100%{opacity:0}
+    }
+    .se-content-fade-out{animation:seContentOut .25s ease forwards}
+    .se-content-fade-in{animation:seContentIn .35s ease both}
+    @keyframes seContentOut{to{opacity:0;transform:scale(.92)}}
+    @keyframes seContentIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+  `;
+  wrap.appendChild(styleEl);
+
+  // ── Sound: warm settled chord (root + fifth + octave, no pitch glide) ──
+  function playEnergySwoop(){
+    try{
+      const ctx = getCtx ? getCtx() : new (window.AudioContext||window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      const freqs = [392.00, 587.33, 783.99]; // G4, D5, G5 — perfect fifth + octave
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0, now);
+      master.gain.linearRampToValueAtTime(0.020, now + 0.08);
+      master.gain.setValueAtTime(0.020, now + 0.32);
+      master.gain.exponentialRampToValueAtTime(0.0001, now + 0.95);
+      master.connect(ctx.destination);
+      freqs.forEach((f, i) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = f;
+        g.gain.value = i === 0 ? 0.85 : (i === 1 ? 0.45 : 0.25);
+        osc.connect(g); g.connect(master);
+        osc.start(now); osc.stop(now + 1.0);
+      });
+    }catch(e){}
+  }
+  function playEnergyDeselect(){
+    try{
+      const ctx = getCtx ? getCtx() : new (window.AudioContext||window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      const freqs = [261.63, 392.00]; // C4 + G4 — soft, lower fifth
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0, now);
+      master.gain.linearRampToValueAtTime(0.014, now + 0.05);
+      master.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+      master.connect(ctx.destination);
+      freqs.forEach((f, i) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = f;
+        g.gain.value = i === 0 ? 0.8 : 0.4;
+        osc.connect(g); g.connect(master);
+        osc.start(now); osc.stop(now + 0.6);
+      });
+    }catch(e){}
+  }
+
+  setTimeout(() => {
+    wrap.style.opacity = '1';
+
+    const circles    = wrap.querySelectorAll('.se-energy');
+    const labels     = wrap.querySelectorAll('.se-static-label');
+    const centreFill = wrap.querySelector('#se-centre-fill');
+    const centreContent = wrap.querySelector('#se-centre-content');
+    const promptBox  = wrap.querySelector('#se-prompt');
+
+    // Start the beckon animation after the entrance is complete
+    setTimeout(() => {
+      circles.forEach((c, i) => {
+        setTimeout(() => c.classList.add('beckon'), i*220);
+      });
+    }, 1700);
+
+    let activeId = null;
+
+    function setCentreContent(html, animateOut=true) {
+      if (animateOut) {
+        centreContent.classList.remove('se-content-fade-in');
+        centreContent.classList.add('se-content-fade-out');
+        setTimeout(() => {
+          centreContent.classList.remove('se-content-fade-out');
+          centreContent.innerHTML = html;
+          centreContent.classList.add('se-content-fade-in');
+        }, 250);
+      } else {
+        centreContent.innerHTML = html;
+      }
+    }
+
+    function defaultCentre() {
+      return '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:30px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#1A3A5C;margin-bottom:14px">Click an energy</div>'+
+             '<div style="font-size:22px;line-height:1.45;color:#444;font-weight:500">Each colour brings a different way of stepping back, listening and questioning.</div>';
+    }
+
+    function energyCentre(en) {
+      return '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:32px;font-weight:800;letter-spacing:.03em;color:'+en.textColor+';margin-bottom:10px;line-height:1">'+en.label+'</div>'+
+             '<div style="font-size:18px;line-height:1.45;color:'+en.textColor+';opacity:.95;margin-bottom:11px;font-weight:600"><span style="opacity:.75;font-size:12px;letter-spacing:.18em;text-transform:uppercase;display:block;margin-bottom:3px">Strength</span>'+en.strength+'</div>'+
+             '<div style="font-size:18px;line-height:1.45;color:'+en.textColor+';opacity:.95;font-weight:500"><span style="opacity:.75;font-size:12px;letter-spacing:.18em;text-transform:uppercase;display:block;margin-bottom:3px">Trap</span>'+en.trap+'</div>';
+    }
+
+    function deselect() {
+      activeId = null;
+      circles.forEach(c => { c.classList.remove('dimmed','travelling'); c.style.transform = ''; c.style.opacity=''; });
+      labels.forEach(l => l.classList.remove('hidden'));
+      centreFill.setAttribute('fill', 'white');
+      setCentreContent(defaultCentre(), true);
+      promptBox.style.opacity = '0';
+      promptBox.textContent = '';
+      playEnergyDeselect();
+      // Resume the beckon after a short pause so the model continues to invite exploration
+      setTimeout(() => {
+        if (activeId === null) {
+          circles.forEach((c, i) => setTimeout(() => c.classList.add('beckon'), i*180));
+        }
+      }, 700);
+    }
+
+    function activate(en, sourceCircle) {
+      // Stop beckon on first interaction
+      circles.forEach(c => c.classList.remove('beckon'));
+
+      activeId = en.id;
+      labels.forEach(l => { if (l.getAttribute('data-for') === en.id) l.classList.add('hidden'); else l.classList.remove('hidden'); });
+
+      // Other circles dim immediately
+      circles.forEach(c => {
+        if (c.getAttribute('data-id') !== en.id) c.classList.add('dimmed');
+        else c.classList.remove('dimmed');
+      });
+
+      // Build a flying clone that travels from the source circle to the centre
+      const svg = wrap.querySelector('#se-svg');
+      const clone = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      clone.setAttribute('cx', en.cx);
+      clone.setAttribute('cy', en.cy);
+      clone.setAttribute('r', 116);
+      clone.setAttribute('fill', en.color);
+      clone.setAttribute('opacity', '1');
+      clone.style.transition = 'cx .6s cubic-bezier(.5,0,.3,1), cy .6s cubic-bezier(.5,0,.3,1), r .6s cubic-bezier(.5,0,.3,1), opacity .25s ease .35s';
+      svg.appendChild(clone);
+
+      playEnergySwoop();
+
+      // Fade out the source circle's solid look briefly while clone travels
+      sourceCircle.style.transition = 'opacity .3s ease';
+      sourceCircle.style.opacity = '.35';
+
+      requestAnimationFrame(() => {
+        clone.setAttribute('cx', C.cx);
+        clone.setAttribute('cy', C.cy);
+        clone.setAttribute('r', C.r);
+      });
+
+      // After the morph completes, set the centre fill colour, fade clone, restore source
+      setTimeout(() => {
+        centreFill.setAttribute('fill', en.color);
+        clone.style.opacity = '0';
+        sourceCircle.style.opacity = '1';
+        setCentreContent(energyCentre(en), true);
+
+        // Show the reflection prompt below
+        promptBox.style.borderLeftColor = en.color;
+        promptBox.style.background = en.id === 'yellow' ? '#fff8e3' : '#f0f6fc';
+        promptBox.style.color = en.color === '#f7c84a' ? '#3a2f00' : en.color;
+        promptBox.innerHTML = '<strong style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#888;display:block;margin-bottom:5px;font-weight:700">Reflection prompt</strong><span style="font-weight:700">'+en.prompt+'</span>';
+        promptBox.style.opacity = '1';
+      }, 600);
+
+      setTimeout(() => { if (clone.parentNode) clone.parentNode.removeChild(clone); }, 950);
+    }
+
+    circles.forEach(c => {
+      c.addEventListener('click', e => {
+        const id = c.getAttribute('data-id');
+        const en = ENERGIES.find(x => x.id === id);
+        if (!en) return;
+        if (activeId === id) {
+          deselect();
+        } else {
+          // If something else is already active, snap centre back to white very briefly first
+          if (activeId) {
+            centreFill.setAttribute('fill', 'white');
+          }
+          activate(en, c);
+        }
+      });
+    });
+  }, 250);
+
+  return wrap;
 }
 
 function buildMatrixVisual() {
@@ -3380,7 +3676,7 @@ function buildDetailPage(seg, onBack) {
 
 
   const detailGrid = document.createElement('div');
-  detailGrid.className = 'detail-grid';
+  detailGrid.className = 'detail-grid' + (seg.fullWidthModel ? ' fullwidth' : '');
   detailGrid.appendChild(modelCard);
   detailGrid.appendChild(rightCol);
 
