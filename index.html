@@ -6068,14 +6068,26 @@ handleHash();
     if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
   }
 
-  ['mousemove','keydown','mousedown','touchstart','scroll'].forEach(function(evt) {
+  // Deliberate user actions dismiss the nudge AND reset the show timer.
+  // Mousemove is intentionally excluded — moving the cursor is too low a bar,
+  // and a user reaching toward the nudge to click a suggestion would otherwise
+  // dismiss it before they got there.
+  ['keydown','mousedown','touchstart','scroll'].forEach(function(evt) {
     window.addEventListener(evt, function(e) {
-      // Don't dismiss the nudge if the user is interacting with it.
-      // This lets them move their cursor onto a suggestion to click it.
+      // Clicks/touches inside the nudge itself are handled by the link
+      // and close-button click handlers — don't fight them here.
       if (nudgeEl && nudgeEl.classList.contains('visible') && e.target && nudgeEl.contains(e.target)) return;
       resetTimer();
     }, { passive:true });
   });
+
+  // Mousemove only resets the inactivity counter for the *next* nudge —
+  // it never hides a currently-visible one. The 15-second fadeTimer in
+  // showNudge() handles natural dismissal.
+  window.addEventListener('mousemove', function() {
+    clearTimeout(nudgeTimer);
+    if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
+  }, { passive:true });
   window.addEventListener('hashchange', function() {
     clearTimeout(nudgeTimer); hideNudge();
     if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
