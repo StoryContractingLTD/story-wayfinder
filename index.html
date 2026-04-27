@@ -357,6 +357,43 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 @media (max-width:820px){
   .detail-grid.fullwidth .right-col{grid-template-columns:1fr}
 }
+
+/* Vision steps activity (Set Clear Vision segment) */
+.vs-stage{position:relative;width:100%;max-width:760px;margin:0 auto;min-height:340px}
+.vs-rail{position:relative;display:flex;justify-content:space-between;align-items:center;margin:0 auto 28px;max-width:560px;padding:0 18px}
+.vs-rail::before{content:"";position:absolute;left:18px;right:18px;top:50%;height:3px;background:linear-gradient(to right,#fbe2cf,#fa6b02,#fbe2cf);transform:translateY(-50%);border-radius:2px;z-index:0}
+.vs-dot{position:relative;z-index:1;width:42px;height:42px;border-radius:50%;background:white;border:3px solid #e8d2bf;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:18px;font-weight:800;color:#c9a182;cursor:pointer;transition:all .35s cubic-bezier(.4,1.4,.6,1)}
+.vs-dot:hover{transform:scale(1.08);border-color:#fa6b02;color:#fa6b02}
+.vs-dot.active{background:#fa6b02;border-color:#fa6b02;color:white;transform:scale(1.12);box-shadow:0 6px 18px rgba(250,107,2,.32)}
+.vs-dot.completed{background:#fef0e3;border-color:#fa6b02;color:#fa6b02}
+.vs-panel{background:white;border-radius:18px;padding:28px 30px;box-shadow:0 6px 22px rgba(26,58,92,.10);border:1px solid #f0f3f7;min-height:210px;animation:vsPanelIn .42s cubic-bezier(.4,1.4,.6,1)}
+@keyframes vsPanelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.vs-eyebrow{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#fa6b02;margin-bottom:8px}
+.vs-step-title{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:26px;font-weight:800;color:#1A3A5C;margin-bottom:10px;line-height:1.2}
+.vs-step-body{font-size:14.5px;color:#4a5568;line-height:1.7;margin-bottom:16px}
+.vs-prompt{background:#fbf6f0;border-left:3px solid #fa6b02;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13.5px;color:#5d4632;line-height:1.6;font-style:italic}
+.vs-prompt strong{color:#1A3A5C;font-weight:700;font-style:normal}
+.vs-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:12px}
+.vs-nav-btn{background:#1A3A5C;color:white;border:none;border-radius:22px;padding:9px 22px;font-family:"Barlow",sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.vs-nav-btn:hover:not(:disabled){background:#0f2740;transform:translateY(-1px)}
+.vs-nav-btn:disabled{opacity:.32;cursor:not-allowed}
+.vs-nav-btn.primary{background:#fa6b02}
+.vs-nav-btn.primary:hover:not(:disabled){background:#d95a01}
+.vs-progress-text{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#aab4c2}
+.vs-link-card{margin-top:22px;background:linear-gradient(135deg,#fef4ea,#ffffff);border:1.5px solid #fdd9b8;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:16px;animation:vsPanelIn .5s ease}
+.vs-link-card-icon{flex:0 0 44px;height:44px;border-radius:50%;background:#fa6b02;display:flex;align-items:center;justify-content:center;color:white}
+.vs-link-card-text{flex:1;font-size:13.5px;color:#5d4632;line-height:1.7}
+.vs-link-card-text strong{color:#1A3A5C;font-weight:700}
+.vs-pill{display:inline-flex;align-items:center;gap:5px;background:#fa6b02;color:white;font-weight:700;padding:3px 11px;border-radius:14px;text-decoration:none;font-size:12.5px;letter-spacing:.01em;cursor:pointer;border:none;font-family:"Barlow",sans-serif;transition:all .18s ease;vertical-align:baseline;line-height:1.35;white-space:nowrap}
+.vs-pill:hover{background:#d95a01;transform:translateY(-1px);box-shadow:0 4px 12px rgba(250,107,2,.32)}
+.vs-pill:active{transform:translateY(0)}
+.vs-pill svg{width:11px;height:11px;flex:0 0 auto}
+@media (max-width:600px){
+  .vs-rail{max-width:100%;padding:0 8px}
+  .vs-dot{width:36px;height:36px;font-size:15px}
+  .vs-panel{padding:22px 20px}
+  .vs-step-title{font-size:22px}
+}
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -469,12 +506,17 @@ const SEGMENTS = [
   {
     id:'clear-vision', label:'Set clear vision',
     quadrant:'Visioning', startAngle:67.5, endAngle:90,
-    tagline:'Painting a compelling picture of the future',
-    desc:'A clear vision gives people something to move toward. It creates alignment, energises effort, and helps teams make better decisions because they understand the destination.',
-    modelTitle:'Vision to Action Framework',
-    modelDesc:'This model connects an aspirational vision to concrete daily actions through a cascading chain: Vision leads to Mission, which informs Strategy, which drives Objectives, which shape Actions. Each level provides more specificity while staying anchored to the overarching purpose.',
-    bullets:['A vision should inspire, not just inform','Connect every initiative back to the bigger picture','Revisit and refresh the vision regularly'],
-    modelType:'vision'
+    tagline:'Stepping forward in time and seeing things as they will be',
+    desc:'A vision is the image we have of a desired future state. It gives people direction, meaning and purpose, and it sustains effort when things stop being easy. Vision is not just a corporate banner: it works at every scale. A vision for the team, a vision for a project, a vision for an individual. Without it, any movement risks being accidental, and people end up somewhere by drift rather than by design. The skill that often goes under-emphasised is being explicit: turning the picture in your head into clear, concrete words your team can actually work toward.',
+    modelTitle:'The Performance Potential Gain Curve',
+    modelDesc:'Performance over time tells two very different stories depending on how people are led. When teams are well led, capability grows steadily and performance climbs. When teams are poorly led, performance dips significantly before recovering, and recovers to a lower level. The space between those two paths is the leadership gain: the difference a clear vision and a deliberate leader-developer make to what a team is ultimately capable of.',
+    bullets:['Vision works at every scale: project, team, and individual','Being explicit is the under-emphasised skill: the vision in your head is not yet a vision until it has clear words','Vision without action is just a dream, so pair the picture with concrete daily steps','The leader makes the difference: the gain curve only opens up when someone consistently and patiently works the process'],
+    modelType:'vision',
+    noteTitle:'A vision you cannot describe is not yet a vision',
+    noteText:'Leaders often hold a strong sense of where they want to take their team but have never put it into words. A vision that lives only in your head cannot pull anyone toward it. The discipline is to write it down in concrete terms (what people will actually be doing, how you will know they are succeeding) for the team and for each individual within it. You do not need an essay. A few honest, specific statements are enough to turn a private picture into a shared destination.',
+    bookPages:'77-82',
+    fullWidthModel:true,
+    hasVisionSteps:true
   },
 
   // ── Mobilising (bottom-right, 90° to 180°, 5 segments) ──
@@ -1292,17 +1334,170 @@ function buildMatrixVisual() {
 }
 
 function buildVisionVisual() {
-  const svg = createSVG(400, 200);
-  const steps = ['Vision','Mission','Strategy','Objectives','Actions'];
-  const colours = ['#004B86','#0061AD','#1874C4','#3A8FD6','#6BB3E8'];
-  steps.forEach((s, i) => {
-    const w = 360 - i*50;
-    const x = (400 - w) / 2;
-    const y = i * 38 + 10;
-    addRect(svg, x, y, w, 30, colours[i], 6);
-    addText(svg, 200, y+18, s, 'white', 11, 700);
+  // Performance Potential Gain Curve — paths from Ali Stewart & Co source SVG file.
+  // The curves are exactly as Ali drew them; we add brand colour, animation, fill area
+  // (sampled from the rendered paths), axis labels and a legend around them.
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;max-width:880px;margin:0 auto';
+
+  // Path data lifted verbatim from Ali Stewart & Co's source SVG
+  const wellD = 'M67.1,120.2c9.7.7,13.8,3.5,15.5,6.6,1.6,2.8,1.1,5.9,2.6,6.3,2,.4,5.1-4.3,7.8-8.4,1.9-2.8,2.5-4.3,4.5-5.1,1.7-.6,4.2-.7,5.8.6,3.7,3-.6,10.5,2,12.9,3.2,2.9,14-4.3,21.1-8.9,1.4-.9,25.2-16.3,36.6-21.8,13.5-6.6,26.1-7.2,44.9-6.9,32.6.4,99.5,3.7,186.7,10.9';
+  const poorD = 'M68.1,138c2.8,14.3,11.1,25.1,21.1,27,5.1,1,9.8-.5,10.2-.7,7.1-2.4,9.6-7.9,14.8-14.5,3.2-4,16.2-20.4,29.4-19.8,6.3.3,10.9,4.4,14.2,7.6,20.2,19.6,33.9,46.1,36.9,51.8,0,0,24.3,45.8,65.3,73.2,4,2.7,17.3,11.2,35.3,12.2,5.9.3,14.1.7,21.1-4.3,8-5.6,10.2-15.2,11.5-21.1,10.1-46.1,9.7-58.2,17.2-77.2,9-23,20.1-32.3,23.4-35,9-7.2,18.3-10.5,24.4-12.2';
+
+  // SVG container — viewBox extended below the source 0 0 612 344 to fit the TIME label
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox', '0 0 612 360');
+  svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
+  svg.style.cssText = 'width:100%;height:auto;display:block';
+
+  // Gradient for the gain area
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML =
+    '<linearGradient id="ppgc-fill" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#fa6b02" stop-opacity="0.30"/>' +
+      '<stop offset="100%" stop-color="#fa6b02" stop-opacity="0.10"/>' +
+    '</linearGradient>';
+  svg.appendChild(defs);
+
+  // Faded gridlines — sit behind everything else for quiet structure.
+  // Chart area: x 66.7 → 400.3, y 62.9 → 298.4. Five equal divisions each way.
+  const grid = document.createElementNS('http://www.w3.org/2000/svg','g');
+  grid.setAttribute('stroke', '#e6ecf2');
+  grid.setAttribute('stroke-width', '1');
+  grid.setAttribute('class', 'ppgc-grid');
+  let gridSVG = '';
+  for (let i = 1; i <= 4; i++) {
+    const y = 62.9 + (235.5 * i / 5);
+    gridSVG += '<line x1="66.7" x2="400.3" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+'"/>';
+  }
+  for (let i = 1; i <= 4; i++) {
+    const x = 66.7 + (333.6 * i / 5);
+    gridSVG += '<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="62.9" y2="299.7"/>';
+  }
+  grid.innerHTML = gridSVG;
+  svg.appendChild(grid);
+
+  // Axes (taken directly from source SVG, rendered in Story navy)
+  const axes = document.createElementNS('http://www.w3.org/2000/svg','g');
+  axes.innerHTML =
+    '<line x1="66.7" y1="62.9" x2="66.7" y2="298.4" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="square"/>' +
+    '<line x1="66.7" y1="299.7" x2="400.3" y2="299.7" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="square"/>';
+  svg.appendChild(axes);
+
+  // Axis labels
+  const yLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+  yLabel.setAttribute('x', '32');
+  yLabel.setAttribute('y', '180');
+  yLabel.setAttribute('transform', 'rotate(-90 32 180)');
+  yLabel.setAttribute('text-anchor','middle');
+  yLabel.setAttribute('font-family','"Barlow Condensed","Arial Narrow",sans-serif');
+  yLabel.setAttribute('font-weight','700');
+  yLabel.setAttribute('font-size','17');
+  yLabel.setAttribute('fill','#1A3A5C');
+  yLabel.setAttribute('letter-spacing','1');
+  yLabel.textContent = 'PERFORMANCE';
+  svg.appendChild(yLabel);
+
+  const xLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+  xLabel.setAttribute('x', '233.5');
+  xLabel.setAttribute('y', '335');
+  xLabel.setAttribute('text-anchor','middle');
+  xLabel.setAttribute('font-family','"Barlow Condensed","Arial Narrow",sans-serif');
+  xLabel.setAttribute('font-weight','700');
+  xLabel.setAttribute('font-size','17');
+  xLabel.setAttribute('fill','#1A3A5C');
+  xLabel.setAttribute('letter-spacing','1');
+  xLabel.textContent = 'TIME';
+  svg.appendChild(xLabel);
+
+  // Fill area placeholder — populated after render via sampling
+  const fill = document.createElementNS('http://www.w3.org/2000/svg','path');
+  fill.setAttribute('fill', 'url(#ppgc-fill)');
+  fill.setAttribute('opacity', '0');
+  fill.setAttribute('class', 'ppgc-fill');
+  svg.appendChild(fill);
+
+  // Poorly Led — orange, draws first
+  const poor = document.createElementNS('http://www.w3.org/2000/svg','path');
+  poor.setAttribute('d', poorD);
+  poor.setAttribute('fill','none');
+  poor.setAttribute('stroke','#fa6b02');
+  poor.setAttribute('stroke-width','3');
+  poor.setAttribute('stroke-linecap','round');
+  poor.setAttribute('stroke-linejoin','round');
+  poor.setAttribute('pathLength','100');
+  poor.setAttribute('class','ppgc-poor');
+  svg.appendChild(poor);
+
+  // Well Led — navy, draws second
+  const well = document.createElementNS('http://www.w3.org/2000/svg','path');
+  well.setAttribute('d', wellD);
+  well.setAttribute('fill','none');
+  well.setAttribute('stroke','#1A3A5C');
+  well.setAttribute('stroke-width','3');
+  well.setAttribute('stroke-linecap','round');
+  well.setAttribute('stroke-linejoin','round');
+  well.setAttribute('pathLength','100');
+  well.setAttribute('class','ppgc-well');
+  svg.appendChild(well);
+
+  // Legend (positioned in the empty area to the right of the chart)
+  const legend = document.createElementNS('http://www.w3.org/2000/svg','g');
+  legend.setAttribute('class','ppgc-legend');
+  legend.setAttribute('opacity','0');
+  const lx = 425, ly = 130;
+  legend.innerHTML =
+    '<rect x="'+lx+'" y="'+ly+'" width="160" height="78" rx="8" fill="white" stroke="#e3e9ef" stroke-width="1.2"/>' +
+    '<line x1="'+(lx+12)+'" y1="'+(ly+18)+'" x2="'+(lx+40)+'" y2="'+(ly+18)+'" stroke="#1A3A5C" stroke-width="3" stroke-linecap="round"/>' +
+    '<text x="'+(lx+48)+'" y="'+(ly+22)+'" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="700" font-size="14" fill="#1A3A5C">Well led</text>' +
+    '<line x1="'+(lx+12)+'" y1="'+(ly+38)+'" x2="'+(lx+40)+'" y2="'+(ly+38)+'" stroke="#fa6b02" stroke-width="3" stroke-linecap="round"/>' +
+    '<text x="'+(lx+48)+'" y="'+(ly+42)+'" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="700" font-size="14" fill="#fa6b02">Poorly led</text>' +
+    '<rect x="'+(lx+14)+'" y="'+(ly+55)+'" width="26" height="11" rx="2" fill="url(#ppgc-fill)" stroke="#fa6b02" stroke-width="0.8" stroke-opacity="0.4"/>' +
+    '<text x="'+(lx+48)+'" y="'+(ly+64)+'" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="700" font-size="12" fill="#1A3A5C">Performance gain</text>';
+  svg.appendChild(legend);
+
+  // Animation styles. pathLength=100 lets us use a constant dashoffset regardless of true path length.
+  const style = document.createElementNS('http://www.w3.org/2000/svg','style');
+  style.textContent =
+    '.ppgc-grid{opacity:0;animation:ppgcFade 0.6s 0s ease-out forwards}' +
+    '.ppgc-poor{stroke-dasharray:100;stroke-dashoffset:100;animation:ppgcDraw 2.6s .3s ease-out forwards}' +
+    '.ppgc-well{stroke-dasharray:100;stroke-dashoffset:100;animation:ppgcDraw 2.8s 1.4s ease-out forwards}' +
+    '.ppgc-fill{animation:ppgcFade 1.8s 3.2s ease-out forwards}' +
+    '.ppgc-legend{animation:ppgcFade 0.8s 4.2s ease-out forwards}' +
+    '@keyframes ppgcDraw{to{stroke-dashoffset:0}}' +
+    '@keyframes ppgcFade{to{opacity:1}}';
+  svg.appendChild(style);
+
+  wrap.appendChild(svg);
+
+  // Build the fill polygon by sampling the two paths after they are in the DOM.
+  // Using length-parameter sampling: both paths are roughly monotonic in x so this gives
+  // a clean polygon between the two curves.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      try {
+        const wellLen = well.getTotalLength();
+        const poorLen = poor.getTotalLength();
+        if (wellLen <= 0 || poorLen <= 0) return;
+        const N = 120;
+        const wellPts = [], poorPts = [];
+        for (let i = 0; i <= N; i++) {
+          const t = i / N;
+          const wp = well.getPointAtLength(t * wellLen);
+          const pp = poor.getPointAtLength(t * poorLen);
+          wellPts.push(wp.x.toFixed(1) + ',' + wp.y.toFixed(1));
+          poorPts.push(pp.x.toFixed(1) + ',' + pp.y.toFixed(1));
+        }
+        const fillD = 'M ' + wellPts.join(' L ') + ' L ' + poorPts.slice().reverse().join(' L ') + ' Z';
+        fill.setAttribute('d', fillD);
+      } catch(e) {
+        // Fallback: leave fill empty rather than break the page
+        console.warn('PPGC fill sampling failed', e);
+      }
+    });
   });
-  return svg;
+
+  return wrap;
 }
 
 function buildSituationalVisual() {
@@ -3866,6 +4061,133 @@ function buildDetailPage(seg, onBack) {
 
     cont.appendChild(rfDivider);
     cont.appendChild(rfOuter);
+  }
+
+  // Vision steps activity (clear-vision segment) - 4-step process from page 79
+  if (seg.hasVisionSteps) {
+    const vsDivider = document.createElement('div');
+    vsDivider.className = 'ws-divider slide-up delay4';
+    vsDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fa6b02" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> A four-step process</div><div class="ws-divider-line"></div>';
+
+    const vsOuter = document.createElement('div');
+    vsOuter.className = 'model-card slide-up delay4';
+    vsOuter.style.cssText = 'padding:32px 28px';
+
+    const vsTitle = document.createElement('div');
+    vsTitle.style.cssText = 'font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:22px;font-weight:800;color:#1A3A5C;margin-bottom:6px;text-align:center';
+    vsTitle.textContent = 'Building your vision, step by step';
+
+    const vsSub = document.createElement('div');
+    vsSub.style.cssText = 'font-size:13.5px;color:#888;margin-bottom:26px;line-height:1.65;text-align:center;max-width:520px;margin-left:auto;margin-right:auto';
+    vsSub.textContent = 'A simple four-step practice for moving a vision out of your head and into something you can share. Work through it in order, or jump back to a step at any time.';
+
+    vsOuter.appendChild(vsTitle);
+    vsOuter.appendChild(vsSub);
+
+    const STEPS = [
+      {
+        title: 'Project your mind forward',
+        body: 'Step out of today and into the next year or two. Picture yourself looking back from a future point where things have gone well. What does the team look like? What is the work like? What feels different?',
+        prompt: 'Pick a horizon (six months, a year, two years) and let your mind settle there. The goal is not certainty; it is to give yourself permission to imagine.'
+      },
+      {
+        title: 'Write the team vision in concrete terms',
+        body: 'Describe the team performing at its very best. Not values, not adjectives: what would they actually be doing day to day? How would you know they were succeeding? You do not need an essay. A few honest, specific statements are enough.',
+        prompt: 'If a colleague who had never met your team read your statements, would they be able to picture what success looks like? If not, get more specific.'
+      },
+      {
+        title: 'Do the same for each individual',
+        body: 'Now zoom in. Picture each person on your team performing at their best. Hold on to your belief that you can make a difference, even with people who are currently struggling or coasting. What does each person look like in the future state?',
+        prompt: 'This is where many leaders stop short. Push past the easy ones. The most important visions to articulate are often the ones that feel hardest to imagine.'
+      },
+      {
+        title: 'Look back from the future',
+        body: 'Standing in that future place, look back to today. The journey between is a flight of steps. Each team member is climbing them at their own pace, from their own starting point. You know where they are starting because you have analysed today honestly. Now you can plan the climb.',
+        prompt: 'This is where the vision turns into action. The <strong>Flight Plan Sheet</strong> on the <button class="vs-pill" data-go="provide-support">Provide continued support<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button> page is built for exactly this: mapping the steps of a supported performance journey for an individual.'
+      }
+    ];
+
+    let currentStep = 0;
+
+    const rail = document.createElement('div');
+    rail.className = 'vs-rail';
+    STEPS.forEach((s, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'vs-dot';
+      dot.setAttribute('aria-label', 'Step ' + (i+1) + ': ' + s.title);
+      dot.textContent = String(i+1);
+      dot.addEventListener('click', () => { goToStep(i); });
+      rail.appendChild(dot);
+    });
+
+    const panel = document.createElement('div');
+    panel.className = 'vs-panel';
+
+    // Delegated handler for pills (handles all data-go pills inside the panel)
+    panel.addEventListener('click', function(e){
+      const pill = e.target.closest('.vs-pill');
+      if (!pill) return;
+      const target = pill.getAttribute('data-go');
+      if (target && typeof goDetail === 'function') {
+        try { playTooltipReveal(); } catch(err){}
+        goDetail(target);
+      }
+    });
+
+    function renderPanel() {
+      const s = STEPS[currentStep];
+      const isLast = currentStep === STEPS.length - 1;
+      const linkCard = isLast
+        ? '<div class="vs-link-card">' +
+            '<div class="vs-link-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>' +
+            '<div class="vs-link-card-text">When you are ready to map this out for a real person, head to <strong>Provide continued support</strong> on the wheel. The <strong>Flight Plan Sheet</strong> there walks you through destination, beacons, GPS and alarm checkpoints, and you can download it as a PDF.</div>' +
+          '</div>'
+        : '';
+
+      panel.innerHTML =
+        '<div class="vs-eyebrow">Step ' + (currentStep+1) + ' of ' + STEPS.length + '</div>' +
+        '<div class="vs-step-title">' + s.title + '</div>' +
+        '<div class="vs-step-body">' + s.body + '</div>' +
+        '<div class="vs-prompt">' + s.prompt + '</div>' +
+        linkCard +
+        '<div class="vs-nav">' +
+          '<button class="vs-nav-btn" id="vs-prev"' + (currentStep === 0 ? ' disabled' : '') + '>' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' +
+            'Back' +
+          '</button>' +
+          '<div class="vs-progress-text">' + (currentStep+1) + ' / ' + STEPS.length + '</div>' +
+          '<button class="vs-nav-btn primary" id="vs-next"' + (isLast ? ' disabled' : '') + '>' +
+            'Next' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+          '</button>' +
+        '</div>';
+
+      // Update rail
+      rail.querySelectorAll('.vs-dot').forEach((d, i) => {
+        d.classList.remove('active','completed');
+        if (i === currentStep) d.classList.add('active');
+        else if (i < currentStep) d.classList.add('completed');
+      });
+
+      const prevBtn = panel.querySelector('#vs-prev');
+      const nextBtn = panel.querySelector('#vs-next');
+      if (prevBtn) prevBtn.addEventListener('click', () => goToStep(currentStep - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => goToStep(currentStep + 1));
+    }
+
+    function goToStep(i) {
+      if (i < 0 || i >= STEPS.length || i === currentStep) return;
+      currentStep = i;
+      try { playTooltipReveal(); } catch(e){}
+      renderPanel();
+    }
+
+    vsOuter.appendChild(rail);
+    vsOuter.appendChild(panel);
+    renderPanel();
+
+    cont.appendChild(vsDivider);
+    cont.appendChild(vsOuter);
   }
 
   // Inline Change Sheet (only for sections that have one)
