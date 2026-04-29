@@ -173,14 +173,28 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .nav-step.visited{border-color:#fa6b02;background:#fff8f2}
 .nav-step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0;background:#e4edf5;color:#666;transition:all .3s ease}
 .nav-step.visited .nav-step-num{background:#fa6b02;color:white}
+.nav-step-body{flex:1;min-width:0}
 .nav-step-text{font-size:12px;color:#666;line-height:1.4}
 .nav-step.visited .nav-step-text{color:#333}
 .nav-step-answer{font-weight:700;color:#fa6b02;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.nav-step-input{font-size:12px;color:#444;line-height:1.5;margin-top:5px;padding:6px 10px;background:rgba(250,107,2,.08);border-radius:8px;word-break:break-word}
+.nav-step-input + .nav-step-input{margin-top:4px}
+.nav-step-input-tag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#fa6b02;margin-right:6px;background:white;padding:2px 6px;border-radius:4px;vertical-align:1px}
 .nav-current{background:white;border-radius:16px;padding:24px;border:2px solid #0061AD;margin-bottom:12px;animation:slideUp .3s ease both}
 .nav-current.decision{border-color:#0061AD}
 .nav-current.outcome{border-color:#fa6b02;background:#fff8f2}
+.nav-current.input{border-color:#0061AD;background:linear-gradient(180deg,#ffffff 0%,#f6fbff 100%)}
 .nav-q-label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8A8E91;margin-bottom:6px}
+.nav-q-heading{font-family:'Barlow Condensed','Barlow',sans-serif;font-size:22px;font-weight:800;color:#004B86;line-height:1.15;margin-bottom:6px;letter-spacing:.01em}
 .nav-q-text{font-size:15px;font-weight:600;color:#004B86;line-height:1.5;margin-bottom:16px}
+.nav-current.input .nav-q-text{font-weight:500;color:#445566;font-size:14px}
+.nav-inputs{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.nav-input-field{display:flex;flex-direction:column;gap:6px}
+.nav-input-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0061AD}
+.nav-input-ta{width:100%;border:2px solid #d4e3f0;border-radius:10px;padding:10px 14px;font-family:'Barlow',sans-serif;font-size:14px;color:#222;line-height:1.5;resize:vertical;min-height:62px;transition:border-color .2s ease,background .2s ease;outline:none;background:white;box-sizing:border-box}
+.nav-input-ta:focus{border-color:#0061AD;background:#fbfdff}
+.nav-input-ta::placeholder{color:#9aabbb;font-style:italic}
+.nav-input-continue{max-width:240px;display:inline-block}
 .nav-outcome-text{font-size:15px;font-weight:600;color:#fa6b02;line-height:1.5;margin-bottom:12px}
 .nav-outcome-note{font-size:13px;color:#666;line-height:1.6}
 .nav-btns{display:flex;gap:10px}
@@ -316,8 +330,12 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .idle-nudge.visible{opacity:1;transform:translateY(0);pointer-events:auto}
 .idle-nudge-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px}
 .idle-nudge-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:17px;color:#004B86;letter-spacing:.01em;line-height:1.2}
-.idle-nudge-close{width:26px;height:26px;border-radius:50%;background:#f0f4f8;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#8fa0b0;font-size:13px;flex-shrink:0;transition:background .15s ease}
+.idle-nudge-close{width:26px;height:26px;border-radius:50%;background:#f0f4f8;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#8fa0b0;font-size:13px;flex-shrink:0;transition:background .15s ease,color .15s ease,transform .15s ease}
 .idle-nudge-close:hover{background:#dde6f0;color:#555}
+@keyframes nudgeCloseBeckon{0%,100%{box-shadow:0 0 0 2px rgba(0,97,173,.18);transform:scale(1)}50%{box-shadow:0 0 0 5px rgba(0,97,173,.32);transform:scale(1.08)}}
+.idle-nudge.visible .idle-nudge-close{animation:nudgeCloseBeckon 1.8s ease-in-out 2.5s infinite}
+.idle-nudge .idle-nudge-close:hover,.idle-nudge .idle-nudge-close:focus{animation:none}
+@media (prefers-reduced-motion: reduce){.idle-nudge.visible .idle-nudge-close{animation:none}}
 .idle-nudge-text{font-size:13px;color:#888;line-height:1.6;margin-bottom:14px}
 .idle-nudge-links{display:flex;flex-direction:column;gap:6px}
 .idle-nudge-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:12px;cursor:pointer;transition:background .15s ease;text-decoration:none;border:none;background:transparent;width:100%;text-align:left}
@@ -393,6 +411,114 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
   .vs-dot{width:36px;height:36px;font-size:15px}
   .vs-panel{padding:22px 20px}
   .vs-step-title{font-size:22px}
+}
+
+/* Narrative section (three-card foundations between thread banner and model) */
+.narrative-section{margin:0 0 26px}
+.narrative-header{text-align:center;margin-bottom:22px}
+.narrative-eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8A8E91;margin-bottom:12px}
+.narrative-quote{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:19px;font-weight:600;line-height:1.5;text-align:center;font-style:italic;padding:14px 28px;border-top:2px solid;border-bottom:2px solid;max-width:720px;margin:0 auto}
+.narrative-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+.narrative-card{background:white;border-radius:22px;padding:24px;box-shadow:0 8px 28px rgba(0,97,173,.08);position:relative;transition:transform .35s ease, box-shadow .35s ease}
+.narrative-card::before{content:'';position:absolute;top:0;left:24px;right:24px;height:3px;background:var(--nc-accent);border-radius:0 0 4px 4px}
+.narrative-card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,97,173,.14)}
+.narrative-card .nc-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.narrative-card .nc-step{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8A8E91;margin-bottom:6px}
+.narrative-card h3{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:23px;font-weight:800;color:#004B86;margin-bottom:10px;line-height:1.2}
+.narrative-card p{font-size:14.5px;line-height:1.65;color:#3a4351}
+.narrative-bridge{display:flex;align-items:center;gap:18px;padding:8px 4px 6px}
+.narrative-bridge .nb-line{flex:1;height:1px}
+.narrative-bridge .nb-text{flex:0 1 auto;max-width:600px;font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:16px;font-weight:600;color:#004B86;font-style:italic;text-align:center;line-height:1.4;padding:0 6px}
+.narrative-arrow{display:flex;justify-content:center;margin-top:4px;animation:nbArrowBob 2.2s ease-in-out infinite}
+@keyframes nbArrowBob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
+.text-lg .narrative-quote{font-size:22px}
+.text-lg .narrative-card h3{font-size:26px}
+.text-lg .narrative-card p{font-size:16.5px;line-height:1.7}
+.text-lg .narrative-bridge .nb-text{font-size:18px}
+@media (max-width:980px){
+  .narrative-grid{grid-template-columns:1fr}
+  .narrative-bridge .nb-line{display:none}
+  .narrative-quote{font-size:17px;padding:12px 18px}
+}
+
+/* Shuffle stack: clickable card stack that cycles through the cards */
+.narrative-stack{position:relative;margin:0 auto 6px;max-width:560px;min-height:310px;perspective:1200px}
+.narrative-stack .stack-card{position:absolute;top:0;left:0;right:0;padding-bottom:58px;cursor:default;transition:transform .55s cubic-bezier(.4,1,.5,1), opacity .45s ease, box-shadow .35s ease;transform-origin:center top;outline:none;will-change:transform,opacity}
+.narrative-stack .stack-card:focus-visible{box-shadow:0 0 0 3px rgba(0,97,173,.28), 0 14px 36px rgba(0,97,173,.14)}
+.narrative-stack .stack-card.pos-front{transform:translateY(0) scale(1);z-index:3;opacity:1;cursor:pointer}
+.narrative-stack .stack-card.pos-mid{transform:translateY(10px) scale(.97);z-index:2;opacity:.85;pointer-events:none}
+.narrative-stack .stack-card.pos-back{transform:translateY(20px) scale(.94);z-index:1;opacity:.65;pointer-events:none}
+.narrative-stack .stack-card.pos-front:hover{transform:translateY(-2px) scale(1.005);box-shadow:0 14px 36px rgba(0,97,173,.14)}
+.narrative-stack .stack-card.shuffling{animation:shuffleAway .65s cubic-bezier(.4,.1,.3,1) forwards;z-index:5;pointer-events:none}
+@keyframes shuffleAway{
+  0%   {transform:translateY(0) translateX(0) rotate(0) scale(1);opacity:1}
+  35%  {transform:translateY(-22px) translateX(36px) rotate(6deg) scale(1.02);opacity:.95}
+  60%  {transform:translateY(-12px) translateX(8px) rotate(-2deg) scale(.96);opacity:.55}
+  100% {transform:translateY(20px) translateX(0) rotate(0) scale(.94);opacity:.65}
+}
+.stack-hint{position:absolute;bottom:18px;right:22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#A4ABB4;display:inline-flex;align-items:center;gap:4px;padding:6px 11px;background:#F2F5F8;border-radius:999px;animation:hintPulse 2.2s ease-in-out infinite;transition:opacity .35s ease}
+.stack-hint.fade-out{opacity:0}
+@keyframes hintPulse{0%,100%{opacity:.7;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+.nc-page{position:absolute;top:24px;right:24px;display:inline-flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#8A8E91;padding:5px 10px;background:#F2F5F8;border-radius:999px}
+.nc-page svg{flex:0 0 auto;opacity:.75}
+.stack-indicator{display:flex;justify-content:center;margin:18px 0 18px}
+.stack-dots{display:flex;gap:8px;align-items:center}
+.stack-dot{width:9px;height:9px;border-radius:50%;border:none;background:#cfd6dd;cursor:pointer;padding:0;transition:width .3s ease, background .3s ease;outline:none}
+.stack-dot:hover{background:#a4abb4}
+.stack-dot:focus-visible{box-shadow:0 0 0 3px rgba(0,97,173,.25)}
+.stack-dot.active{width:24px;border-radius:999px}
+.text-lg .narrative-stack{min-height:360px}
+@media (max-width:600px){
+  .narrative-stack{min-height:370px}
+  .stack-hint{bottom:14px;right:14px;font-size:10.5px;padding:5px 9px}
+}
+
+/* ── Fable block: animated illustration + story text ─────────────── */
+.fable-block{position:relative;background:#fff;border-radius:22px;padding:34px 38px 32px;margin:0 auto 28px;max-width:760px;box-shadow:0 10px 36px rgba(0,97,173,.09);overflow:hidden}
+.fable-block::before{content:'';position:absolute;top:0;left:38px;right:38px;height:3px;background:var(--fb-accent,#1A3A5C);border-radius:0 0 4px 4px}
+.fable-eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8A8E91;margin-bottom:8px}
+.fable-title{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:26px;font-weight:800;color:#004B86;line-height:1.15;margin:0 0 12px}
+.fable-intro{font-size:14.5px;line-height:1.65;color:#3a4351;margin:0 0 20px}
+.fable-illustration{position:relative;width:100%;max-width:560px;margin:8px auto 22px;padding:6px 0;opacity:0;transform:translateY(8px);transition:opacity .7s ease, transform .7s ease}
+.fable-illustration.is-visible{opacity:1;transform:translateY(0)}
+.fable-illustration svg{display:block;width:100%;height:auto;overflow:visible}
+.fable-illustration .fb-bob{transform-origin:50% 50%;will-change:transform}
+.fable-illustration.is-animated .fb-bob{animation:fbBob 6s ease-in-out 3.6s infinite}
+@keyframes fbBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+/* Line draw-in: paths get path length set as a CSS var in JS, then transitioned to 0 via class */
+.fable-illustration .fb-line{stroke-dasharray:var(--fb-len,1000);stroke-dashoffset:var(--fb-len,1000);transition:stroke-dashoffset 1.6s cubic-bezier(.55,.05,.3,1)}
+.fable-illustration.is-animated .fb-line{stroke-dashoffset:0}
+.fable-illustration .fb-line.fb-l1{transition-duration:.9s;transition-delay:.05s}
+.fable-illustration .fb-line.fb-l2{transition-duration:1.4s;transition-delay:.4s}
+.fable-illustration .fb-line.fb-l3{transition-duration:1.4s;transition-delay:.85s}
+.fable-illustration .fb-line.fb-l4{transition-duration:.7s;transition-delay:1.45s}
+.fable-illustration .fb-line.fb-l5{transition-duration:1.6s;transition-delay:1.65s}
+.fable-illustration .fb-line.fb-l6{transition-duration:1.0s;transition-delay:2.0s}
+.fable-illustration .fb-shade{opacity:0;transition:opacity 1.1s ease}
+.fable-illustration.is-animated .fb-shade{opacity:.42}
+.fable-illustration .fb-shade.fb-s1{transition-delay:1.6s}
+.fable-illustration .fb-shade.fb-s2{transition-delay:2.4s}
+.fable-illustration .fb-shade.fb-s3{transition-delay:2.7s}
+.fable-story{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:16.5px;font-weight:500;line-height:1.65;color:#3a4351;font-style:italic;border-left:3px solid var(--fb-accent,#1A3A5C);padding:4px 0 4px 18px;margin:6px 0 4px}
+.fable-story p{margin:0 0 12px}
+.fable-story p:last-child{margin-bottom:0}
+.fable-page{position:absolute;top:34px;right:38px;display:inline-flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#8A8E91;padding:5px 10px;background:#F2F5F8;border-radius:999px}
+.fable-page svg{flex:0 0 auto;opacity:.75}
+.text-lg .fable-title{font-size:30px}
+.text-lg .fable-intro{font-size:16.5px;line-height:1.7}
+.text-lg .fable-story{font-size:18.5px;line-height:1.75}
+@media (max-width:680px){
+  .fable-block{padding:28px 22px 26px}
+  .fable-block::before{left:22px;right:22px}
+  .fable-page{top:18px;right:22px}
+  .fable-title{font-size:22px;padding-right:78px}
+}
+@media (prefers-reduced-motion:reduce){
+  .fable-illustration,.fable-illustration .fb-line,.fable-illustration .fb-shade{transition:none !important}
+  .fable-illustration{opacity:1;transform:none}
+  .fable-illustration .fb-line{stroke-dashoffset:0 !important}
+  .fable-illustration .fb-shade{opacity:.42 !important}
+  .fable-illustration.is-animated .fb-bob{animation:none}
 }
 </style>
 
@@ -525,11 +651,43 @@ const SEGMENTS = [
     quadrant:'Mobilising', startAngle:90, endAngle:108,
     tagline:'Saying what you mean with clarity',
     desc:'Being explicit means removing ambiguity from your communication. It means stating expectations clearly, naming what you see, and not assuming others have read between the lines.',
+    narrative:{
+      eyebrow:'The Art of Explicitness',
+      quote:'Specify in clear, behavioural terms what needs to be done for successful operation, and what will be regarded as poor performance.',
+      cards:[
+        { icon:'compass', title:'The road analogy', page:115, body:'Would you walk a small child to the edge of a fast motorway and say, \u201Ccross safely and let me know how you get on\u201D? Yet many leaders brief their teams that way.' },
+        { icon:'key', title:'A Skill rarely taught', page:116, body:'The Skill is defining clearly, in behavioural terms, what good performance looks like and what poor performance looks like. Rarely taught, often assumed, rarely used.' },
+        { icon:'target', title:'Behaviour, not personality', page:116, body:'Focus on behaviour, not personality. Grounded in Positive Regard and Genuineness, explicitness names what success looks like, and the \u201Ctiger traps\u201D to avoid.' }
+      ],
+      tryIt:{
+        eyebrow:'Try it',
+        title:'See the difference',
+        sub:'Tap the toggle to turn a vague brief into an explicit one.',
+        scenarios:[
+          {
+            label:'Client calls',
+            vague:'\u201CBe more professional with our clients.\u201D',
+            explicit:'\u201COn client calls, use the client\u2019s first name within the first sentence, summarise their request before responding, and confirm next steps before ending the call.\u201D'
+          },
+          {
+            label:'Reports',
+            vague:'\u201CI want better quality reports from you.\u201D',
+            explicit:'\u201CFor reports, include the three KPIs we agreed, run spellcheck before submitting, and add a one-line summary at the top so I can scan the headlines first.\u201D'
+          },
+          {
+            label:'Team meetings',
+            vague:'\u201CTry to contribute more in team meetings.\u201D',
+            explicit:'\u201CIn our weekly team meeting, please offer at least one idea, ask one question of a colleague, and follow up on actions assigned to you within 24 hours.\u201D'
+          }
+        ]
+      },
+      bridge:'The first useful way of crystallising this is through the Onion Model.'
+    },
     modelTitle:'The Onion Model',
     modelDesc:'The Onion Model helps separate who a person is from what they do. At the core sit personality and values, which are deep-rooted and not the right target for performance conversations. The more useful focus is on the outer layers, attitudes and behaviours, because these are visible, more changeable, and far easier to address constructively.',
     bullets:['Focus feedback on behaviours and attitudes, not personality','Change is most achievable at the outer layers, where actions and approaches can be seen and shaped','Positive regard and clear explicitness make honest feedback easier to hear and act on'],
     modelType:'onion',
-    bookPages:'117-121',
+    bookPages:'115-121',
     noteTitle:'Keeping it fair and actionable',
     noteText:'The model is a useful reminder that effective challenge should stay with observable performance, not personal identity. It helps leaders be direct without becoming personal, and supports change by keeping conversations clear, fair and actionable.',
     hasWorksheet: true
@@ -539,10 +697,47 @@ const SEGMENTS = [
     quadrant:'Mobilising', startAngle:108, endAngle:126,
     tagline:'Looking below the surface',
     desc:'Surface-level fixes rarely solve deep problems. Getting to the root means asking better questions, resisting the urge to jump to solutions, and being willing to sit with discomfort while the real issue reveals itself.',
+    narrative:{
+      eyebrow:'Why people behave as they do',
+      quote:'People aren\u2019t daft. They do things for a reason. Identifying the reason is the most important part of being able to get to the root of the issue.',
+      fable:{
+        eyebrow:'An old Hungarian fable',
+        title:'The fisherman, the snake, and the brandy',
+        page:121,
+        intro:'Most of us are quick at diagnosing technical problems, but slower with people problems, often falling back on \u2018it\u2019s an attitude issue\u2019 or \u2018they need training\u2019. The truth is usually more interesting. This old fable has much to teach us about why we get the behaviours we get.',
+        svg:`<svg viewBox="0 0 572.15 177.39" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <g class="fb-bob">
+    <path class="fb-shade fb-s1" fill="#fa6b02" d="M79.91,103.53c5.18,2.64,18.46,8.13,23.42,9.61,6.59,1.97,6.31-.81,20.04,0,8.36.49,13.41,1.81,18.82,2.84,21.64,4.13,40.77,2.11,47.52,1.35,10.44-1.17,20.22-2.28,31.27-6.77,4.34-1.76,8.82-3.18,13.13-5.01,8.54-3.62,14.24-6.78,17.46-4.47.64.46,1.68,1.49,2.17,2.98.66,2.04-.06,3.94-.41,4.87-2.93,7.9-1.45,7.96-4.33,13.81-3,6.07-6.58,10.04-8.12,11.64-1.93,2.01-6.48,6.66-13.67,9.75-6.12,2.63-11.43,2.96-14.21,3.11-37.61,2.04-48.06,2.03-48.06,2.03-46.13-.03-25.53-1.13-41.7-.95-2.06.02-6.4.09-12.05-.95-5.85-1.07-14.2-2.6-21.52-9.07-3.97-3.51-6.12-7.71-10.42-16.11,0,0-4.15-8.11-3.66-15.84.11-1.67.52-2.8,1.35-3.25,1.07-.58,2.5.16,2.98.41Z"/>
+    <path class="fb-shade fb-s2" fill="#fa6b02" d="M338.03,94.97c-.75.33-1.39.71-1.65.87,0,0-2.09,1.26-3.77,3.14-3.23,3.61-4.21,12.08-5.19,12.02-.81-.05-.13-5.98-2.59-7.07-2.24-.99-5.64,2.66-6.13,2.12-.35-.38,1.06-2.6,3.3-4.71,2.37-2.24,4.67-3.4,10.37-5.89,5.02-2.2,9.56-4.06,9.43-4.48-.11-.34-3.09,1.24-5.42,0-3.26-1.73-3.09-7.82-3.06-8.49.24-6.05,4.18-10.29,7.54-13.91,2.41-2.59,6.49-6.88,13.43-9.43,6.48-2.38,11.95-1.95,15.32-1.65,5.37.48,14.77,1.31,20.74,8.49,3.12,3.75,4.05,7.73,4.95,11.55,1.39,5.93,1.1,11.25.71,18.38-.38,6.86-1.05,9.03.24,12.96.63,1.91,2.1,6.42,5.89,8.01,2.22.93,4.42.52,11.31-2.12,12.82-4.92,12.54-6.32,16.26-6.36,4.74-.06,8.76,2.16,15.56,5.89,4.75,2.61,7.91,5.1,8.49,4.48.62-.67-3.04-3.53-4.71-8.72-1.64-5.09-.46-9.63.71-14.14,1.34-5.15,2.76-10.62,7.78-14.38,1.19-.89,4.65-3.48,9.43-3.3,6.57.25,10.63,5.56,11.79,7.07,3.22,4.21,3.72,8.53,4.24,12.96.38,3.26,1.07,9.12-1.41,15.56-1.64,4.24-3.73,6.34-2.83,7.54.97,1.29,4.15-.1,9.19-1.18.64-.14,10.05-2.1,17.68-.94,1.29.2,2.91.54,14.61,6.6,13.51,6.99,15.23,8.55,20.51,9.43,6.07,1.01,10.91.15,12.73-.24,2-.42,6.3-1.37,10.83-4.33,3.08-2.02,4.68-3.94,4.97-3.68.38.34-2.08,4.31-5.66,7.54-1.19,1.07-3.81,3.25-7.78,4.95-1.61.69-6.99,2.82-14.38,2.36-8.44-.53-9.27-3.8-26.87-9.9-4.33-1.5-8.09-2.62-12.96-2.59-2.83.02-5.19.48-9.9,1.41-10.12,2-10.61,3.4-14.61,2.83-3.63-.52-4.92-1.9-8.49-1.41-2.84.39-3.75,1.5-6.13,2.36-4.89,1.76-9.64.13-14.14-1.41-8.81-3.02-9.15-6.68-15.08-7.07-2.71-.18-5.34.82-10.61,2.83-8.36,3.18-9.37,5.16-16.73,7.54-7.63,2.47-10.76,1.71-11.79,1.41-3.49-1-5.97-3.27-7.54-4.71-1.58-1.45-3.74-3.43-4.95-6.6-.72-1.87-.47-2.52-.71-7.78-.38-8.59-1.14-9.47-.47-13.44.5-2.96.92-2.47,1.65-6.36.54-2.86,1.13-6.23.47-10.37-.33-2.07-.72-4.31-2.36-6.6-.74-1.03-1.96-2.69-4.24-3.54-.44-.16-2.52-.89-4.95-.24-2.84.77-3.86,2.82-6.6,5.66-.27.28-3.44,3.52-7.54,5.89-1.83,1.06-7.68,4.44-12.96,4.24-.78-.03-3.27-.2-5.89.94Z"/>
+    <path class="fb-shade fb-s3" fill="#fa6b02" d="M234.13,104.21c-.92-1.61,2.33-4.08,1.51-5.83-.59-1.24-2.44-.47-4.89-2.07-.62-.4-2.94-2.05-3.39-4.7-.17-1.01.33-2.62,1.32-5.83.34-1.11.53-1.58.94-2.07,1.31-1.57,3.46-1.68,3.76-1.69,1.6-.06,2,.61,5.83,2.07,1.74.66,2.6.99,3.39,1.13,3.24.57,4.14-.78,6.21,0,1.49.56,2.31,1.74,3.58,3.58.68.98,1.75,2.47,2.26,4.7.25,1.09.52,2.29.19,3.58-.33,1.26-1.2,2.49-4.14,4.33-.75.47-7.62,4.66-14.49,3.76-.88-.11-1.71-.31-2.07-.94Z"/>
+    <path class="fb-line fb-l1" fill="none" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M389.87,135.51c-2.9-.44-10.32-2.5-16.07-1.99-11.03.98-13.24,4.55-25.07,6.37-10.17,1.57-17.79.37-18.16,2.34-.17.88,1.21,1.83,2.87,2.87,9.76,6.1,17.84,8.18,17.84,8.18,2.1.54,9.68,2.42,20.61,3.29,7.29.58,12.29.98,19.01,0,3.73-.55,3.63-.88,14.55-3.51,8.6-2.07,12.9-3.1,16.14-3.51,8.83-1.1,15.8.23,21.03,1.27,5.33,1.06,9.87,2.52,35.58,11.68,1.11.4,3.7,1.32,7.22,1.59,4.83.38,8.63-.67,10.62-1.27,13.06-3.96,20.72-10.67,35.79-15.29,2.96-.91,6.22-1.74,9.98-2.34,5.5-.87,11.28-1.79,18.06-.11,2.68.67,6.77,2.05,11.26,5.2"/>
+    <path class="fb-line fb-l2" fill="none" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M157.02,41.79c1.59,1.84,4.1,4.19,7.73,5.8,2.14.95,3.87,1.71,5.31.97,2.45-1.26,3.14-6.4.97-9.66-2.13-3.2-6.22-3.37-6.76-3.38-5.31-.14-10.79,4.63-11.11,10.14-.31,5.46,4.48,10.7,6.76,10.14,1.79-.44,1.92-4.4,2.72-4.33.95.08.63,5.62,1.95,11.83.93,4.36,2.11,9.95,6.06,13.92,5.8,5.83,14.46,5.1,14.37,6.51-.06.95-4.07,2.59-8.08,1.57-8.96-2.28-16.21-17.35-17.96-24.03-.21-.8-.77-3.11-2.69-4.27-1.79-1.08-4.41-.94-6.06.22-2.75,1.93-2.47,6.41-2.25,9.43.28,3.73,1.42,18.89,13.25,24.92,4.45,2.27,12.69,4.41,18.19,2.02,1.22-.53,3.58-1.84,6.51-1.35,2.34.39,2.87,1.56,4.94,1.57,2.28.01,5.37-1.38,5.84-3.82.49-2.56-2.15-5-4.27-5.84-1.84-.73-3.37-.27-3.46-.69-.13-.59,2.82-1.9,5.87-2.56.87-.19,7.04-1.51,7.86.28.88,1.92-3.17,6.55-4.64,5.97-.73-.29-.96-1.92-.57-3.13.87-2.68,4.84-3.44,7.67-3.98,2.35-.45,3.73-.71,5.4-.09,2.69,1,3.93,3.5,4.74,5.12,1.07,2.16,2.63,5.3,1.23,8.24-1.61,3.39-6.62,5.42-9.47,3.6-1.99-1.27-2.24-3.97-2.3-4.6-.06-.67-.3-4.14,2.3-6.01,1.27-.91,3.8-1.87,5.59-.47,1.73,1.36,1.79,4.18.57,5.97-1.57,2.3-5.09,2.65-6.35,1.42-2.22-2.16,2.07-9.71,2.37-10.23,3.34-5.77,7.79-8.44,22.74-17.9,8.15-5.16,7.73-4.94,8.62-5.47,12.38-7.44,60.25-29.88,125.45-58.64-.19,1.61-.37,3.22-.56,4.82-6.25,2.1-12.5,4.21-18.74,6.31-18.02,9.1-36.14,18.2-56.3,28.28-25.46,12.74-39.2,19.56-52.81,24.61-2.26.84-5.46,1.97-5.38,2.23.17.56,17.12-.78,33.59-9.84,9.04-4.97,14.33-10.29,26.17-14.85.95-.36,3.82-1.45,8.17-3.15,9.75-3.83,14.66-5.77,16.14-6.87,5.17-3.82,6.05-7.28,11.51-8.72,2.43-.64,2.23.05,4.82-.56,6.93-1.61,7.44-6.32,14.47-8.72,3.51-1.2,3.52-.07,7.42-1.48,5.84-2.11,8.49-5.61,9.65-4.82.62.41.81,2.04-1.48,7.79-7,11.22-13.62,19.63-18.37,25.24-9.51,11.21-13.79,13.86-24.12,27.09-7.52,9.63-11.73,16.52-14.1,25.42-1.21,4.55-2.28,8.55-1.67,13.73,1.46,12.52,11.52,22.25,20.97,26.72,6.9,3.26,14.92,4.1,30.62,2.04,18.91-2.48,23.6-5.35,24.31-7.05.34-.82.39-1.85.39-1.85.1-.8.19-1.54.26-2.2.2-1.8.11-3.6-.26-5.37-.73-3.51-.89-5-.44-12.41.11-1.81.5-3.6,1.08-5.32.7-2.07,1.17-5.22,1.27-8.95.16-5.69-2.41-13.22-7.1-14.52-3.96-1.09-7.03,1.38-15.75,8.65-5.56,4.63-6.18,5.87-18.84,8.03-7.65,1.31-10.34,5.19-12.05,8.96-1.57,3.46-1.14,7.05-1.85,7.1-.47.04-1.22-1.47-2.47-8.03-3.87,1.66-5.93,2.28-6.18,1.85-.37-.64,3.19-3.48,5.87-5.25.65-.43,3.6-2.34,7.72-4.02,1.47-.6,2.83-1.06,5.86-2.33,1.31-.55,1.96-.82,2.83-1.23,2.9-1.36,4.38-2.05,5.82-3.24.87-.72,3.6-3.16,4.49-7.11.33-1.45.72-3.18-.17-4.94-.89-1.76-3.04-3.51-5.25-3.09-3.01.58-4.86,4.92-3.4,7.1.9,1.35,7.76,1.82,8.34,1.85"/>
+    <path class="fb-line fb-l3" fill="none" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M157.09,41.81c-.1-.33-.22-.79-.34-1.35-.32-1.58-.84-4.12,0-5.58.55-.95,1.76-1.59,5.41-1.86,2.73-.2,6.81-.18,11.83,1.01.3-.58.6-1.4.34-2.2-.44-1.33-2.15-1.7-3.89-2.37-4.43-1.7-4-3.45-7.27-4.39-.75-.22-4.73-1.37-8.11,1.01-2.61,1.84-4.07,5.23-3.55,7.94.29,1.48.96,1.73,1.52,3.72.62,2.2.44,4.2.17,5.58-3,3.11-7.93,8.53-12.34,15.21-2.51,3.8-4.47,7.44-5.07,12.17-.12.94-.15,1.67-.17,2.03-.3,7.1,0,25.92.17,35.32-1.75,1.3-3.49,2.59-5.24,3.89-21.36,4.05-33.23.74-40.22-3.38-2.79-1.64-11.19-7.19-13.69-4.9-.69.64-.71,1.68-.68,2.7.12,3.17.6,16.45,11.49,24,.6.42,1.87,1.26,3.64,2.1,6.48,3.07,12.42,2.72,14.44,2.63,13.15-.55,14,3.92,67.77,2.03,15.93-.56,34.29-1.37,53.57-7.1,10.07-2.99,19.22-6.96,19.7-12.68.14-1.59-.43-2.97-.95-3.91-.65-.42-1.76-1.04-3.24-1.43-.58-.15-2.49-.62-5.03-.23-12.15,1.86-22.14,7.1-22.14,7.1-2.77,1.31-5.59,2.3-30.76,4.39-22.35,1.86-38.07,2.57-53.74,2.87-5.86.11-24.41.31-38.36-7.6-1.96-1.11-6.72-3.86-6.25-6.08.53-2.53,7.53-3.04,9.8-3.21,10.01-.73,17.85,1.99,19.43,2.53,1.52.52,11.83,2.04,32.45,5.07,29.33,4.32,55.59-1.63,60.16-2.7,24.91-5.86,41.58-16.8,45.46-11.66.9,1.19.34,3.9-.79,9.31-2.06,9.91-6.61,16.37-8.31,18.61-1.24,1.63-2.35,2.87-3.11,3.67-.65.69-5.56,5.81-12.5,9.24-7.72,3.82-15.07,4.13-18.48,4.27-33.35,1.45-50.03,2.17-88.62.76-3.99-.15-12.59-.44-22.42-4.67-3.22-1.39-5.7-2.82-7.18-3.74-6.6-3.92-9.01-5.08-11.43-6.01-.3-.12-1.18-.27-2.36-.12-5.98.76-3.28,4.4-10.9,7.33-8.48,3.26-14.63,1.04-32.06-2.17-16.02-2.95-33.2-6.12-34.23-3.26-.7,1.94,6.09,6.45,11.95,9.24,9.61,4.57,18.36,5.29,37.49,4.89,22.78-.48,37.13-2.06,56.51,2.72,1.91.47,8.28,2.09,8.15,3.26-.22,1.97-18.57.4-47.27,2.72-3.82.31-17.96,1.45-17.93,2.17.04,1.01,27.69.36,83.14,0,27.52-.18,4.98.08,104.38.1,23.71,0,30.91,0,30.92.44.05,1.29-59.14,6.97-114.65,7.06-21.23.03-34.8.57-61.95,1.63-20.39.8-23.9,1.2-23.91,1.63-.02,1.48,41.37,3.48,72.81,4.35,77.35,2.13,57.99-3.65,100.53-1.09,15.24.92,46.18,3.38,71.73-10.87,10.22-5.7,10.53-9.03,10.32-10.32-.96-5.96-19.33-8.94-32.06-9.24-19.22-.45-29.19,5.12-36.41-1.63-.5-.47-4.49-4.31-4.89-9.78-.25-3.46,1.12-4.92,5.2-15.66,2.36-6.2,2.79-8.04,3.05-9.86.74-5.2.26-11.09-1.43-11.47-1.01-.23-1.44,1.76-4.12,3.41-2.23,1.37-6.57,2.86-8.78.72-1.69-1.64-1.92-5.19-.36-6.63,2.66-2.46,9.21,2.46,10.58.72,1.14-1.45-1.63-7.16-6.09-8.78-3.16-1.15-4.64.67-8.42-.9-2.46-1.02-3.01-2.27-5.38-2.51-1.97-.19-4.52.38-4.84,1.61-.35,1.36,2.08,3.38,4.3,4.3,2.94,1.22,4.38.06,5.92,1.25,2.2,1.71,2.61,6.67.36,8.6-2.56,2.2-7.37-.54-9.5-2.33-.89-.75-4.55-3.83-3.59-6.81,1.01-3.1,6.49-4.42,8.6-2.69.89.73,1.21,2.01.18,10.22-.51,4.04-1.04,7.37-1.43,9.68"/>
+    <path class="fb-line fb-l4" fill="none" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M191.26,116.26c-2.54,1.57-6.37,1.91-7.35.43-1.29-1.94,3.26-5.64,2.16-7.35-1-1.56-5.75.08-17.29,3.03-8.18,2.09-11.65,2.76-15.78,1.51-1.64-.49-5.15-1.61-6.48-4.76-.14-.32-1.15-2.82,0-4.97,1.17-2.18,3.88-2.71,6.27-3.24,5.84-1.29,11.47-3.41,17.29-4.76,8.85-2.05,9.73-2.29,11.89-2.16,2.32.14,7.46.51,11.46,4.32,1.12,1.07,3.37,3.21,3.67,6.48.27,2.86-1.08,5.14-2.38,7.35-1.02,1.74-1.82,3.09-3.46,4.11Z"/>
+    <path class="fb-line fb-l5" fill="none" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M342.3,90.92c-.77.36-2.88,1.23-4.94.4-3.21-1.29-3.75-5.65-3.87-6.68-.71-5.78,3.5-10.54,6.81-14.29,2.7-3.06,8.74-9.68,19.23-12.15,2.46-.58,7.89-1.57,14.55-.27,3.37.66,12.1,2.37,17.49,9.48,3.32,4.38,3.89,8.86,4.54,13.89,1.82,14.18-3.67,19.72.67,29.11,2.43,5.25,5.45,6.32,6.14,6.54,3.08.97,5.93-.48,8.68-1.74,10.14-4.65,15.21-6.98,19.77-6.76,6.87.33,15.51,5.35,20.04,9.3.58.51,1.38,1.24,2.69,1.65,4.95,1.57,11.41-3.2,14.67-8.06,3.96-5.9,3.72-15.37.26-17.68-2.34-1.56-6.58-.95-7.88,3.03-2.46,7.54-2.15,19.56,5.96,23.53,3.32,1.63,8.22,1.73,11.58-.94,3.27-2.6,3.6-6.6,3.71-13.11.15-9.21.28-17.64-5.99-23.14-.82-.71-5.86-4.99-12.4-4.13-8.86,1.16-13.05,10.78-13.84,12.6-4.81,11.03.54,21.89,2.89,26.65,1.29,2.62,6.93,14.06,14.26,13.84,1.64-.05,2.95-.67,3.72-1.03,5.99-2.83,7.5-10.1,7.78-11.41"/>
+    <path class="fb-line fb-l6" fill="none" stroke="#1A3A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M380.84,127.58c8.01,8.88,14.42,11.32,18.84,11.06,5.1-.3,7.28-3.19,23.79-9.8,4.89-1.96,6.76-2.53,9.27-2.27,5.56.56,6.22,4.37,14.17,7,1.76.58,6.44,2.09,11.37,1.4,4.19-.58,6.65-1.57,6.65-1.57,1.21-.49,1.81-.86,2.97-1.05,2.45-.4,4.38.49,5.42.87,4.64,1.73,9.76.34,16.8-1.57,3.85-1.05,3.17-1.35,5.77-1.92,2.65-.59,7.56-1.21,15.75,1.22,10.74,3.2,10.65,6.75,20.82,9.45,6.69,1.77,11.44,1.48,12.6,1.4,2.87-.21,8.49-.62,13.82-4.2,1.33-.89,3.04-2.46,6.47-5.6,2.74-2.51,4.79-4.39,4.54-4.72-.38-.52-5.51,3.91-13.47,6.3-6.14,1.84-11.18,1.63-12.25,1.57-7.13-.37-12.25-3.06-19.07-6.65-8.39-4.41-9.75-6.81-16.45-8.57-4.16-1.09-7.48-1.18-9.8-1.22-4.43-.09-11.46.18-20.56,4.01"/>
+  </g>
+</svg>`,
+        story:[
+          'A man was out fishing in a boat on a lake. It was a beautiful day, and the fisherman was feeling pleased with the world. There was a tug on his line, and when he reeled it in there was a snake, and the snake had a live frog in its mouth.',
+          'Feeling sorry for the frog, the fisherman took it from the snake and threw the frog back into the water. Then he felt that perhaps that had not been fair on the snake, so he looked around the boat to see what he could give the snake. All he had was a flask of brandy, so he gave the snake a slug of brandy and then threw the snake back in the water.',
+          'Ten seconds later, there was a loud knocking on the side of the boat, and there was the snake again, this time with two frogs in its mouth.'
+        ]
+      },
+      cards:[
+        { icon:'award', title:'What gets rewarded gets done', page:121, body:'The fisherman thanked the snake with a slug of brandy. He never said the words, but the action sent a clear message. People take their cues from what is rewarded, not from what is intended.' },
+        { icon:'repeat', title:'You get more of what you reward', page:121, body:'Ten seconds later, the snake returned with two frogs. Reinforce a behaviour once and you signal to keep going. The actions we recognise are the actions we will see again.' },
+        { icon:'alert', title:'It is easy to reward the wrong thing', page:121, body:'The fisherman never set out to encourage frog-catching, but that is exactly what his kindness did. When something feels off, look closely at what is being rewarded, and by whom.' }
+      ],
+      bridge:'Once you understand why a behaviour is happening, the Performance Navigator below helps you decide what to do about it.'
+    },
     modelTitle:'The Performance Navigator',
     modelDesc:'The Performance Navigator is a structured decision tool that helps leaders diagnose whether a performance issue is a skills gap (Can\'t Do) or an attitude issue (Won\'t Do). By working through a sequence of yes/no questions, it guides you to the right intervention rather than jumping to conclusions. Click through the navigator below to explore the process.',
     bullets:['Start by defining the specific behaviours you are seeing','Use the Acid Test to distinguish Can\'t Do from Won\'t Do','Follow the path to the right intervention, then act on it and follow through consistently'],
     modelType:'navigator',
+    bookPages:'117-132',
+    noteTitle:'The cost of solving the wrong problem',
+    noteText:'Acting quickly on a misdiagnosed issue is worse than acting slowly on a clear one. Train someone with a motivation problem and nothing changes. Discipline someone with a skills gap and trust erodes. The Navigator is slower than instinct on purpose, because the wrong remedy costs more than no remedy at all.',
     hasActionPlanner: true
   },
   {
@@ -711,6 +906,20 @@ function playTextSizeClick(){
     osc.type='sine'; osc.frequency.value=880;
     g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(.014,now+.006); g.gain.exponentialRampToValueAtTime(.0001,now+.09);
     osc.connect(g); g.connect(ctx.destination); osc.start(now); osc.stop(now+.1);
+  }catch(e){}
+}
+// Soft, downward "tip" for dismissing the idle nudge — sine wave gliding from C5 to E4.
+function playNudgeClose(){
+  try{
+    const ctx=getCtx(), now=ctx.currentTime;
+    const osc=ctx.createOscillator(), g=ctx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(523.25, now);
+    osc.frequency.exponentialRampToValueAtTime(329.63, now+.18);
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(.013,now+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,now+.22);
+    osc.connect(g); g.connect(ctx.destination); osc.start(now); osc.stop(now+.25);
   }catch(e){}
 }
 // ── Motivation Inventory sounds ──
@@ -1564,7 +1773,7 @@ function buildSpectrumVisual() {
 function buildOnionVisual() {
   const wrap = document.createElement('div');
   wrap.style.cssText = 'width:100%;opacity:0;transition:opacity .4s ease';
-  wrap.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1930.29 862.58" style="width:100%;height:auto"><style>.onion-fade{opacity:0;animation:oFade 1.5s .2s ease forwards}.co1{stroke-dasharray:800;stroke-dashoffset:800;animation:oDraw 1s 1.4s ease forwards}.co2{stroke-dasharray:800;stroke-dashoffset:800;animation:oDraw 1s 1.7s ease forwards}.co3{stroke-dasharray:400;stroke-dashoffset:400;animation:oDraw .8s 2s ease forwards}.co4{stroke-dasharray:400;stroke-dashoffset:400;animation:oDraw .8s 2.2s ease forwards}.ot1{opacity:0;animation:oFade .5s 1.6s ease forwards}.ot2{opacity:0;animation:oFade .5s 1.9s ease forwards}.ot3{opacity:0;animation:oFade .5s 2.2s ease forwards}.ot4{opacity:0;animation:oFade .5s 2.5s ease forwards}@keyframes oDraw{to{stroke-dashoffset:0}}@keyframes oFade{to{opacity:1}}</style>
+  wrap.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1930.29 862.58" style="width:100%;height:auto"><style>.onion-fade{opacity:0}.co1,.co2{stroke-dasharray:800;stroke-dashoffset:800}.co3,.co4{stroke-dasharray:400;stroke-dashoffset:400}.ot1,.ot2,.ot3,.ot4{opacity:0}.onion-play .onion-fade{animation:oFade 1.5s .2s ease forwards}.onion-play .co1{animation:oDraw 1s 1.4s ease forwards}.onion-play .co2{animation:oDraw 1s 1.7s ease forwards}.onion-play .co3{animation:oDraw .8s 2s ease forwards}.onion-play .co4{animation:oDraw .8s 2.2s ease forwards}.onion-play .ot1{animation:oFade .5s 1.6s ease forwards}.onion-play .ot2{animation:oFade .5s 1.9s ease forwards}.onion-play .ot3{animation:oFade .5s 2.2s ease forwards}.onion-play .ot4{animation:oFade .5s 2.5s ease forwards}@keyframes oDraw{to{stroke-dashoffset:0}}@keyframes oFade{to{opacity:1}}</style>
   <g id="Onion">
     <path class="onion-fade" d="M2.42,851.25c193.52-94.22,530.68,61.48,645.78-11.76,12.14-18.3-3.73-42.98-14.84-60.46-22.63-34.98-52.63-71.26-65.59-111.57-22.45-75.59-24.66-164.3-3.28-243.32,15.96-74.82,53.83-136.16,119.08-173.45,6.9-6.49,51.7-19.52,48.77-27.33-4.9-13.08-48.3-10.51-64.58-8.95-25.32,2.42-60.4,14.4-90.71,15.49-39.6,1.43-45.31-50.9-63.44-66.25-13.08-11.57-51.35,2.79-58.52,17.82,9.04,3.54,37.49-19.17,45.42-24.36,33.45-21.89-38.49,1.11-44.64,5.49-34.64,24.65,23.52,30.57,1.62,96.43-22.4,67.35-95.2,122.6-110.25,201.05-16.39,85.47,13.63,162.86,75.69,220.44,16.32,15.14,94.19,52.97,148.78,61.08,39.36,5.85,63.37,1.35,63.37.24,0-4.97-6.84-12.99-13.26-27.62-13.81-31.49-16.86-55.14-21.61-85.91-8.95-57.89-2.92-131.03,2.28-173.76,12.15-100,113.42-237.71,212.34-245.74,44.5-4.81,93.71-4.26,138.24-11.96,19.55-2.09,40.72-14.64,57.44-14.74,4.89,5.55-13.79,19.63-23.79,26.93-34.86,24.19-79.52,22.12-119.1,32.76-92.89,20.74-154.59,62.02-199.82,146.99-57.23,100.38-28.91,304.85,29.01,399.69,8.77,15.22,11.84,15.66,6.6-3.06-29.82-109.03-39.26-237.55.64-346.46,40.06-103.89,132.67-150.15,235.06-178.52,14.72-5.71,25.78-14.92,36.66-15.03,10.24,8.09-23.76,40.47-33.02,48.05-44.3,37.54-102.32,57.73-143.95,98.43-39.15,45.02-60.1,106.23-71.56,164.3-11.18,76.15-.89,160.03,8.74,235.73,4.31,27.8,9.21,18.69,11.15-2.07,6.04-61.85,8.99-126.16,12.7-189.04,3.26-75.48,12.68-139.73,82.5-182.1,57.6-41.21,88.11-120.3,65.93,9.12,11.9,164.08,28.88,193.11-84.01,337.34-32.58,50.58,22.66,18.55,41.43,1.91,111.8-78.68,104.31-193.44,97.57-315.45-1.67-52.83,5.87-112.17,18.32-160.74,3.56-20.72,27.74-84.26,23.83-22.6-2.08,24.64-7.05,48.97-5.17,72.7,4.85,44.75,22.43,87.81,29.76,132.72,10.17,53.95,15.01,111.62-6.09,163.43-13.44,32.68-38.61,61.29-62.23,88.47-30.3,35.81-66.42,64.37-109.62,83.58-22.38,10.62-26.18,16.96,2.2,8.45,111.51-37.7,275.98-146.95,265.3-280.6-2.69-109.52-49.28-147.62-87.73-237.87-12.86-38.39-14.85-75.58,21.06-20.14,15.76,21.63,33.58,41.82,50.95,62.05,16.81,19.73,33.33,40.04,45.13,63.26,23.85,51.98,34.12,115.02,22.84,171.76-14.51,53.99-51.32,101.69-92.64,137.98-36.12,29.48-80.27,52.36-119.56,76.13-87.96,48.57,100.07-1.53,115.87-9.86,41.66-15.39,83.29-33.98,116.8-63.75,57.08-54.09,99.03-135.38,83.26-215.55-19.25-113.94-47.39-142.63-143.5-199.27-28.29-21.31-64.39-40.05-81.19-72.64-5.65-14.93-4.42-43.54,12.34-48.44,10.48,4.67,10.6,18.7,18.67,30.42,25.86,41.5,79.08,51.98,118.11,77.69,33.3,19.46,60.26,46.99,86.41,75.48,29.85,32.44,51.28,64.72,56.28,110.07,6.41,50.1,8.36,104.52-17.89,149.34-39.34,73.75-101.49,131.31-178.12,165.55-21.44,12.76-55.57,24.07-72.61,38.91-6.93,27.75,192.3,32.82,219.92,31.89,88.25,1.76,172.8-29.7,260.23-34.63,49.22-3.97,99.22-7.74,148.69-4.59,75.13,6.15,151.39,24.37,225.03,38.37" style="fill:none;stroke:#0061ad;stroke-linecap:round;stroke-linejoin:round;stroke-width:4.85px"/>
   </g>
@@ -1621,7 +1830,23 @@ function buildOnionVisual() {
     </g>
   </g>
 </svg>`;
-  setTimeout(() => { wrap.style.opacity = '1'; }, 50);
+  // Animate the onion when it scrolls into view
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          wrap.style.opacity = '1';
+          wrap.classList.add('onion-play');
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.15 });
+    requestAnimationFrame(() => obs.observe(wrap));
+  } else {
+    // Fallback for very old browsers
+    wrap.style.opacity = '1';
+    wrap.classList.add('onion-play');
+  }
   return wrap;
 }
 
@@ -1669,130 +1894,171 @@ function buildFiveWhysVisual() {
 }
 
 function buildNavigatorVisual() {
-  // Decision tree data
+  // Decision tree data — follows the canonical Performance Navigator flow exactly
   const nodes = {
-    start: {
-      type:'action', label:'Start',
-      text:'Define specific performance behaviours, including present undesirable ones and future desirable ones.',
-      next:'q1'
+    define: {
+      type:'input', label:'Step 1', heading:'Define the behaviours',
+      text:'Be specific about what you want to address. Vague behaviours are far harder to tackle than clear ones.',
+      fields:[
+        { id:'undesirable', label:'Present undesirable behaviour', placeholder:'What is happening now that needs to change? Describe the behaviour, not the character.' },
+        { id:'desirable',   label:'Future desirable behaviour',   placeholder:'What should you see or hear instead? Be as specific as you can.' }
+      ],
+      next:'q_matter'
     },
-    q1: {
-      type:'decision', label:'Question 1',
+    q_matter: {
+      type:'decision', label:'Step 2',
+      text:'Do these matter in terms of actual performance?',
+      yes:'q_knows', no:'end_livewith'
+    },
+    end_livewith: {
+      type:'outcome',
+      text:'Live with the situation. Focus only on what matters.',
+      note:'Not every imperfection needs correcting. Concentrate your energy where it counts.'
+    },
+    q_knows: {
+      type:'decision', label:'Step 3',
       text:'Does the person clearly know what is expected?',
-      yes:'q2', no:'a1'
+      yes:'q_acid', no:'a_describe'
     },
-    a1: {
-      type:'action', label:'Action needed',
-      text:'Describe what is required in explicit behavioural terms, and monitor subsequent performance closely.',
-      next:'q2'
+    a_describe: {
+      type:'action', label:'Step 4',
+      text:'Describe what is required in explicit behavioural terms, then monitor subsequent performance closely.',
+      next:'q_now_well'
     },
-    q2: {
-      type:'decision', label:'Question 2',
+    q_now_well: {
+      type:'decision', label:'Step 5',
       text:'Is the person now performing well?',
-      yes:'end_reinforce', no:'q3'
+      yes:'end_reinforce', no:'q_acid'
     },
     end_reinforce: {
       type:'outcome',
       text:'Recognise and reinforce the new behaviour.',
-      note:'Positive reinforcement sustains improvement. Make it specific and timely.'
+      note:'Specific, timely recognition is what makes new behaviour stick.'
     },
-    q3: {
-      type:'decision', label:'Question 3',
-      text:'Do these matter in terms of actual performance?',
-      yes:'q4_acid', no:'end_livewith'
-    },
-    end_livewith: {
-      type:'outcome',
-      text:'Live with the situation and concentrate on what matters.',
-      note:'Not every imperfection needs correcting. Focus your energy where it counts.'
-    },
-    q4_acid: {
+    q_acid: {
       type:'decision', label:'The Acid Test',
-      text:'Could the person do what was required if their life depended on it? (This separates Can\'t Do from Won\'t Do.)',
-      yes:'wont_q1', no:'cant_q1',
-      yesLabel:'YES (Won\'t Do)', noLabel:'NO (Can\'t Do)'
+      text:'Could the person do what was required if their life depended on it?',
+      yes:'won_q_matters', no:'cant_q_past',
+      yesLabel:"Yes, they could (Won't Do)", noLabel:"No, they couldn't (Can't Do)"
     },
-    // CAN'T DO (Skills) path
-    cant_q1: {
-      type:'decision', label:'Can\'t Do: Question 1',
-      text:'Has the person done this work or activity successfully in the past?',
-      yes:'cant_q2', no:'cant_q3'
-    },
-    cant_q2: {
-      type:'decision', label:'Can\'t Do: Question 2',
-      text:'Does the person have the ability and experience to do it?',
-      yes:'cant_q4', no:'cant_q3'
-    },
-    cant_q3: {
-      type:'decision', label:'Can\'t Do: Question 3',
-      text:'Is the job, task, or body of work designed well, or could it be simplified?',
-      yes:'end_redesign', no:'cant_q4'
-    },
-    end_redesign: {
-      type:'outcome',
-      text:'Redesign the job to simplify. Provide specific practice, review methods, and reset expectations.',
-      note:'Sometimes the task itself is the barrier, not the person.'
-    },
-    cant_q4: {
-      type:'decision', label:'Can\'t Do: Question 4',
-      text:'Is the person well trained and knowledgeable?',
-      yes:'end_monitor', no:'end_train'
+
+    // ── CAN'T DO pathway: skills / capability issue ──────────────
+    cant_q_past: {
+      type:'decision', label:"Can't Do: Step 6",
+      text:'Has the person done the work correctly in the past?',
+      yes:'cant_q_regular', no:'end_train'
     },
     end_train: {
       type:'outcome',
-      text:'Increase the amount of training, practice, and coaching.',
-      note:'Invest in building capability. Set clear milestones and review progress.'
+      text:'Provide specific, accurate training and monitor results.',
+      note:'They have not yet built the capability. Invest in proper training before judging the performance.'
+    },
+    cant_q_regular: {
+      type:'decision', label:"Can't Do: Step 7",
+      text:'Does the person use the skills required regularly?',
+      yes:'cant_q_problems', no:'end_practice'
+    },
+    end_practice: {
+      type:'outcome',
+      text:'Increase the amount of practice and coaching.',
+      note:'Skills fade without use. Build practice into the routine and stay close enough to coach.'
+    },
+    cant_q_problems: {
+      type:'decision', label:"Can't Do: Step 8",
+      text:'Is the person still having problems?',
+      yes:'a_remedial', no:'end_monitor'
     },
     end_monitor: {
       type:'outcome',
-      text:'Provide specific, accountable results and monitor closely.',
-      note:'The skills may be there but need structure and accountability to surface consistently.'
+      text:'Continue monitoring and reinforcing improvement.',
+      note:'Things are on track. Stay close enough to keep them there.'
     },
-    // WON'T DO (Attitude) path
-    wont_q1: {
-      type:'decision', label:'Won\'t Do: Question 1',
-      text:'Does the person feel that it doesn\'t matter whether they perform well or not?',
-      yes:'end_feedback', no:'wont_q2'
+    a_remedial: {
+      type:'action', label:"Can't Do: Action",
+      text:'Increase the amount of feedback. Provide remedial training and coaching, and monitor the results.',
+      next:'cant_q_design'
     },
-    end_feedback: {
+    cant_q_design: {
+      type:'decision', label:"Can't Do: Step 9",
+      text:'Is the job badly designed, or could it be simplified?',
+      yes:'end_redesign', no:'cant_q_potential'
+    },
+    end_redesign: {
       type:'outcome',
-      text:'Give praise and create positive, frequent feedback and recognition.',
-      note:'People repeat what gets noticed. Make good performance visible and valued.'
+      text:'Redesign the job to simplify it where possible. Review methods and equipment.',
+      note:'Sometimes the task itself is the barrier, not the person.'
     },
-    wont_q2: {
-      type:'decision', label:'Won\'t Do: Question 2',
-      text:'Are there natural or automatic consequences if the person does the wrong thing?',
-      yes:'end_penalties', no:'wont_q3'
+    cant_q_potential: {
+      type:'decision', label:"Can't Do: Step 10",
+      text:'Does the person have appropriate potential for this work?',
+      yes:'end_targeted', no:'end_redeploy_cant'
     },
-    end_penalties: {
+    end_targeted: {
       type:'outcome',
-      text:'Act to remove unintended penalties for good performance.',
-      note:'Sometimes doing the right thing is punished by extra workload or peer pressure. Remove those barriers.'
+      text:'Continue targeted support, coaching, feedback and monitoring.',
+      note:'The potential is there. Stay invested, and return to Step 8 if problems continue.'
     },
-    wont_q3: {
-      type:'decision', label:'Won\'t Do: Question 3',
-      text:'Are there any job design characteristics which prevent performance?',
-      yes:'end_remove', no:'wont_q4'
-    },
-    end_remove: {
+    end_redeploy_cant: {
       type:'outcome',
-      text:'Remove such characteristics.',
-      note:'Environmental or structural factors can block even willing people.'
+      text:'Redeploy to suitable work, if available. Otherwise, process dismissal.',
+      note:'When capability and potential are both absent, the kindest path is usually a better fit, or a formal parting of ways.'
     },
-    wont_q4: {
-      type:'decision', label:'Won\'t Do: Question 4',
-      text:'Does the person have a personal problem affecting this work?',
-      yes:'end_support', no:'end_formal'
+
+    // ── WON'T DO pathway: attitude / motivation / consequences ───
+    won_q_matters: {
+      type:'decision', label:"Won't Do: Step 11",
+      text:"Does the person feel that it doesn't matter whether they perform well or not?",
+      yes:'end_strong_fb', no:'won_q_penalised'
     },
-    end_support: {
+    end_strong_fb: {
       type:'outcome',
-      text:'Refer to suitable support. Consider whether adjustments can be made while the issue is resolved.',
-      note:'Lead with compassion, but keep expectations clear.'
+      text:'Give strong and frequent feedback. Create positive and negative outcomes.',
+      note:'Make performance visible and consequential, both ways.'
     },
-    end_formal: {
+    won_q_penalised: {
+      type:'decision', label:"Won't Do: Step 12",
+      text:'Does the person feel penalised for doing the right thing?',
+      yes:'end_remove_penalties', no:'won_q_good_for_bad'
+    },
+    end_remove_penalties: {
       type:'outcome',
-      text:'Consider the formal poor performance process, and ultimately, if necessary, dismissal.',
-      note:'When all other avenues are exhausted, formal processes protect everyone involved.'
+      text:'Act to remove the penalties.',
+      note:'Doing the right thing should never cost more than doing the wrong thing.'
+    },
+    won_q_good_for_bad: {
+      type:'decision', label:"Won't Do: Step 13",
+      text:'Are there good outcomes if the person does the wrong thing?',
+      yes:'end_create_outcomes', no:'won_q_design'
+    },
+    end_create_outcomes: {
+      type:'outcome',
+      text:'Create positive outcomes for good performance. Include negative outcomes if poor performance continues.',
+      note:'Reward the behaviour you want. Make sure the wrong path is the harder path.'
+    },
+    won_q_design: {
+      type:'decision', label:"Won't Do: Step 14",
+      text:'Are there any job design characteristics which get in the way of good performance?',
+      yes:'end_remove_design', no:'won_q_potential'
+    },
+    end_remove_design: {
+      type:'outcome',
+      text:'Act to remove such characteristics.',
+      note:'Even willing people can be blocked by structural barriers. Clear the path.'
+    },
+    won_q_potential: {
+      type:'decision', label:"Won't Do: Step 15",
+      text:'Does the person have appropriate potential for this work?',
+      yes:'end_structured_pm', no:'end_redeploy_won'
+    },
+    end_structured_pm: {
+      type:'outcome',
+      text:'Continue structured performance management. Reinforce expectations, consequences and support, and review regularly.',
+      note:'The potential is there. Stay disciplined and consistent.'
+    },
+    end_redeploy_won: {
+      type:'outcome',
+      text:'Redeploy to suitable work, if available. Otherwise, process dismissal.',
+      note:'When potential is absent and the will to engage is missing, formal pathways protect everyone involved.'
     }
   };
 
@@ -1800,7 +2066,9 @@ function buildNavigatorVisual() {
   wrap.className = 'nav-wrap';
 
   let trail = [];
-  let currentId = 'start';
+  let currentId = 'define';
+  const definedBehaviours = { undesirable: '', desirable: '' };
+  const escHtml = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
   function render() {
     wrap.innerHTML = '';
@@ -1811,10 +2079,21 @@ function buildNavigatorVisual() {
       const trailEl = document.createElement('div');
       trailEl.className = 'nav-trail';
       trail.forEach((t, i) => {
+        const trailNode = nodes[t.id];
         const step = document.createElement('div');
         step.className = 'nav-step visited';
-        const ansLabel = t.answer === 'yes' ? (nodes[t.id].yesLabel || 'Yes') : t.answer === 'no' ? (nodes[t.id].noLabel || 'No') : 'Continue';
-        step.innerHTML = `<div class="nav-step-num">${i+1}</div><div><div class="nav-step-text">${nodes[t.id].text}</div>${t.answer ? '<div class="nav-step-answer">' + ansLabel + '</div>' : ''}</div>`;
+        const headlineText = trailNode.heading || trailNode.text;
+        let detailHtml = '';
+        if (trailNode.type === 'input') {
+          const bits = [];
+          if (t.values && t.values.undesirable) bits.push('<div class="nav-step-input"><span class="nav-step-input-tag">Now</span> ' + escHtml(t.values.undesirable) + '</div>');
+          if (t.values && t.values.desirable)   bits.push('<div class="nav-step-input"><span class="nav-step-input-tag">Want</span> ' + escHtml(t.values.desirable) + '</div>');
+          detailHtml = bits.length ? bits.join('') : '<div class="nav-step-answer">Behaviours defined</div>';
+        } else if (t.answer) {
+          const ansLabel = t.answer === 'yes' ? (trailNode.yesLabel || 'Yes') : (trailNode.noLabel || 'No');
+          detailHtml = '<div class="nav-step-answer">' + ansLabel + '</div>';
+        }
+        step.innerHTML = `<div class="nav-step-num">${i+1}</div><div class="nav-step-body"><div class="nav-step-text">${headlineText}</div>${detailHtml}</div>`;
         trailEl.appendChild(step);
       });
       wrap.appendChild(trailEl);
@@ -1823,7 +2102,41 @@ function buildNavigatorVisual() {
     // Current node
     const current = document.createElement('div');
 
-    if (node.type === 'action') {
+    if (node.type === 'input') {
+      current.className = 'nav-current input';
+      const headingHtml = node.heading ? `<div class="nav-q-heading">${node.heading}</div>` : '';
+      current.innerHTML = `<div class="nav-q-label">${node.label}</div>${headingHtml}<div class="nav-q-text">${node.text}</div>`;
+
+      const fieldsWrap = document.createElement('div');
+      fieldsWrap.className = 'nav-inputs';
+      node.fields.forEach(field => {
+        const fwrap = document.createElement('div');
+        fwrap.className = 'nav-input-field';
+        const lbl = document.createElement('label');
+        lbl.className = 'nav-input-label';
+        lbl.textContent = field.label;
+        const ta = document.createElement('textarea');
+        ta.className = 'nav-input-ta';
+        ta.placeholder = field.placeholder;
+        ta.value = definedBehaviours[field.id] || '';
+        ta.rows = 2;
+        ta.addEventListener('input', e => { definedBehaviours[field.id] = e.target.value; });
+        fwrap.appendChild(lbl);
+        fwrap.appendChild(ta);
+        fieldsWrap.appendChild(fwrap);
+      });
+      current.appendChild(fieldsWrap);
+
+      const btn = document.createElement('button');
+      btn.className = 'nav-yn yes nav-input-continue';
+      btn.textContent = 'Continue \u2192';
+      btn.addEventListener('click', () => {
+        trail.push({ id: currentId, values: { ...definedBehaviours } });
+        currentId = node.next;
+        render();
+      });
+      current.appendChild(btn);
+    } else if (node.type === 'action') {
       current.className = 'nav-current decision';
       current.innerHTML = `<div class="nav-q-label">${node.label}</div><div class="nav-q-text">${node.text}</div>`;
       const btn = document.createElement('button');
@@ -1864,15 +2177,30 @@ function buildNavigatorVisual() {
       current.className = 'nav-current outcome';
       current.innerHTML = `<div class="nav-q-label">Recommended Action</div><div class="nav-outcome-text">${node.text}</div><div class="nav-outcome-note">${node.note}</div>`;
       if (currentId !== 'end_livewith') {
-        const cantDoIds = ['end_redesign','end_train','end_monitor'];
-        const wontDoIds = ['end_feedback','end_penalties','end_remove','end_support','end_formal'];
-        const diagType = cantDoIds.includes(currentId) ? 'cant-do' : wontDoIds.includes(currentId) ? 'wont-do' : 'positive';
+        const positiveIds = ['end_reinforce','end_monitor'];
+        const cantDoIds   = ['end_train','end_practice','end_redesign','end_targeted','end_redeploy_cant'];
+        const wontDoIds   = ['end_strong_fb','end_remove_penalties','end_create_outcomes','end_remove_design','end_structured_pm','end_redeploy_won'];
+        const diagType = positiveIds.includes(currentId) ? 'positive' : cantDoIds.includes(currentId) ? 'cant-do' : wontDoIds.includes(currentId) ? 'wont-do' : 'positive';
         const planBtn = document.createElement('button');
         planBtn.className = 'nav-plan-btn';
         planBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Plan your action';
         planBtn.addEventListener('click', () => {
+          // Combine the defined behaviours into a single description for the planner
+          let behaviourText = '';
+          if (definedBehaviours.undesirable) behaviourText = definedBehaviours.undesirable;
+          if (definedBehaviours.desirable) {
+            behaviourText += (behaviourText ? '\n\nWhat I want to see instead: ' : '') + definedBehaviours.desirable;
+          }
           document.dispatchEvent(new CustomEvent('liberatorNavOutcome', {
-            detail: { diagnosisType: diagType, action: node.text, note: node.note, outcomeId: currentId }
+            detail: {
+              diagnosisType: diagType,
+              action: node.text,
+              note: node.note,
+              outcomeId: currentId,
+              behaviour: behaviourText,
+              undesirable: definedBehaviours.undesirable,
+              desirable: definedBehaviours.desirable
+            }
           }));
           const plannerEl = document.getElementById('nav-action-planner');
           if (plannerEl) setTimeout(() => plannerEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
@@ -1896,7 +2224,9 @@ function buildNavigatorVisual() {
       reset.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Start again';
       reset.addEventListener('click', () => {
         trail = [];
-        currentId = 'start';
+        currentId = 'define';
+        definedBehaviours.undesirable = '';
+        definedBehaviours.desirable = '';
         render();
       });
       wrap.appendChild(reset);
@@ -3775,6 +4105,510 @@ function buildWheelPage(onOpen) {
 // ============================================================
 //  DETAIL PAGE
 // ============================================================
+const NARRATIVE_ICONS = {
+  compass: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
+  key: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><line x1="10.85" y1="12.15" x2="20" y2="3"/><line x1="18" y1="5" x2="20" y2="7"/><line x1="15" y1="8" x2="17" y2="10"/></svg>',
+  target: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  award: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>',
+  repeat: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+  alert: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+};
+
+// ── Fable block builder ──────────────────────────────────────────
+// Renders an animated illustration with story text. Lines draw in
+// progressively (using getTotalLength + stroke-dashoffset transitions),
+// then warm colour shades fade in. Triggered by IntersectionObserver.
+function buildFableBlock(fable, qColour) {
+  const block = document.createElement('div');
+  block.className = 'fable-block';
+  block.style.setProperty('--fb-accent', qColour);
+
+  if (fable.eyebrow) {
+    const eb = document.createElement('p');
+    eb.className = 'fable-eyebrow';
+    eb.textContent = fable.eyebrow;
+    block.appendChild(eb);
+  }
+
+  if (fable.title) {
+    const t = document.createElement('h3');
+    t.className = 'fable-title';
+    t.textContent = fable.title;
+    block.appendChild(t);
+  }
+
+  if (fable.page) {
+    const pg = document.createElement('div');
+    pg.className = 'fable-page';
+    pg.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> <span>Page ' + fable.page + '</span>';
+    block.appendChild(pg);
+  }
+
+  if (fable.intro) {
+    const intro = document.createElement('p');
+    intro.className = 'fable-intro';
+    intro.textContent = fable.intro;
+    block.appendChild(intro);
+  }
+
+  // Illustration wrapper
+  if (fable.svg) {
+    const ill = document.createElement('div');
+    ill.className = 'fable-illustration';
+    ill.innerHTML = fable.svg;
+    block.appendChild(ill);
+
+    // After the SVG is in the DOM, measure path lengths and arm the animation.
+    requestAnimationFrame(() => {
+      const svgEl = ill.querySelector('svg');
+      if (!svgEl) return;
+
+      // Arm every fb-line path with its true length so dasharray draws cleanly.
+      // We set --fb-len as a CSS variable; the stylesheet handles dasharray/offset
+      // and the transition to 0 when .is-animated is added. Setting these inline
+      // here would override the CSS rule and prevent the transition firing.
+      const lines = svgEl.querySelectorAll('.fb-line');
+      lines.forEach(p => {
+        try {
+          const len = p.getTotalLength();
+          if (len > 0) {
+            p.style.setProperty('--fb-len', len);
+          }
+        } catch (e) { /* non-path or unmeasurable, ignore */ }
+      });
+
+      // Mark the wrapper visible (opacity fade in) and trigger animation
+      // when the user actually scrolls to it.
+      const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) {
+        ill.classList.add('is-visible', 'is-animated');
+        return;
+      }
+
+      const reveal = () => {
+        ill.classList.add('is-visible');
+        // Let the wrapper fade settle in fully before the strokes start drawing.
+        setTimeout(() => ill.classList.add('is-animated'), 750);
+      };
+
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              reveal();
+              io.disconnect();
+            }
+          });
+        }, { threshold: 0.25 });
+        io.observe(ill);
+        // Safety: if observer never fires (e.g., already in view but layout odd),
+        // reveal after a generous delay.
+        setTimeout(() => {
+          if (!ill.classList.contains('is-visible')) reveal();
+        }, 1500);
+      } else {
+        // Fallback for browsers without IO
+        reveal();
+      }
+    });
+  }
+
+  // Story text: array of paragraphs in italics with a left rule
+  if (fable.story && fable.story.length) {
+    const story = document.createElement('div');
+    story.className = 'fable-story';
+    fable.story.forEach(para => {
+      const p = document.createElement('p');
+      p.textContent = para;
+      story.appendChild(p);
+    });
+    block.appendChild(story);
+  }
+
+  return block;
+}
+
+function buildNarrativeSection(seg, qColour) {
+  if (!seg.narrative) return null;
+  const n = seg.narrative;
+
+  const sec = document.createElement('div');
+  sec.className = 'narrative-section slide-up delay2';
+
+  // Header with eyebrow + framed quote
+  if (n.eyebrow || n.quote) {
+    const head = document.createElement('div');
+    head.className = 'narrative-header';
+    if (n.eyebrow) {
+      const eb = document.createElement('p');
+      eb.className = 'narrative-eyebrow';
+      eb.textContent = n.eyebrow;
+      head.appendChild(eb);
+    }
+    if (n.quote) {
+      const q = document.createElement('blockquote');
+      q.className = 'narrative-quote';
+      q.style.borderColor = qColour;
+      q.style.color = qColour;
+      q.textContent = '\u201C' + n.quote + '\u201D';
+      head.appendChild(q);
+    }
+    sec.appendChild(head);
+  }
+
+  // Fable block: animated illustration + story text. Sits between quote and cards.
+  if (n.fable) {
+    sec.appendChild(buildFableBlock(n.fable, qColour));
+  }
+
+  // Three cards as a clickable shuffle stack
+  if (n.cards && n.cards.length) {
+    const stack = document.createElement('div');
+    stack.className = 'narrative-stack';
+    stack.style.setProperty('--nc-accent', qColour);
+
+    const stepLabels = ['One','Two','Three','Four','Five'];
+    const cardsCount = n.cards.length;
+
+    n.cards.forEach((card, i) => {
+      const c = document.createElement('div');
+      c.className = 'narrative-card stack-card';
+      c.setAttribute('role', 'button');
+      c.setAttribute('tabindex', i === 0 ? '0' : '-1');
+      c.setAttribute('aria-label', card.title + '. Card ' + (i + 1) + ' of ' + cardsCount + '. Press to shuffle.');
+      c.style.setProperty('--nc-accent', qColour);
+      c.dataset.idx = String(i);
+
+      const icon = document.createElement('div');
+      icon.className = 'nc-icon';
+      icon.style.background = qColour + '14';
+      icon.style.color = qColour;
+      icon.innerHTML = NARRATIVE_ICONS[card.icon] || '';
+      c.appendChild(icon);
+
+      // Page reference badge (top-right corner)
+      if (card.page) {
+        const pg = document.createElement('div');
+        pg.className = 'nc-page';
+        pg.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> <span>Page ' + card.page + '</span>';
+        c.appendChild(pg);
+      }
+
+      const step = document.createElement('p');
+      step.className = 'nc-step';
+      step.textContent = stepLabels[i] || ('Step ' + (i + 1));
+      c.appendChild(step);
+
+      const title = document.createElement('h3');
+      title.textContent = card.title;
+      c.appendChild(title);
+
+      const body = document.createElement('p');
+      body.textContent = card.body;
+      c.appendChild(body);
+
+      // Subtle "tap for next" hint on the front card; fades away after first click
+      if (i === 0) {
+        const hint = document.createElement('div');
+        hint.className = 'stack-hint';
+        hint.innerHTML = 'Tap for next <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+        c.appendChild(hint);
+      }
+
+      stack.appendChild(c);
+    });
+
+    // Indicator dots (also clickable to jump)
+    const indicator = document.createElement('div');
+    indicator.className = 'stack-indicator';
+    const dots = document.createElement('div');
+    dots.className = 'stack-dots';
+    for (let i = 0; i < cardsCount; i++) {
+      const d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'stack-dot';
+      d.setAttribute('aria-label', 'Show card ' + (i + 1));
+      d.dataset.idx = String(i);
+      if (i === 0) { d.classList.add('active'); d.style.background = qColour; }
+      dots.appendChild(d);
+    }
+    indicator.appendChild(dots);
+
+    // Stack state and behaviour
+    let activeIdx = 0;
+    let isAnimating = false;
+
+    function applyPositions() {
+      const cardEls = Array.from(stack.querySelectorAll('.stack-card'));
+      cardEls.forEach((el) => {
+        el.classList.remove('pos-front', 'pos-mid', 'pos-back');
+        const i = parseInt(el.dataset.idx, 10);
+        const pos = (i - activeIdx + cardsCount) % cardsCount;
+        if (pos === 0) {
+          el.classList.add('pos-front');
+          el.setAttribute('tabindex', '0');
+          el.setAttribute('aria-hidden', 'false');
+        } else if (pos === cardsCount - 1) {
+          el.classList.add('pos-back');
+          el.setAttribute('tabindex', '-1');
+          el.setAttribute('aria-hidden', 'true');
+        } else {
+          el.classList.add('pos-mid');
+          el.setAttribute('tabindex', '-1');
+          el.setAttribute('aria-hidden', 'true');
+        }
+      });
+      Array.from(dots.children).forEach((d, di) => {
+        if (di === activeIdx) {
+          d.classList.add('active');
+          d.style.background = qColour;
+        } else {
+          d.classList.remove('active');
+          d.style.background = '';
+        }
+      });
+    }
+
+    function shuffleNext() {
+      if (isAnimating) return;
+      const cardEls = Array.from(stack.querySelectorAll('.stack-card'));
+      const front = cardEls.find(el => el.classList.contains('pos-front'));
+      if (!front) return;
+      isAnimating = true;
+
+      // Hide the hint after first shuffle
+      const hint = stack.querySelector('.stack-hint');
+      if (hint) hint.classList.add('fade-out');
+
+      // Advance index so other cards transition into their new spots
+      activeIdx = (activeIdx + 1) % cardsCount;
+      applyPositions();
+      // The leaving card should run the shuffleAway animation, not just slide to back
+      front.classList.remove('pos-front', 'pos-mid', 'pos-back');
+      front.classList.add('shuffling');
+
+      try { if (typeof playMINext === 'function') playMINext(); } catch(e){}
+
+      setTimeout(() => {
+        front.classList.remove('shuffling');
+        applyPositions();
+        isAnimating = false;
+        // Move keyboard focus to the new front card so keyboard users can keep going
+        const newFront = stack.querySelector('.stack-card.pos-front');
+        if (newFront && document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('stack-card')) {
+          newFront.focus();
+        }
+      }, 650);
+    }
+
+    function jumpTo(targetIdx) {
+      if (isAnimating || targetIdx === activeIdx) return;
+      activeIdx = targetIdx;
+      applyPositions();
+      try { if (typeof playMISelect === 'function') playMISelect(); } catch(e){}
+    }
+
+    stack.addEventListener('click', (e) => {
+      const c = e.target.closest('.stack-card');
+      if (c && c.classList.contains('pos-front')) shuffleNext();
+    });
+
+    stack.addEventListener('keydown', (e) => {
+      const c = e.target.closest('.stack-card');
+      if (!c || !c.classList.contains('pos-front')) return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        shuffleNext();
+      }
+    });
+
+    dots.addEventListener('click', (e) => {
+      const d = e.target.closest('.stack-dot');
+      if (!d) return;
+      jumpTo(parseInt(d.dataset.idx, 10));
+    });
+
+    applyPositions();
+
+    sec.appendChild(stack);
+    sec.appendChild(indicator);
+  }
+
+  // Bridge line + downward arrow that hands off to the model below
+  if (n.bridge) {
+    const bridge = document.createElement('div');
+    bridge.className = 'narrative-bridge';
+
+    const lLine = document.createElement('div');
+    lLine.className = 'nb-line';
+    lLine.style.background = 'linear-gradient(90deg, transparent, ' + qColour + ')';
+    lLine.style.opacity = '.45';
+
+    const text = document.createElement('p');
+    text.className = 'nb-text';
+    text.textContent = '\u201C' + n.bridge + '\u201D';
+
+    const rLine = document.createElement('div');
+    rLine.className = 'nb-line';
+    rLine.style.background = 'linear-gradient(90deg, ' + qColour + ', transparent)';
+    rLine.style.opacity = '.45';
+
+    bridge.appendChild(lLine);
+    bridge.appendChild(text);
+    bridge.appendChild(rLine);
+    sec.appendChild(bridge);
+
+    const arrow = document.createElement('div');
+    arrow.className = 'narrative-arrow';
+    arrow.style.color = qColour;
+    arrow.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+    sec.appendChild(arrow);
+  }
+
+  return sec;
+}
+
+function buildTryItWidget(tryIt, qColour) {
+  const card = document.createElement('div');
+  card.className = 'tryit-card slide-up delay4';
+  card.style.setProperty('--ti-accent', qColour);
+
+  // Header row
+  const head = document.createElement('div');
+  head.className = 'tryit-head';
+  const headLeft = document.createElement('div');
+  const eb = document.createElement('p');
+  eb.className = 'tryit-eyebrow';
+  eb.textContent = tryIt.eyebrow || 'Try it';
+  eb.style.color = qColour;
+  const ttl = document.createElement('h3');
+  ttl.className = 'tryit-title';
+  ttl.textContent = tryIt.title || 'See the difference';
+  headLeft.appendChild(eb);
+  headLeft.appendChild(ttl);
+  if (tryIt.sub) {
+    const sub = document.createElement('p');
+    sub.className = 'tryit-sub';
+    sub.textContent = tryIt.sub;
+    headLeft.appendChild(sub);
+  }
+  const counter = document.createElement('div');
+  counter.className = 'tryit-counter';
+  head.appendChild(headLeft);
+  head.appendChild(counter);
+  card.appendChild(head);
+
+  // Scenario label chip
+  const chip = document.createElement('div');
+  chip.className = 'tryit-chip';
+  chip.style.background = qColour + '14';
+  chip.style.color = qColour;
+  card.appendChild(chip);
+
+  // Brief panel that cross-fades
+  const panel = document.createElement('div');
+  panel.className = 'tryit-panel';
+  const panelText = document.createElement('p');
+  panelText.className = 'tryit-text';
+  panel.appendChild(panelText);
+  card.appendChild(panel);
+
+  // Toggle row
+  const row = document.createElement('div');
+  row.className = 'tryit-row';
+
+  const lbl1 = document.createElement('span');
+  lbl1.className = 'tryit-side tryit-side-vague active';
+  lbl1.textContent = 'Vague';
+
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'tryit-toggle';
+  toggle.setAttribute('aria-label', 'Toggle between vague and explicit');
+  toggle.setAttribute('role', 'switch');
+  toggle.setAttribute('aria-checked', 'false');
+  const knob = document.createElement('span');
+  knob.className = 'tryit-knob';
+  toggle.appendChild(knob);
+
+  const lbl2 = document.createElement('span');
+  lbl2.className = 'tryit-side tryit-side-explicit';
+  lbl2.textContent = 'Explicit';
+
+  row.appendChild(lbl1);
+  row.appendChild(toggle);
+  row.appendChild(lbl2);
+
+  const next = document.createElement('button');
+  next.type = 'button';
+  next.className = 'tryit-next';
+  next.innerHTML = 'Next example <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+  next.style.color = qColour;
+
+  card.appendChild(row);
+  card.appendChild(next);
+
+  // State
+  let idx = 0;
+  let mode = 'vague'; // 'vague' | 'explicit'
+  const total = tryIt.scenarios.length;
+
+  function render(animateText) {
+    const sc = tryIt.scenarios[idx];
+    chip.textContent = 'Scenario: ' + sc.label;
+    counter.textContent = (idx + 1) + ' of ' + total;
+    const newText = mode === 'vague' ? sc.vague : sc.explicit;
+
+    // Update toggle visual state
+    if (mode === 'explicit') {
+      toggle.classList.add('on');
+      toggle.setAttribute('aria-checked', 'true');
+      lbl1.classList.remove('active');
+      lbl2.classList.add('active');
+      panel.classList.add('explicit');
+      toggle.style.background = qColour;
+    } else {
+      toggle.classList.remove('on');
+      toggle.setAttribute('aria-checked', 'false');
+      lbl2.classList.remove('active');
+      lbl1.classList.add('active');
+      panel.classList.remove('explicit');
+      toggle.style.background = '#cfd6dd';
+    }
+
+    if (animateText) {
+      panelText.classList.add('fade-out');
+      setTimeout(() => {
+        panelText.textContent = newText;
+        panelText.classList.remove('fade-out');
+      }, 180);
+    } else {
+      panelText.textContent = newText;
+    }
+  }
+
+  toggle.addEventListener('click', () => {
+    mode = (mode === 'vague') ? 'explicit' : 'vague';
+    try {
+      if (mode === 'explicit' && typeof playMISelect === 'function') playMISelect();
+      else if (mode === 'vague' && typeof playMIDeselect === 'function') playMIDeselect();
+    } catch(e){}
+    render(true);
+  });
+
+  next.addEventListener('click', () => {
+    idx = (idx + 1) % total;
+    mode = 'vague';
+    try { if (typeof playMINext === 'function') playMINext(); } catch(e){}
+    render(true);
+  });
+
+  // Initial render (no animation)
+  render(false);
+
+  return card;
+}
+
 function buildDetailPage(seg, onBack) {
   const page = document.createElement('div');
   page.className = 'page';
@@ -3888,6 +4722,8 @@ function buildDetailPage(seg, onBack) {
 
   cont.appendChild(hero);
   cont.appendChild(threadBanner);
+  const narrativeSection = buildNarrativeSection(seg, qColour);
+  if (narrativeSection) cont.appendChild(narrativeSection);
   cont.appendChild(detailGrid);
 
   // Extra models (segments with more than one model, e.g. feedback page)
@@ -4943,7 +5779,12 @@ function buildActionPlanner() {
     state.diagnosisType = e.detail.diagnosisType;
     state.recommendedAction = e.detail.action;
     state.fromNavigator = true;
-    if (state.name.trim()) step = 2;
+    // If the user defined behaviours in the Navigator, carry that text into the planner
+    // unless they have already typed something different here themselves.
+    if (e.detail.behaviour && !state.behaviour.trim()) {
+      state.behaviour = e.detail.behaviour;
+    }
+    if (state.name.trim() && state.behaviour.trim()) step = 2;
     render();
   };
   document.addEventListener('liberatorNavOutcome', navHandler);
@@ -6349,7 +7190,10 @@ handleHash();
         }).join('') +
       '</div>';
     document.body.appendChild(el);
-    el.querySelector('#idle-nudge-close').addEventListener('click', hideNudge);
+    el.querySelector('#idle-nudge-close').addEventListener('click', function() {
+      playNudgeClose();
+      hideNudge();
+    });
     el.querySelectorAll('[data-nudge-link]').forEach(function(a) { a.addEventListener('click', hideNudge); });
     return el;
   }
@@ -6390,6 +7234,13 @@ handleHash();
     if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
   }
 
+  // Single point of truth for scheduling the nudge. Always clears the
+  // previous timer before setting a new one so timers can never leak.
+  function scheduleNudge() {
+    clearTimeout(nudgeTimer);
+    if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
+  }
+
   // Deliberate user actions dismiss the nudge AND reset the show timer.
   // Mousemove is intentionally excluded — moving the cursor is too low a bar,
   // and a user reaching toward the nudge to click a suggestion would otherwise
@@ -6406,17 +7257,12 @@ handleHash();
   // Mousemove only resets the inactivity counter for the *next* nudge —
   // it never hides a currently-visible one. The 15-second fadeTimer in
   // showNudge() handles natural dismissal.
-  window.addEventListener('mousemove', function() {
-    clearTimeout(nudgeTimer);
-    if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
-  }, { passive:true });
+  window.addEventListener('mousemove', scheduleNudge, { passive:true });
   window.addEventListener('hashchange', function() {
-    clearTimeout(nudgeTimer); hideNudge();
-    if (isHomePage()) nudgeTimer = setTimeout(showNudge, 10000);
+    hideNudge();
+    scheduleNudge();
   });
-  document.getElementById('welcome-btn').addEventListener('click', function() {
-    nudgeTimer = setTimeout(showNudge, 10000);
-  });
+  document.getElementById('welcome-btn').addEventListener('click', scheduleNudge);
 })();
 </script>
 </body>
