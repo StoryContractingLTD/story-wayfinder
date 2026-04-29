@@ -4089,6 +4089,12 @@ function buildFlightPlanVisual() {
   <circle cx="305" cy="185" r="4.5" fill="white"/>
   <text x="305" y="200" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-weight="800" font-size="13" fill="white" pointer-events="none">C</text>
 </g>
+
+<!-- Plane (JS animates position and rotation) — sits before D pin so D covers it on arrival -->
+<g id="${fp}p" transform="translate(45,210) rotate(0)">
+  <path d="M10,0 L-6,-4 L-4,-1.5 L-11,-1.5 L-11,1.5 L-4,1.5 L-6,4 Z" fill="#1A3A5C"/>
+</g>
+
 <!-- Beacon D -->
 <g class="${fp}b ${fp}b4 ${fp}pin" id="${fp}pinD">
   <circle cx="440" cy="66" r="10" class="${fp}bpulse"/>
@@ -4098,10 +4104,6 @@ function buildFlightPlanVisual() {
   <text x="440" y="81" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-weight="800" font-size="13" fill="white" pointer-events="none">D</text>
 </g>
 
-<!-- Plane (JS animates position and rotation) -->
-<g id="${fp}p" transform="translate(45,210) rotate(0)">
-  <path d="M10,0 L-6,-4 L-4,-1.5 L-11,-1.5 L-11,1.5 L-4,1.5 L-6,4 Z" fill="#1A3A5C"/>
-</g>
 </svg>
 
 <!-- Beacon / alarm info panel -->
