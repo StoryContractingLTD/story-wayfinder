@@ -423,7 +423,11 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .narrative-card::before{content:'';position:absolute;top:0;left:24px;right:24px;height:3px;background:var(--nc-accent);border-radius:0 0 4px 4px}
 .narrative-card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,97,173,.14)}
 .narrative-card .nc-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-.narrative-card .nc-step{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8A8E91;margin-bottom:6px}
+.narrative-card .nc-step{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.narrative-card .nc-step-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--nc-accent);color:white;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;flex-shrink:0;letter-spacing:0;line-height:1;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.narrative-card .nc-step-text{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#6c7480;line-height:1}
+.narrative-card .nc-step-marker{font-weight:800;color:var(--nc-accent);margin-right:1px}
+.narrative-card.is-bookend::before{height:5px;left:14px;right:14px}
 .narrative-card h3{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:23px;font-weight:800;color:#004B86;margin-bottom:10px;line-height:1.2}
 .narrative-card p{font-size:14.5px;line-height:1.65;color:#3a4351}
 .narrative-bridge{display:flex;align-items:center;gap:18px;padding:8px 4px 6px}
@@ -434,6 +438,8 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .text-lg .narrative-quote{font-size:22px}
 .text-lg .narrative-card h3{font-size:26px}
 .text-lg .narrative-card p{font-size:16.5px;line-height:1.7}
+.text-lg .narrative-card .nc-step-num{width:30px;height:30px;font-size:16px}
+.text-lg .narrative-card .nc-step-text{font-size:13.5px}
 .text-lg .narrative-bridge .nb-text{font-size:18px}
 @media (max-width:980px){
   .narrative-grid{grid-template-columns:1fr}
@@ -743,12 +749,22 @@ const SEGMENTS = [
   {
     id:'assertive', label:'Be appropriately assertive',
     quadrant:'Mobilising', startAngle:126, endAngle:144,
-    tagline:'Standing firm without standing over',
-    desc:'Appropriate assertiveness is the ability to express your position clearly and respectfully, to hold boundaries, and to advocate for what matters, without tipping into aggression or withdrawing into passivity.',
-    modelTitle:'Thomas-Kilmann Conflict Modes',
-    modelDesc:'This model maps five approaches to conflict based on two dimensions: assertiveness (the degree to which you try to satisfy your own concerns) and cooperativeness (the degree to which you try to satisfy the other person\'s concerns). No mode is inherently right or wrong; effectiveness depends on the context.',
-    bullets:['Know your default conflict style','Competing and avoiding both have a place, used intentionally','Collaboration takes more time but builds stronger outcomes'],
-    modelType:'conflict'
+    tagline:'The keystone of the leader-developer set',
+    desc:'Apply the underlying skills and attitudes of assertiveness, which are necessary for being explicit and giving feedback, but also to maintain consistency of standards and approach. Exert strong leadership when needed to prevent the team from going in different directions.',
+    modelTitle:'Aggressive, Assertive, Non-Assertive',
+    modelDesc:'Assertion lives in the middle of a spectrum. Aggression stands up for oneself in a way that violates the rights of others (I Win, You Lose). Non-Assertion fails to stand up for oneself effectively (You Win, I Lose). Assertion stands up for oneself in a way that respects the other person\'s rights too (I Win, You Win). Many leaders confuse assertion with aggression, or fear it sounds pushy. It is neither: it is the keystone influencing style that underpins clear feedback and consistent standards.',
+    bullets:['Assertion is the keystone of the leader-developer skill set: it underpins explicit standards, honest feedback, and high challenge with high support','It rests on treating both people as fundamentally OK, with both sets of rights respected at the same time','Without assertion, leaders eventually flip from non-assertive to aggressive when their "doormat bank" is full: better to build personal power steadily than rely on it'],
+    modelType:'assertion-spectrum',
+    bookPages:'167-174',
+    noteTitle:'Two questions before you speak',
+    noteText:'Am I treating the other person as fundamentally OK as a human being, even if their behaviour or attitude on this occasion is not? Am I looking after my legitimate rights and theirs at the same time, neither trampling on them nor allowing mine to be trampled? When the answer to both is yes, you are already most of the way there.',
+    companionReference:{
+      eyebrow:'Companion model',
+      title:'The OK Corral',
+      text:'A companion model that frames four different ways of approaching any interaction, and shows why genuine assertion is the most productive position to lead from.',
+      cta:'View the OK Corral on the wheel home page'
+    },
+    hasAssertionRehearsal:true
   },
   {
     id:'feedback', label:'Give empowering feedback',
@@ -759,7 +775,7 @@ const SEGMENTS = [
     modelDesc:'From Transactional Analysis, a "Stroke" is a unit of recognition. Every person needs Strokes to maintain their psychological well-being, and in the absence of positive recognition, people will often seek out negative forms rather than receive nothing at all. Effective leaders understand the four types of Stroke and use them with intention: Positive Conditional recognition, specific and linked to behaviour, is the most powerful tool available to a leader-developer.',
     bullets:['Recognition is a fundamental human need: people will seek it even in negative forms if positive strokes are withheld','Positive Conditional feedback is the most effective in leadership: specific, genuine, and directly linked to observable behaviour','Negative Unconditional feedback attacks who someone is rather than what they did, and has no place in empowering leadership'],
     modelType:'strokes',
-    bookPages:'188',
+    bookPages:'175-205',
     noteTitle:'The greatest reward you have to give is yourself',
     noteText:'The most powerful thing a leader can offer is their genuine attention and honest recognition. Recognition costs nothing and yet means everything. The goal is not relentless positivity but genuine authenticity: naming what you see, both when it impresses and when it concerns you, and always from a place of positive regard.',
     hasFeedbackPlanner: true,
@@ -767,7 +783,8 @@ const SEGMENTS = [
       modelTitle:'Catch Someone Doing Something Right',
       modelDesc:'Effective feedback is not just about correction. It is about actively looking for improvement, a step forward, something different, and naming it when you see it. Each step caught and reinforced encourages the next. The journey is continuous: true excellence is always a moving state, and the leader\'s role is to keep people progressing rather than praising them into a comfortable plateau.',
       modelType:'catchright',
-      bookPages:'194',
+      bookPages:'175-205',
+      cardinalRule:true,
       bullets:['Praise improvement and progress, not just baseline behaviour: catching a step forward is more powerful than recognising the expected','Reinforce each step, then encourage the next: repeated praise of the same achievement signals to stay put rather than grow','Feedback becomes a way of life when it is consistent, expected, and given with genuine positive regard for the person\'s success'],
       noteTitle:'People know the rules of engagement',
       noteText:'When feedback is a regular part of how a leader works, negative feedback loses its sting. People are not caught off guard. They understand that recognition and challenge are both part of being genuinely supported, and that they can trust the feedback they receive because it comes from someone who cares about their success.'
@@ -1063,6 +1080,7 @@ function buildModelVisual(seg) {
     fivewhys: buildFiveWhysVisual,
     navigator: buildNavigatorVisual,
     conflict: buildConflictVisual,
+    'assertion-spectrum': buildAssertionSpectrumVisual,
     sbi: buildSBIVisual,
     strokes: buildStrokesVisual,
     catchright: buildCatchRightVisual,
@@ -2277,9 +2295,112 @@ function buildConflictVisual() {
     addRect(svg, m.x-65, m.y-18, 130, 36, m.bg, 10);
     addText(svg, m.x, m.y+4, m.label, 'white', 12, 600);
   });
-  addText(svg, 24, 120, 'ASSERTIVE →', '#999', 9, 600, -90);
-  addText(svg, 200, 240, '← COOPERATIVE →', '#999', 9, 600);
+  addText(svg, 24, 120, 'ASSERTIVE \u2192', '#999', 9, 600, -90);
+  addText(svg, 200, 240, '\u2190 COOPERATIVE \u2192', '#999', 9, 600);
   return svg;
+}
+
+function buildAssertionSpectrumVisual() {
+  const uid = 'asp' + Math.random().toString(36).slice(2,7);
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:relative;width:100%;font-family:"Barlow",sans-serif';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    @keyframes ${uid}-arrow-left { 0%{transform:scaleX(0);transform-origin:right center;opacity:0} 100%{transform:scaleX(1);transform-origin:right center;opacity:1} }
+    @keyframes ${uid}-arrow-right { 0%{transform:scaleX(0);transform-origin:left center;opacity:0} 100%{transform:scaleX(1);transform-origin:left center;opacity:1} }
+    @keyframes ${uid}-marker-pop { 0%{transform:scale(0);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+    @keyframes ${uid}-fadeUp { 0%{opacity:0;transform:translateY(8px)} 100%{opacity:1;transform:translateY(0)} }
+    @keyframes ${uid}-pulse-glow { 0%,100%{filter:drop-shadow(0 0 0 rgba(26,58,92,0))} 50%{filter:drop-shadow(0 0 8px rgba(26,58,92,0.45))} }
+
+    .${uid}-svgwrap { width:100%; }
+    .${uid}-arrow-l { animation:${uid}-arrow-left .85s .15s cubic-bezier(.18,.74,.32,1) both; }
+    .${uid}-arrow-r { animation:${uid}-arrow-right .85s .15s cubic-bezier(.18,.74,.32,1) both; }
+    .${uid}-marker { animation:${uid}-marker-pop .55s 1.05s cubic-bezier(.34,1.56,.64,1) both, ${uid}-pulse-glow 3.6s 2.5s ease-in-out infinite; transform-origin:center; transform-box:fill-box; }
+    .${uid}-label { animation:${uid}-fadeUp .55s 1.25s ease both; opacity:0; }
+    .${uid}-divider { animation:${uid}-fadeUp .5s .9s ease both; opacity:0; }
+
+    .${uid}-outcomes { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:18px; animation:${uid}-fadeUp .6s 1.5s ease both; opacity:0; }
+    .${uid}-outc { border-radius:12px; padding:12px 14px; text-align:center; }
+    .${uid}-outc-eyebrow { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.78); }
+    .${uid}-outc-title { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:white; margin-top:3px; line-height:1.1; letter-spacing:.02em; }
+    .${uid}-outc-sub { font-size:11.5px; color:rgba(255,255,255,.78); margin-top:6px; line-height:1.5; }
+
+    @media (max-width:540px) {
+      .${uid}-outcomes { grid-template-columns:1fr; }
+    }
+  `;
+  wrap.appendChild(styleEl);
+
+  const svgWrap = document.createElement('div');
+  svgWrap.className = uid + '-svgwrap';
+
+  // SVG: 600 x 230 viewBox.
+  // Aggressive arrow left (red), Non-Assertive arrow right (grey), Assertive markers centre (navy).
+  const aggColour = '#B14A4A';      // muted warning red
+  const naColour = '#3A3A3A';        // soft charcoal
+  const asrColour = '#1A3A5C';       // Mobilising navy
+  const labelColour = '#1A3A5C';
+
+  svgWrap.innerHTML = `
+    <svg viewBox="0 0 600 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+      <!-- Top labels -->
+      <text x="100" y="22" text-anchor="middle" class="${uid}-label" fill="${aggColour}" font-family="'Barlow Condensed',sans-serif" font-size="14" font-weight="800" letter-spacing="3">AGGRESSIVE</text>
+      <text x="300" y="22" text-anchor="middle" class="${uid}-label" fill="${asrColour}" font-family="'Barlow Condensed',sans-serif" font-size="15" font-weight="800" letter-spacing="3">ASSERTIVE</text>
+      <text x="500" y="22" text-anchor="middle" class="${uid}-label" fill="${naColour}" font-family="'Barlow Condensed',sans-serif" font-size="14" font-weight="800" letter-spacing="3">NON-ASSERTIVE</text>
+
+      <!-- Vertical divider lines -->
+      <line x1="200" y1="40" x2="200" y2="160" stroke="#cfd8e2" stroke-width="1" class="${uid}-divider"/>
+      <line x1="400" y1="40" x2="400" y2="160" stroke="#cfd8e2" stroke-width="1" class="${uid}-divider"/>
+
+      <!-- Aggressive arrow (pointing LEFT) -->
+      <g class="${uid}-arrow-l">
+        <polygon points="190,100 60,100 60,80 20,105 60,130 60,110 190,110" fill="${aggColour}"/>
+      </g>
+
+      <!-- Assertive markers (two short bars in centre, navy) -->
+      <g class="${uid}-marker">
+        <rect x="285" y="95" width="11" height="22" rx="1.5" fill="${asrColour}"/>
+        <rect x="304" y="95" width="11" height="22" rx="1.5" fill="${asrColour}"/>
+      </g>
+
+      <!-- Non-Assertive arrow (pointing RIGHT) -->
+      <g class="${uid}-arrow-r">
+        <polygon points="410,100 540,100 540,80 580,105 540,130 540,110 410,110" fill="${naColour}"/>
+      </g>
+
+      <!-- Bottom descriptors -->
+      <text x="100" y="180" text-anchor="middle" class="${uid}-label" fill="#667788" font-family="'Barlow',sans-serif" font-size="11" font-weight="600">Standing up for self</text>
+      <text x="100" y="196" text-anchor="middle" class="${uid}-label" fill="#667788" font-family="'Barlow',sans-serif" font-size="11" font-weight="500">at the cost of others</text>
+
+      <text x="300" y="180" text-anchor="middle" class="${uid}-label" fill="${labelColour}" font-family="'Barlow',sans-serif" font-size="11" font-weight="700">Standing up for self</text>
+      <text x="300" y="196" text-anchor="middle" class="${uid}-label" fill="${labelColour}" font-family="'Barlow',sans-serif" font-size="11" font-weight="500">while respecting others</text>
+
+      <text x="500" y="180" text-anchor="middle" class="${uid}-label" fill="#667788" font-family="'Barlow',sans-serif" font-size="11" font-weight="600">Failing to stand up</text>
+      <text x="500" y="196" text-anchor="middle" class="${uid}-label" fill="#667788" font-family="'Barlow',sans-serif" font-size="11" font-weight="500">for self effectively</text>
+    </svg>
+  `;
+
+  wrap.appendChild(svgWrap);
+
+  // Outcome chips below
+  const outcomes = document.createElement('div');
+  outcomes.className = uid + '-outcomes';
+  const outs = [
+    { eyebrow:'Outcome', title:'I Win, You Lose', sub:'The middle of the Onion gets attacked', bg:aggColour },
+    { eyebrow:'Outcome', title:'I Win, You Win', sub:'Only behaviour and attitudes are addressed', bg:asrColour },
+    { eyebrow:'Outcome', title:'You Win, I Lose', sub:'Issues remain unsaid and unresolved', bg:naColour }
+  ];
+  outs.forEach(o => {
+    const card = document.createElement('div');
+    card.className = uid + '-outc';
+    card.style.background = o.bg;
+    card.innerHTML = `<div class="${uid}-outc-eyebrow">${o.eyebrow}</div><div class="${uid}-outc-title">${o.title}</div><div class="${uid}-outc-sub">${o.sub}</div>`;
+    outcomes.appendChild(card);
+  });
+  wrap.appendChild(outcomes);
+
+  return wrap;
 }
 
 function buildSBIVisual() {
@@ -2337,8 +2458,8 @@ function buildStrokesVisual() {
   const cells = [
     { row:0, col:0, bg:'#e4f5f6', textColor:'#0a3e40', dotColor:'rgba(10,62,64,.45)', badgeBg:'rgba(1,164,171,.15)', badgeText:'#0a5a5f', badge:'Nurturing', typeLabel:'Positive Unconditional', typeSub:'For being', quote:'"I like you, you\'re a good bloke."', note:'Warm and nourishing, but does not change workplace behaviour. Better suited to close personal relationships than professional settings. Positive, but not enough on its own to develop people.' },
     { row:0, col:1, bg:'#1A3A5C', textColor:'#ffffff', dotColor:'rgba(255,255,255,.6)', badgeBg:'rgba(255,255,255,.2)', badgeText:'#ffffff', badge:'Most Effective', typeLabel:'Positive Conditional', typeSub:'For doing', quote:'"That was a good report you produced. It was clear, concise and summed up the issues."', note:'The most powerful Stroke in leadership. Specific, genuine, and directly linked to observable behaviour. It reinforces exactly what you want to see more of and builds real confidence.' },
-    { row:1, col:0, bg:'#fff2e6', textColor:'#6b3000', dotColor:'rgba(107,48,0,.4)', badgeBg:'rgba(250,107,2,.15)', badgeText:'#7a3800', badge:'Use Carefully', typeLabel:'Negative Conditional', typeSub:'For doing', quote:'"When someone has an idea you always criticise it right away, so people are reluctant to make suggestions. Next time, find something positive to say first before pointing out the flaws."', note:'Can influence behaviour when delivered honestly and fairly. Most effective when paired with genuine positive recognition and a clear commitment to supporting the person\'s improvement.' },
-    { row:1, col:1, bg:'#22357A', textColor:'#ffffff', dotColor:'rgba(255,255,255,.6)', badgeBg:'rgba(255,255,255,.18)', badgeText:'#ffffff', badge:'Never Appropriate', typeLabel:'Negative Unconditional', typeSub:'For being', quote:'"You\'re a waste of space."', note:'Attacks who someone is, not what they did. It provokes the strongest possible defensive reaction, destroys psychological safety, and has no place in any approach to empowering leadership.' }
+    { row:1, col:1, bg:'#fff2e6', textColor:'#6b3000', dotColor:'rgba(107,48,0,.4)', badgeBg:'rgba(250,107,2,.15)', badgeText:'#7a3800', badge:'Use Carefully', typeLabel:'Negative Conditional', typeSub:'For doing', quote:'"When someone has an idea you always criticise it right away, so people are reluctant to make suggestions. Next time, find something positive to say first before pointing out the flaws."', note:'Can influence behaviour when delivered honestly and fairly. Most effective when paired with genuine positive recognition and a clear commitment to supporting the person\'s improvement.' },
+    { row:1, col:0, bg:'#22357A', textColor:'#ffffff', dotColor:'rgba(255,255,255,.6)', badgeBg:'rgba(255,255,255,.18)', badgeText:'#ffffff', badge:'Never Appropriate', typeLabel:'Negative Unconditional', typeSub:'For being', quote:'"You\'re a waste of space."', note:'Attacks who someone is, not what they did. It provokes the strongest possible defensive reaction, destroys psychological safety, and has no place in any approach to empowering leadership.' }
   ];
   const grid = document.createElement('div');
   grid.className = `${uid}-grid`;
@@ -2498,6 +2619,326 @@ function buildCatchRightVisual() {
   container.appendChild(beckon);
 
   return container;
+}
+
+// Cardinal Rule banner: a memorable, full-width punctuation mark for the
+// "Catch Someone Doing Something Right" section. Recreates the iconic
+// hexagon callout from the Liberator material with subtle motion.
+function buildCardinalRuleBanner() {
+  const uid = 'crr' + Math.random().toString(36).slice(2,7);
+  const banner = document.createElement('div');
+  banner.className = `${uid}-banner slide-up delay4`;
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    @keyframes ${uid}-glow {
+      0%,100% { filter: drop-shadow(0 0 6px rgba(216,49,110,0.30)); }
+      50%     { filter: drop-shadow(0 0 14px rgba(216,49,110,0.55)); }
+    }
+    @keyframes ${uid}-shimmer {
+      0%   { transform: translateX(-60%); opacity: 0; }
+      15%  { opacity: 1; }
+      85%  { opacity: 1; }
+      100% { transform: translateX(260%); opacity: 0; }
+    }
+    @keyframes ${uid}-dot-fade {
+      0%,100% { opacity: 0.18; }
+      50%     { opacity: 0.38; }
+    }
+    @keyframes ${uid}-rule-rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes ${uid}-sub-rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .${uid}-banner {
+      position: relative;
+      margin-top: 36px;
+      padding: 56px 36px 60px;
+      background: radial-gradient(ellipse at top right, #234B73 0%, #1A3A5C 45%, #142E4B 100%);
+      border-radius: 22px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 14px 44px rgba(20,46,75,0.30), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .${uid}-dots {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      pointer-events: none;
+      animation: ${uid}-dot-fade 7s ease-in-out infinite;
+    }
+    .${uid}-dots-tl { top: -70px; left: -70px; }
+    .${uid}-dots-br { bottom: -70px; right: -70px; transform: rotate(180deg); animation-delay: 3.5s; }
+
+    .${uid}-hex-accent {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .${uid}-hex-tr { top: 22px; right: 26px; width: 64px; height: 64px; }
+    .${uid}-hex-bl { bottom: 22px; left: 26px; width: 64px; height: 64px; transform: rotate(180deg); }
+
+    .${uid}-shimmer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 30%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+      pointer-events: none;
+      animation: ${uid}-shimmer 9s ease-in-out infinite;
+      animation-delay: 1.4s;
+    }
+
+    .${uid}-content {
+      position: relative;
+      z-index: 2;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .${uid}-eyebrow {
+      font-family: 'Barlow Condensed','Arial Narrow',sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.94);
+      margin-bottom: 28px;
+      animation: ${uid}-rule-rise 0.8s ease both;
+      animation-delay: 0.1s;
+    }
+
+    .${uid}-hex-wrap {
+      position: relative;
+      display: inline-block;
+      margin: 0 auto 32px;
+      animation: ${uid}-glow 4.5s ease-in-out infinite, ${uid}-rule-rise 0.9s ease both;
+      animation-delay: 0s, 0.25s;
+    }
+
+    .${uid}-hex-svg {
+      display: block;
+      width: 360px;
+      height: auto;
+      max-width: 100%;
+    }
+
+    .${uid}-hex-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Barlow Condensed','Arial Narrow',sans-serif;
+      font-size: 25px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 0.015em;
+      padding: 0 44px;
+      line-height: 1.2;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.35);
+    }
+
+    .${uid}-subtitle {
+      font-family: 'Barlow',sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.80);
+      line-height: 1.75;
+      max-width: 480px;
+      margin: 0 auto;
+      animation: ${uid}-sub-rise 0.9s ease both;
+      animation-delay: 0.55s;
+    }
+    .${uid}-subtitle .${uid}-soft {
+      letter-spacing: 0.18em;
+      opacity: 0.7;
+    }
+    .${uid}-subtitle .${uid}-bold {
+      color: rgba(255,255,255,0.95);
+      font-weight: 600;
+    }
+
+    .${uid}-spotlight {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      left: 0;
+      top: 0;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(232,100,160,0.34) 0%,
+        rgba(232,74,134,0.20) 18%,
+        rgba(216,49,110,0.10) 36%,
+        rgba(216,49,110,0.04) 52%,
+        transparent 68%
+      );
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.65s ease;
+      mix-blend-mode: screen;
+      z-index: 1;
+      will-change: transform, opacity;
+      transform: translate3d(-9999px, -9999px, 0);
+    }
+    .${uid}-spotlight.${uid}-spotlight-on {
+      opacity: 1;
+    }
+
+    @media (max-width: 620px) {
+      .${uid}-banner { padding: 40px 22px 44px; }
+      .${uid}-eyebrow { font-size: 22px; margin-bottom: 22px; }
+      .${uid}-hex-svg { width: 290px; }
+      .${uid}-hex-text { font-size: 20px; padding: 0 32px; }
+      .${uid}-subtitle { font-size: 14px; }
+      .${uid}-hex-tr, .${uid}-hex-bl { width: 46px; height: 46px; }
+      .${uid}-spotlight { width: 360px; height: 360px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .${uid}-spotlight { display: none; }
+    }
+  `;
+  banner.appendChild(styleEl);
+
+  // Decorative dot patterns (concentric arcs of small dots)
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  function makeDots(extraClass) {
+    const svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 260 260');
+    svg.setAttribute('class', `${uid}-dots ${extraClass}`);
+    for (let r = 50; r < 260; r += 16) {
+      const dotCount = Math.floor((r / 16) * 1.8);
+      for (let i = 0; i < dotCount; i++) {
+        const a = (i / dotCount) * 90;
+        const rad = a * Math.PI / 180;
+        const x = 30 + r * Math.cos(rad);
+        const y = 30 + r * Math.sin(rad);
+        if (x > 260 || y > 260) continue;
+        const dot = document.createElementNS(SVG_NS, 'circle');
+        dot.setAttribute('cx', x.toFixed(1));
+        dot.setAttribute('cy', y.toFixed(1));
+        dot.setAttribute('r', 1.6);
+        dot.setAttribute('fill', '#D8316E');
+        dot.setAttribute('opacity', (0.85 - r/320).toFixed(2));
+        svg.appendChild(dot);
+      }
+    }
+    return svg;
+  }
+  banner.appendChild(makeDots(`${uid}-dots-tl`));
+  banner.appendChild(makeDots(`${uid}-dots-br`));
+
+  // Corner hexagon clusters (echoes the Liberator branding)
+  function makeHexCluster(extraClass) {
+    const svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 64 64');
+    svg.setAttribute('class', `${uid}-hex-accent ${extraClass}`);
+    const hexA = document.createElementNS(SVG_NS, 'polygon');
+    hexA.setAttribute('points', '14,8 32,8 41,24 32,40 14,40 5,24');
+    hexA.setAttribute('fill', '#D8316E');
+    hexA.setAttribute('opacity', '0.80');
+    svg.appendChild(hexA);
+    const hexB = document.createElementNS(SVG_NS, 'polygon');
+    hexB.setAttribute('points', '34,22 52,22 61,38 52,54 34,54 25,38');
+    hexB.setAttribute('fill', '#1A3A5C');
+    hexB.setAttribute('stroke', '#D8316E');
+    hexB.setAttribute('stroke-width', '1.8');
+    svg.appendChild(hexB);
+    return svg;
+  }
+  banner.appendChild(makeHexCluster(`${uid}-hex-tr`));
+  banner.appendChild(makeHexCluster(`${uid}-hex-bl`));
+
+  // Subtle moving shimmer
+  const shimmer = document.createElement('div');
+  shimmer.className = `${uid}-shimmer`;
+  banner.appendChild(shimmer);
+
+  // Content: eyebrow, hexagon callout, contrasting subtitle
+  const content = document.createElement('div');
+  content.className = `${uid}-content`;
+  content.innerHTML = `
+    <div class="${uid}-eyebrow">The Cardinal Rule</div>
+    <div class="${uid}-hex-wrap">
+      <svg class="${uid}-hex-svg" viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="${uid}-hexBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E84A86"/>
+            <stop offset="55%" stop-color="#D8316E"/>
+            <stop offset="100%" stop-color="#A8275A"/>
+          </linearGradient>
+          <linearGradient id="${uid}-hexFill" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgba(216,49,110,0.18)"/>
+            <stop offset="100%" stop-color="rgba(216,49,110,0.06)"/>
+          </linearGradient>
+        </defs>
+        <polygon points="42,100 96,18 264,18 318,100 264,182 96,182"
+                 fill="url(#${uid}-hexFill)"
+                 stroke="url(#${uid}-hexBorder)"
+                 stroke-width="2.6"
+                 stroke-linejoin="round"/>
+      </svg>
+      <div class="${uid}-hex-text">Catch Someone Doing Something Right!</div>
+    </div>
+    <div class="${uid}-subtitle">
+      Rather than the more usual<span class="${uid}-soft"> ... </span><br>
+      ignoring what is going well<br>
+      and <span class="${uid}-bold">blitzing what is going wrong!</span>
+    </div>
+  `;
+  banner.appendChild(content);
+
+  // Spotlight follow: a soft warm pool of light that tracks just behind the
+  // cursor as it moves across the card. Uses a lerped target position so the
+  // light glides rather than snaps, giving a sense that the card is quietly
+  // aware of you. Fades in on enter, drifts out on leave.
+  const spotlight = document.createElement('div');
+  spotlight.className = `${uid}-spotlight`;
+  banner.appendChild(spotlight);
+
+  const SPOT_HALF = 260; // half of the 520px spotlight square
+  let spotX = 0, spotY = 0, targetX = 0, targetY = 0, spotRaf = null;
+
+  function spotAnimate() {
+    spotX += (targetX - spotX) * 0.16;
+    spotY += (targetY - spotY) * 0.16;
+    spotlight.style.transform =
+      `translate3d(${(spotX - SPOT_HALF).toFixed(1)}px, ${(spotY - SPOT_HALF).toFixed(1)}px, 0)`;
+    if (Math.abs(targetX - spotX) > 0.4 || Math.abs(targetY - spotY) > 0.4) {
+      spotRaf = requestAnimationFrame(spotAnimate);
+    } else {
+      spotRaf = null;
+    }
+  }
+
+  banner.addEventListener('mouseenter', (e) => {
+    const rect = banner.getBoundingClientRect();
+    // Start the spotlight already at the cursor, no swooping in from elsewhere
+    targetX = spotX = e.clientX - rect.left;
+    targetY = spotY = e.clientY - rect.top;
+    spotlight.style.transform =
+      `translate3d(${spotX - SPOT_HALF}px, ${spotY - SPOT_HALF}px, 0)`;
+    spotlight.classList.add(`${uid}-spotlight-on`);
+  });
+
+  banner.addEventListener('mousemove', (e) => {
+    const rect = banner.getBoundingClientRect();
+    targetX = e.clientX - rect.left;
+    targetY = e.clientY - rect.top;
+    if (!spotRaf) spotRaf = requestAnimationFrame(spotAnimate);
+  });
+
+  banner.addEventListener('mouseleave', () => {
+    spotlight.classList.remove(`${uid}-spotlight-on`);
+  });
+
+  return banner;
 }
 
 function buildPDCAVisual() {
@@ -4267,7 +4708,6 @@ function buildNarrativeSection(seg, qColour) {
     stack.className = 'narrative-stack';
     stack.style.setProperty('--nc-accent', qColour);
 
-    const stepLabels = ['One','Two','Three','Four','Five'];
     const cardsCount = n.cards.length;
 
     n.cards.forEach((card, i) => {
@@ -4278,6 +4718,8 @@ function buildNarrativeSection(seg, qColour) {
       c.setAttribute('aria-label', card.title + '. Card ' + (i + 1) + ' of ' + cardsCount + '. Press to shuffle.');
       c.style.setProperty('--nc-accent', qColour);
       c.dataset.idx = String(i);
+      // Bookend cards (first and last) get a slightly thicker accent strip
+      if (i === 0 || i === cardsCount - 1) c.classList.add('is-bookend');
 
       const icon = document.createElement('div');
       icon.className = 'nc-icon';
@@ -4294,9 +4736,23 @@ function buildNarrativeSection(seg, qColour) {
         c.appendChild(pg);
       }
 
-      const step = document.createElement('p');
+      // Step indicator: coloured number badge + position label.
+      // Bookend cards (first / last) read "FIRST OF n" and "LAST OF n" so the
+      // user can see at a glance where they are in the sequence.
+      const step = document.createElement('div');
       step.className = 'nc-step';
-      step.textContent = stepLabels[i] || ('Step ' + (i + 1));
+      const num = document.createElement('span');
+      num.className = 'nc-step-num';
+      num.textContent = String(i + 1);
+      step.appendChild(num);
+      const stepText = document.createElement('span');
+      stepText.className = 'nc-step-text';
+      let label;
+      if (i === 0) label = '<span class="nc-step-marker">First</span> of ' + cardsCount;
+      else if (i === cardsCount - 1) label = '<span class="nc-step-marker">Last</span> of ' + cardsCount;
+      else label = (i + 1) + ' of ' + cardsCount;
+      stepText.innerHTML = label;
+      step.appendChild(stepText);
       c.appendChild(step);
 
       const title = document.createElement('h3');
@@ -4646,12 +5102,13 @@ function buildDetailPage(seg, onBack) {
   const plannerCallout = seg.hasFeedbackPlanner ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> This section includes a Feedback Planner below. Build and download your feedback plan as a PDF.</div>' : '';
   const flightPlanCallout = seg.hasFlightPlanSheet ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> This section includes a Flight Plan Sheet below. Map out a support journey and download it as a PDF.</div>' : '';
   const actionPlannerCallout = seg.hasActionPlanner ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Run the Navigator above, then use the Action Planner below to turn your diagnosis into a committed plan.</div>' : '';
+  const rehearsalCallout = seg.hasAssertionRehearsal ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> This section includes an Assertion Rehearsal below. Prepare and download a script for an upcoming conversation.</div>' : '';
   hero.innerHTML = `
     <div class="hero-blob1"></div><div class="hero-blob2"></div>
     <p class="hero-eyebrow">${seg.quadrant}</p>
     <h1>${seg.label}</h1>
     <p>${seg.desc}</p>
-    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}
+    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}${rehearsalCallout}
   `;
 
   const modelCard = document.createElement('div');
@@ -4726,6 +5183,43 @@ function buildDetailPage(seg, onBack) {
   if (narrativeSection) cont.appendChild(narrativeSection);
   cont.appendChild(detailGrid);
 
+  // Companion reference card (e.g. OK Corral teaser linking to wheel home page)
+  if (seg.companionReference) {
+    const cr = seg.companionReference;
+    const crCard = document.createElement('div');
+    crCard.className = 'companion-ref-card slide-up delay4';
+    crCard.style.cssText = 'background:linear-gradient(135deg, #f7faff 0%, #eef4fb 100%); border-radius:16px; padding:22px 24px; margin-top:26px; max-width:1180px; margin-left:auto; margin-right:auto; display:flex; gap:20px; align-items:center; flex-wrap:wrap; box-shadow:0 4px 18px rgba(26,58,92,.06); border-left:4px solid ' + qColour + ';';
+    crCard.innerHTML = `
+      <div style="flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:72px; height:72px; border-radius:14px; background:${qColour}; color:white;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="8" height="8" rx="1.5"/>
+          <rect x="13" y="3" width="8" height="8" rx="1.5"/>
+          <rect x="3" y="13" width="8" height="8" rx="1.5"/>
+          <rect x="13" y="13" width="8" height="8" rx="1.5"/>
+          <circle cx="12" cy="12" r="2.2" fill="currentColor"/>
+        </svg>
+      </div>
+      <div style="flex:1; min-width:240px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:${qColour}; margin-bottom:4px;">${cr.eyebrow}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:24px; font-weight:800; color:#1A3A5C; line-height:1.15; margin-bottom:8px;">${cr.title}</div>
+        <p style="font-size:14px; line-height:1.65; color:#445566; margin:0;">${cr.text}</p>
+      </div>
+      <div style="flex:0 0 auto; align-self:center;">
+        <button class="companion-ref-cta" style="background:${qColour}; color:white; border:none; border-radius:22px; padding:11px 20px; font-family:'Barlow',sans-serif; font-weight:700; font-size:13.5px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px rgba(26,58,92,.22); transition:transform .15s ease, box-shadow .15s ease;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          ${cr.cta}
+        </button>
+      </div>
+    `;
+    const ctaBtn = crCard.querySelector('.companion-ref-cta');
+    if (ctaBtn) {
+      ctaBtn.addEventListener('mouseenter', () => { ctaBtn.style.transform = 'translateY(-1px)'; ctaBtn.style.boxShadow = '0 6px 18px rgba(26,58,92,.32)'; });
+      ctaBtn.addEventListener('mouseleave', () => { ctaBtn.style.transform = 'translateY(0)'; ctaBtn.style.boxShadow = '0 4px 14px rgba(26,58,92,.22)'; });
+      ctaBtn.addEventListener('click', () => { try { playMINext(); } catch(e) {} goHome(); });
+    }
+    cont.appendChild(crCard);
+  }
+
   // Extra models (segments with more than one model, e.g. feedback page)
   if (seg.extraModels && seg.extraModels.length) {
     seg.extraModels.forEach(em => {
@@ -4788,6 +5282,10 @@ function buildDetailPage(seg, onBack) {
 
       cont.appendChild(emDivider);
       cont.appendChild(emGrid);
+
+      if (em.cardinalRule) {
+        cont.appendChild(buildCardinalRuleBanner());
+      }
     });
   }
 
@@ -5143,7 +5641,7 @@ function buildDetailPage(seg, onBack) {
     fpDiv.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Feedback Planner</div><div class="ws-divider-line"></div>';
     const fpCard = document.createElement('div');
     fpCard.className = 'ws-card slide-up delay4';
-    fpCard.innerHTML = '<h2>Feedback Planner</h2><p class="ws-subtitle">Use this planner to prepare and craft a piece of feedback before you deliver it. Work through the four steps to build a clear, well-structured feedback note you can download and keep. Based on pages 188 and 194 of the Liberator book.</p>';
+    fpCard.innerHTML = '<h2>Feedback Planner</h2><p class="ws-subtitle">Use this planner to prepare and craft a piece of feedback before you deliver it. Work through the four steps to build a clear, well-structured feedback note you can download and keep. Based on pages 175 to 205 of the Liberator book.</p>';
     const fpWrap = document.createElement('div');
     fpWrap.style.marginTop = '18px';
     fpWrap.appendChild(buildFeedbackPlanner());
@@ -5156,12 +5654,40 @@ function buildDetailPage(seg, onBack) {
     fpBookIcon.innerHTML = `<div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>`;
     const fpBookInfo = document.createElement('div');
     fpBookInfo.className = 'book-info';
-    fpBookInfo.innerHTML = '<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 188, 194</div>';
+    fpBookInfo.innerHTML = '<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 175-205</div>';
     fpBook.appendChild(fpBookIcon);
     fpBook.appendChild(fpBookInfo);
     cont.appendChild(fpDiv);
     cont.appendChild(fpCard);
     cont.appendChild(fpBook);
+  }
+
+  // Inline Assertion Rehearsal
+  if (seg.hasAssertionRehearsal) {
+    const arDiv = document.createElement('div');
+    arDiv.className = 'ws-divider slide-up delay4';
+    arDiv.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> Assertion Rehearsal</div><div class="ws-divider-line"></div>';
+    const arCard = document.createElement('div');
+    arCard.className = 'ws-card slide-up delay4';
+    arCard.innerHTML = '<h2>Assertion Rehearsal</h2><p class="ws-subtitle">Use this rehearsal before an upcoming conversation. Work through the steps to prepare a clear, assertive script: your core message, what you feel, what you want, and how you will hold your ground if the conversation gets diverted. Download a printable script you can read through beforehand. Based on pages 167 to 174 of the Liberator book.</p>';
+    const arWrap = document.createElement('div');
+    arWrap.style.marginTop = '18px';
+    arWrap.appendChild(buildAssertionRehearsal());
+    arCard.appendChild(arWrap);
+    const arBook = document.createElement('div');
+    arBook.className = 'book-card slide-up delay4';
+    arBook.style.cssText = 'max-width:800px;margin:20px auto 0';
+    const arBookIcon = document.createElement('div');
+    arBookIcon.className = 'book-icon';
+    arBookIcon.innerHTML = `<div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+    const arBookInfo = document.createElement('div');
+    arBookInfo.className = 'book-info';
+    arBookInfo.innerHTML = '<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 167-174</div>';
+    arBook.appendChild(arBookIcon);
+    arBook.appendChild(arBookInfo);
+    cont.appendChild(arDiv);
+    cont.appendChild(arCard);
+    cont.appendChild(arBook);
   }
 
   page.appendChild(buildHeader(headerBtnGroup));
@@ -6755,7 +7281,7 @@ function downloadFeedbackPlannerPDF(state, stroke) {
     // Header bar
     s += `${blue} rg\n${M} ${H-M-44} ${W-2*M} 44 re f\n${white} rg\n`;
     s += `BT /F1 15 Tf ${M+12} ${H-M-28} Td (${escPDF('Story Liberator - Feedback Planner')}) Tj ET\n`;
-    s += `BT /F2 8 Tf ${W-M-158} ${H-M-28} Td (${escPDF('Liberator Programme | p.188, 194')}) Tj ET\n`;
+    s += `BT /F2 8 Tf ${W-M-158} ${H-M-28} Td (${escPDF('Liberator Programme | p.175-205')}) Tj ET\n`;
     // Stroke type colour band
     s += `${sColor} rg\n${M} ${H-M-56} ${W-2*M} 12 re f\n`;
     y = H - M - 74;
@@ -6824,6 +7350,625 @@ function downloadFeedbackPlannerPDF(state, stroke) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url;
     a.download = 'Feedback-Plan-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) { console.error('PDF error', e); }
+}
+
+// ============================================================
+//  ASSERTION REHEARSAL (M3: Be appropriately assertive)
+// ============================================================
+function buildAssertionRehearsal() {
+  const uid = 'ar' + Math.random().toString(36).slice(2, 7);
+  let step = 1;
+  const TOTAL = 6;
+  const state = {
+    name: '', situation: '',
+    coreMessage: '',
+    feeling: '',
+    want: '',
+    diversions: [{ them: '', you: '' }, { them: '', you: '' }],
+    mindset: { iup: false, tone: false, hold: false }
+  };
+
+  // Triggers for live coaching
+  const QUALIFIERS = ['perhaps', 'maybe', 'a little', 'kind of', 'sort of', 'just', 'a bit', 'might', 'possibly', 'if you wouldn\'t mind', 'if you don\'t mind', 'when you get a chance', 'when you have time', 'i guess', 'i suppose'];
+  const HEDGES = ['^we ', '^they ', '^the company ', '^the team ', '^people ', '^one ', '^my boss ', '^the organisation ', '^the rules '];
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
+    .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
+    .${uid}-pseg.done{background:#1A3A5C}
+    .${uid}-pseg.active{background:#1A3A5C}
+    .${uid}-pgap{width:6px;flex:0 0 6px}
+
+    .${uid}-hd{margin-bottom:18px}
+    .${uid}-hnum{font-size:11px;font-weight:700;color:#8fa0b0;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#1A3A5C;line-height:1.2}
+    .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
+
+    .${uid}-lbl{font-size:12px;font-weight:600;color:#445566;margin-bottom:6px;margin-top:14px;letter-spacing:.04em;display:block}
+    .${uid}-inp{width:100%;border:2px solid #d4e3f0;border-radius:10px;padding:10px 14px;font-family:"Barlow",sans-serif;font-size:14px;color:#222;resize:vertical;transition:border-color .2s;outline:none;background:white;box-sizing:border-box}
+    .${uid}-inp:focus{border-color:#1A3A5C}
+    .${uid}-ta{min-height:88px;line-height:1.6}
+    .${uid}-hint{font-size:11.5px;color:#99aabb;margin-top:4px;margin-bottom:8px;line-height:1.5;font-style:italic}
+
+    .${uid}-coachrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:0}
+    .${uid}-chip{display:inline-flex;align-items:center;gap:5px;background:#fff5e6;border:1px solid #f5cf94;color:#8a4a00;border-radius:14px;padding:5px 10px;font-size:11.5px;line-height:1.3;animation:${uid}-fi .3s ease both}
+    .${uid}-chip svg{flex:0 0 auto}
+    .${uid}-chip.green{background:#eaf6ee;border-color:#a9d8b6;color:#1f6a3a}
+
+    .${uid}-starter{background:#EAF0F8;border-radius:9px;padding:11px 14px;font-size:12.5px;color:#1A3A5C;font-style:italic;line-height:1.55;margin-bottom:12px;border-left:3px solid #1A3A5C}
+    .${uid}-starter em{font-style:normal;display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8fa0b0;margin-bottom:5px;font-weight:700}
+
+    .${uid}-divrow{background:#f7faff;border:1.5px solid #dce6f0;border-radius:12px;padding:12px 14px;margin-bottom:10px;animation:${uid}-fi .35s ease both}
+    .${uid}-divlbl{font-family:"Barlow Condensed",sans-serif;font-size:11.5px;font-weight:700;color:#1A3A5C;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+    .${uid}-divlbl.you{color:#0061AD;margin-top:10px}
+
+    .${uid}-addbtn{background:transparent;border:1.5px dashed #1A3A5C;color:#1A3A5C;border-radius:10px;padding:9px 14px;font-family:"Barlow",sans-serif;font-weight:600;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-top:4px;transition:all .15s ease}
+    .${uid}-addbtn:hover{background:#1A3A5C;color:white}
+    .${uid}-addbtn:disabled{opacity:.4;cursor:not-allowed}
+    .${uid}-removebtn{background:transparent;border:none;color:#99aabb;cursor:pointer;font-size:11px;font-weight:600;text-decoration:underline;margin-top:6px;padding:2px 0;font-family:inherit}
+    .${uid}-removebtn:hover{color:#c0392b}
+
+    .${uid}-checkrow{display:flex;align-items:flex-start;gap:12px;background:#f7faff;border:1.5px solid #dce6f0;border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all .18s ease}
+    .${uid}-checkrow:hover{border-color:#b8c8db}
+    .${uid}-checkrow.checked{background:#eaf0f8;border-color:#1A3A5C}
+    .${uid}-checkbox{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:2px solid #b8c8db;background:white;display:flex;align-items:center;justify-content:center;transition:all .18s ease;margin-top:1px}
+    .${uid}-checkrow.checked .${uid}-checkbox{background:#1A3A5C;border-color:#1A3A5C}
+    .${uid}-checkbox svg{opacity:0;transition:opacity .15s ease}
+    .${uid}-checkrow.checked .${uid}-checkbox svg{opacity:1}
+    .${uid}-checktitle{font-weight:700;font-size:14px;color:#1A3A5C;margin-bottom:3px}
+    .${uid}-checkdesc{font-size:12.5px;color:#667788;line-height:1.55}
+
+    .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+    .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
+    .${uid}-ghost{background:#f0f5fa;color:#556677}
+    .${uid}-ghost:hover{background:#e0ecf5}
+    .${uid}-primary{background:#1A3A5C;color:white;box-shadow:0 4px 16px rgba(26,58,92,.28)}
+    .${uid}-primary:hover{background:#0f2640;transform:translateY(-1px)}
+    .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .${uid}-dl{background:#1A3A5C;color:white;box-shadow:0 6px 20px rgba(26,58,92,.32);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{background:#0f2640;transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,58,92,.42)}
+
+    .${uid}-preview{margin-top:22px;border-radius:14px;overflow:hidden;animation:${uid}-fi .35s ease both}
+    .${uid}-prevhd{padding:14px 18px;background:#1A3A5C}
+    .${uid}-prevey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:4px}
+    .${uid}-prevname{font-family:"Barlow Condensed",sans-serif;font-size:21px;font-weight:800;color:white;line-height:1.1}
+    .${uid}-prevbody{background:white;padding:16px 18px 14px}
+    .${uid}-prevrow{margin-bottom:11px}
+    .${uid}-prevrlbl{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#99aabb;margin-bottom:3px}
+    .${uid}-prevrval{font-size:13.5px;color:#222;line-height:1.6}
+    .${uid}-prevquote{background:#eaf0f8;border-left:3px solid #1A3A5C;border-radius:0 8px 8px 0;padding:10px 14px;font-style:italic;color:#1A3A5C;line-height:1.55;font-size:13.5px}
+
+    @keyframes ${uid}-fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  `;
+  wrap.appendChild(styleEl);
+
+  function buildProg() {
+    const prog = document.createElement('div');
+    prog.className = uid + '-prog';
+    for (let i = 1; i <= TOTAL; i++) {
+      const seg = document.createElement('div');
+      seg.className = uid + '-pseg';
+      if (i < step) seg.classList.add('done');
+      else if (i === step) seg.classList.add('active');
+      prog.appendChild(seg);
+      if (i < TOTAL) { const g = document.createElement('div'); g.className = uid + '-pgap'; prog.appendChild(g); }
+    }
+    return prog;
+  }
+
+  function buildPreviewEl() {
+    const pr = document.createElement('div');
+    pr.className = uid + '-preview';
+    const hd = document.createElement('div');
+    hd.className = uid + '-prevhd';
+    hd.innerHTML = `<div class="${uid}-prevey">Rehearsal for a conversation with</div><div class="${uid}-prevname">${state.name || 'Your team member'}</div>`;
+    const body = document.createElement('div');
+    body.className = uid + '-prevbody';
+
+    if (state.situation) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Situation</div><div class="${uid}-prevrval">${state.situation}</div>`;
+      body.appendChild(r);
+    }
+    if (state.coreMessage && step >= 2) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Core message</div><div class="${uid}-prevquote">"${state.coreMessage}"</div>`;
+      body.appendChild(r);
+    }
+    if (state.feeling && step >= 3) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">How I feel</div><div class="${uid}-prevquote">"${state.feeling}"</div>`;
+      body.appendChild(r);
+    }
+    if (state.want && step >= 4) {
+      const r = document.createElement('div'); r.className = uid + '-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">What I want</div><div class="${uid}-prevquote">"${state.want}"</div>`;
+      body.appendChild(r);
+    }
+    if (step >= 5) {
+      const filled = state.diversions.filter(d => d.them.trim() || d.you.trim());
+      if (filled.length) {
+        const r = document.createElement('div'); r.className = uid + '-prevrow';
+        let inner = `<div class="${uid}-prevrlbl">Broken record responses</div>`;
+        filled.forEach((d, i) => {
+          inner += `<div style="margin-bottom:8px;font-size:13px;line-height:1.55"><div style="color:#667788"><strong>If they say:</strong> ${d.them || '(not specified)'}</div><div style="color:#1A3A5C;margin-top:2px"><strong>I will say:</strong> ${d.you || '(not specified)'}</div></div>`;
+        });
+        r.innerHTML = inner;
+        body.appendChild(r);
+      }
+    }
+    pr.appendChild(hd); pr.appendChild(body);
+    return pr;
+  }
+
+  function render() {
+    [...wrap.children].forEach(c => { if (c !== styleEl) c.remove(); });
+    wrap.appendChild(buildProg());
+    const cont = document.createElement('div');
+    cont.style.animation = uid + '-fi .3s ease both';
+    if (step === 1) s1(cont);
+    else if (step === 2) s2(cont);
+    else if (step === 3) s3(cont);
+    else if (step === 4) s4(cont);
+    else if (step === 5) s5(cont);
+    else if (step === 6) s6(cont);
+    wrap.appendChild(cont);
+    if (step >= 2) wrap.appendChild(buildPreviewEl());
+  }
+
+  function mkHd(num, title, sub) {
+    const el = document.createElement('div'); el.className = uid + '-hd';
+    el.innerHTML = `<div class="${uid}-hnum">Step ${num} of ${TOTAL}</div><div class="${uid}-htitle">${title}</div>${sub ? '<div class="'+uid+'-hsub">'+sub+'</div>' : ''}`;
+    return el;
+  }
+
+  function mkNav(c, onBack, onNext, nextLbl, nextDis) {
+    const n = document.createElement('div'); n.className = uid + '-nav';
+    const spacer = document.createElement('span');
+    if (onBack) {
+      const b = document.createElement('button'); b.className = uid + '-btn ' + uid + '-ghost';
+      b.innerHTML = '\u2190 Back'; b.addEventListener('click', onBack); n.appendChild(b);
+    } else { n.appendChild(spacer); }
+    const nx = document.createElement('button'); nx.className = uid + '-btn ' + uid + '-primary';
+    nx.textContent = nextLbl + ' \u2192'; nx.disabled = nextDis;
+    nx.addEventListener('click', onNext); n.appendChild(nx); c.appendChild(n);
+    return nx;
+  }
+
+  // ── Live coaching: scan text and emit chips ──
+  function coachCoreMessage(text, container) {
+    container.innerHTML = '';
+    if (!text || !text.trim()) return;
+    const lower = text.toLowerCase().trim();
+    const found = [];
+    QUALIFIERS.forEach(q => {
+      const re = new RegExp('\\b' + q.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&') + '\\b', 'i');
+      if (re.test(lower)) found.push({ type:'qualifier', word:q });
+    });
+    HEDGES.forEach(h => {
+      const re = new RegExp(h, 'i');
+      if (re.test(lower)) {
+        const w = h.replace(/^\^/,'').trim();
+        found.push({ type:'hedge', word:w });
+      }
+    });
+    if (!/\bi\b/i.test(text) && text.trim().length > 6) {
+      found.push({ type:'no-i' });
+    }
+    found.forEach(f => {
+      const chip = document.createElement('span');
+      chip.className = uid + '-chip';
+      const icon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+      let msg = '';
+      if (f.type === 'qualifier') msg = `"${f.word}" may dilute the message`;
+      else if (f.type === 'hedge') msg = `Try owning this with "I" rather than "${f.word}"`;
+      else if (f.type === 'no-i') msg = 'Consider starting with "I" to own the message';
+      chip.innerHTML = icon + ' ' + msg;
+      container.appendChild(chip);
+    });
+    if (!found.length && text.trim().length > 10) {
+      const chip = document.createElement('span');
+      chip.className = uid + '-chip green';
+      chip.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Clear and direct: no qualifiers detected';
+      container.appendChild(chip);
+    }
+  }
+
+  function s1(c) {
+    c.appendChild(mkHd(1, 'The conversation', 'Who is this with, and what is it about?'));
+    const ln = document.createElement('label'); ln.className = uid + '-lbl'; ln.textContent = 'Who is the conversation with?'; c.appendChild(ln);
+    const iName = document.createElement('input'); iName.className = uid + '-inp'; iName.type = 'text';
+    iName.placeholder = 'e.g. Jamie, Sam, the team...'; iName.value = state.name;
+    iName.addEventListener('input', () => { state.name = iName.value; nxt.disabled = !state.name.trim() || !state.situation.trim(); });
+    c.appendChild(iName);
+
+    const lc = document.createElement('label'); lc.className = uid + '-lbl'; lc.textContent = 'What is the situation?'; c.appendChild(lc);
+    const iCtx = document.createElement('textarea'); iCtx.className = uid + '-inp ' + uid + '-ta';
+    iCtx.placeholder = 'Briefly describe what has been happening, and what needs to change or be addressed...'; iCtx.value = state.situation;
+    iCtx.addEventListener('input', () => { state.situation = iCtx.value; nxt.disabled = !state.name.trim() || !state.situation.trim(); }); c.appendChild(iCtx);
+    const nxt = mkNav(c, null, () => { playMINext(); step = 2; render(); }, 'Next: Your core message', !state.name.trim() || !state.situation.trim());
+  }
+
+  function s2(c) {
+    c.appendChild(mkHd(2, 'Your core message', 'The single most important sentence. Direct, owned, and free of waffle. This is what you keep coming back to if the conversation gets diverted.'));
+    const st = document.createElement('div'); st.className = uid + '-starter';
+    st.innerHTML = `<em>Sentence starters</em>"I want you to..." &nbsp;\u2022&nbsp; "I need you to..." &nbsp;\u2022&nbsp; "I am asking you to..."`; c.appendChild(st);
+
+    const hint = document.createElement('div'); hint.className = uid + '-hint';
+    hint.textContent = 'Tip: Use the "I" statement, keep it short, avoid qualifiers like "perhaps", "maybe", or "if you wouldn\'t mind". Don\'t hide behind "we", "they", or "the company".';
+    c.appendChild(hint);
+
+    const lo = document.createElement('label'); lo.className = uid + '-lbl'; lo.textContent = 'Your core message'; c.appendChild(lo);
+    const iMsg = document.createElement('textarea'); iMsg.className = uid + '-inp ' + uid + '-ta'; iMsg.style.minHeight = '90px';
+    iMsg.placeholder = 'e.g. I want you to write down the actions we agree at our weekly meetings.'; iMsg.value = state.coreMessage;
+
+    const coachRow = document.createElement('div'); coachRow.className = uid + '-coachrow';
+
+    iMsg.addEventListener('input', () => {
+      state.coreMessage = iMsg.value;
+      nxt.disabled = !state.coreMessage.trim();
+      coachCoreMessage(state.coreMessage, coachRow);
+      // refresh preview live
+      const oldPrev = wrap.querySelector('.' + uid + '-preview');
+      if (oldPrev) { const newPrev = buildPreviewEl(); newPrev.style.animation = 'none'; oldPrev.replaceWith(newPrev); }
+    });
+    c.appendChild(iMsg);
+    c.appendChild(coachRow);
+    if (state.coreMessage) coachCoreMessage(state.coreMessage, coachRow);
+
+    const nxt = mkNav(c, () => { playMIBack(); step = 1; render(); }, () => { playMINext(); step = 3; render(); }, 'Next: How you feel', !state.coreMessage.trim());
+  }
+
+  function s3(c) {
+    c.appendChild(mkHd(3, 'How you feel about it', 'Naming a feeling adds genuine weight to the message. The greatest reward you have to give is yourself, so do not hide behind a flat, impersonal tone.'));
+    const st = document.createElement('div'); st.className = uid + '-starter';
+    st.innerHTML = `<em>Sentence starters</em>"I feel concerned that..." &nbsp;\u2022&nbsp; "I feel pleased when..." &nbsp;\u2022&nbsp; "I feel disappointed because..."`; c.appendChild(st);
+
+    const lf = document.createElement('label'); lf.className = uid + '-lbl'; lf.textContent = 'Your feeling, in your own words'; c.appendChild(lf);
+    const iFeel = document.createElement('textarea'); iFeel.className = uid + '-inp ' + uid + '-ta'; iFeel.style.minHeight = '76px';
+    iFeel.placeholder = 'e.g. I feel concerned that without written actions, things will keep slipping.'; iFeel.value = state.feeling;
+    iFeel.addEventListener('input', () => {
+      state.feeling = iFeel.value;
+      nxt.disabled = !state.feeling.trim();
+      const oldPrev = wrap.querySelector('.' + uid + '-preview');
+      if (oldPrev) { const newPrev = buildPreviewEl(); newPrev.style.animation = 'none'; oldPrev.replaceWith(newPrev); }
+    });
+    c.appendChild(iFeel);
+    const nxt = mkNav(c, () => { playMIBack(); step = 2; render(); }, () => { playMINext(); step = 4; render(); }, 'Next: What you want', !state.feeling.trim());
+  }
+
+  function s4(c) {
+    c.appendChild(mkHd(4, 'What you specifically want', 'The clear, observable action. Specific, time-bound where possible, and described in behaviour rather than attitude.'));
+    const hint = document.createElement('div'); hint.className = uid + '-hint';
+    hint.textContent = 'Tip: Aim for something a stranger watching could tell whether or not had been done. "Be more proactive" is too vague. "Send me a written list of agreed actions within an hour of each weekly meeting" is clear.';
+    c.appendChild(hint);
+    const lw = document.createElement('label'); lw.className = uid + '-lbl'; lw.textContent = 'What you want them to do'; c.appendChild(lw);
+    const iWant = document.createElement('textarea'); iWant.className = uid + '-inp ' + uid + '-ta'; iWant.style.minHeight = '90px';
+    iWant.placeholder = 'e.g. From now on, send me a written list of the agreed actions within an hour of each weekly meeting.'; iWant.value = state.want;
+    iWant.addEventListener('input', () => {
+      state.want = iWant.value;
+      nxt.disabled = !state.want.trim();
+      const oldPrev = wrap.querySelector('.' + uid + '-preview');
+      if (oldPrev) { const newPrev = buildPreviewEl(); newPrev.style.animation = 'none'; oldPrev.replaceWith(newPrev); }
+    });
+    c.appendChild(iWant);
+    const nxt = mkNav(c, () => { playMIBack(); step = 3; render(); }, () => { playMINext(); step = 5; render(); }, 'Next: Anticipate diversions', !state.want.trim());
+  }
+
+  function s5(c) {
+    c.appendChild(mkHd(5, 'Broken record: anticipating diversions', 'The Broken Record technique is sticking to your point and not allowing the conversation to be sidetracked. Think about what they are likely to say to deflect, and prepare your assertive comeback. You do not have to argue: just calmly repeat what you want.'));
+
+    const list = document.createElement('div');
+    function renderList() {
+      list.innerHTML = '';
+      state.diversions.forEach((d, i) => {
+        const row = document.createElement('div');
+        row.className = uid + '-divrow';
+        row.innerHTML = `<div class="${uid}-divlbl">If they say (likely diversion ${i+1})</div>`;
+        const iThem = document.createElement('textarea'); iThem.className = uid + '-inp'; iThem.style.minHeight = '52px';
+        iThem.placeholder = 'e.g. Why do I have to do it when no one else is?'; iThem.value = d.them;
+        iThem.addEventListener('input', () => {
+          state.diversions[i].them = iThem.value;
+          const oldPrev = wrap.querySelector('.' + uid + '-preview');
+          if (oldPrev) { const newPrev = buildPreviewEl(); newPrev.style.animation = 'none'; oldPrev.replaceWith(newPrev); }
+        });
+        row.appendChild(iThem);
+        const lblYou = document.createElement('div'); lblYou.className = uid + '-divlbl you'; lblYou.textContent = 'I will say (broken record response)';
+        row.appendChild(lblYou);
+        const iYou = document.createElement('textarea'); iYou.className = uid + '-inp'; iYou.style.minHeight = '52px';
+        iYou.placeholder = 'e.g. We are not discussing anyone else now. I want you to write down the agreed actions.'; iYou.value = d.you;
+        iYou.addEventListener('input', () => {
+          state.diversions[i].you = iYou.value;
+          const oldPrev = wrap.querySelector('.' + uid + '-preview');
+          if (oldPrev) { const newPrev = buildPreviewEl(); newPrev.style.animation = 'none'; oldPrev.replaceWith(newPrev); }
+        });
+        row.appendChild(iYou);
+        if (state.diversions.length > 1) {
+          const rm = document.createElement('button'); rm.className = uid + '-removebtn'; rm.type = 'button';
+          rm.textContent = 'Remove this diversion';
+          rm.addEventListener('click', () => { state.diversions.splice(i, 1); renderList(); });
+          row.appendChild(rm);
+        }
+        list.appendChild(row);
+      });
+      addBtn.disabled = state.diversions.length >= 4;
+    }
+    c.appendChild(list);
+    const addBtn = document.createElement('button');
+    addBtn.className = uid + '-addbtn';
+    addBtn.type = 'button';
+    addBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add another likely diversion';
+    addBtn.addEventListener('click', () => {
+      if (state.diversions.length < 4) { state.diversions.push({ them:'', you:'' }); renderList(); }
+    });
+    c.appendChild(addBtn);
+    renderList();
+
+    mkNav(c, () => { playMIBack(); step = 4; render(); }, () => { playMINext(); step = 6; render(); }, 'Next: Mindset check', false);
+  }
+
+  function s6(c) {
+    c.appendChild(mkHd(6, 'Mindset check', 'Three commitments before the conversation. Tick each one when you are ready.'));
+
+    const items = [
+      { key:'iup', title:'I will hold both of us as fundamentally OK', desc:'I will treat them as fundamentally OK as a person, even if their behaviour or attitude is not. I will not get hooked into aggression or get drawn into treating them like a child.' },
+      { key:'tone', title:'I will use a clean, even tone', desc:'No sarcasm, no stings, no dressing it up. I will look at the person, relax, and stay calm and respectful. If needed, I will count to ten and breathe before speaking.' },
+      { key:'hold', title:'I will hold my ground without trampling theirs', desc:'I have legitimate rights, and so do they. I will not be deflected from my core message, and I will not deny them the right to respond.' }
+    ];
+    items.forEach(it => {
+      const row = document.createElement('div');
+      row.className = uid + '-checkrow' + (state.mindset[it.key] ? ' checked' : '');
+      row.innerHTML = `<div class="${uid}-checkbox"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="${uid}-checktitle">${it.title}</div><div class="${uid}-checkdesc">${it.desc}</div></div>`;
+      row.addEventListener('click', () => {
+        state.mindset[it.key] = !state.mindset[it.key];
+        row.classList.toggle('checked', state.mindset[it.key]);
+        try { playStrokesExpand(); } catch(e) {}
+      });
+      c.appendChild(row);
+    });
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const leftBtns = document.createElement('div'); leftBtns.className = uid + '-navl';
+    const backBtn = document.createElement('button'); backBtn.className = uid + '-btn ' + uid + '-ghost';
+    backBtn.innerHTML = '\u2190 Back'; backBtn.addEventListener('click', () => { playMIBack(); step = 5; render(); });
+    const restartBtn = document.createElement('button'); restartBtn.className = uid + '-btn ' + uid + '-ghost';
+    restartBtn.innerHTML = '\u21BA Start again';
+    restartBtn.addEventListener('click', () => {
+      playMIBack();
+      state.name=''; state.situation=''; state.coreMessage=''; state.feeling=''; state.want='';
+      state.diversions = [{them:'',you:''},{them:'',you:''}];
+      state.mindset = { iup:false, tone:false, hold:false };
+      step = 1; render();
+    });
+    leftBtns.appendChild(backBtn); leftBtns.appendChild(restartBtn);
+    const dlBtn = document.createElement('button'); dlBtn.className = uid + '-btn ' + uid + '-dl';
+    dlBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download Rehearsal Script';
+    dlBtn.addEventListener('click', () => { playMIDownload(); downloadAssertionRehearsalPDF(state); });
+    navRow.appendChild(leftBtns); navRow.appendChild(dlBtn); c.appendChild(navRow);
+  }
+
+  render();
+  return wrap;
+}
+
+function downloadAssertionRehearsalPDF(state) {
+  try {
+    const W = 595.28, H = 841.89, M = 50;
+    let objCount = 0;
+    const objects = [];
+    function addObj(data) { objCount++; objects.push({ id: objCount, data }); return objCount; }
+
+    function escPDF(str) { return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str) {
+      if (!str) return '';
+      return String(str).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2013|\u2014/g,'-').replace(/\u2026/g,'...').replace(/[^\x00-\x7F]/g,'');
+    }
+    function wrapText(text, maxChars) {
+      if (!text) return [''];
+      const words = sanitize(text).split(/\s+/); const lines = []; let line = '';
+      words.forEach(w => { if ((line+' '+w).trim().length > maxChars) { lines.push(line.trim()); line = w; } else { line = (line+' '+w).trim(); } });
+      if (line) lines.push(line.trim());
+      return lines.length ? lines : [''];
+    }
+
+    const navy = '0.10 0.23 0.36';
+    const navyDark = '0.06 0.15 0.25';
+    const white = '1 1 1';
+    const grey = '0.45 0.45 0.45';
+    const lightGrey = '0.93 0.96 0.99';
+    const accentBg = '0.92 0.94 0.97';
+    const lh = 14;
+
+    let pages = [];
+    let s = '';
+    let y = H - M;
+
+    function newPage() {
+      if (s.length) pages.push(s);
+      s = '';
+      y = H - M;
+    }
+
+    function ensureSpace(needed) {
+      if (y - needed < M + 30) {
+        newPage();
+        // Page header on continuation pages
+        s += `${navy} rg\n${M} ${H-M-26} ${W-2*M} 26 re f\n${white} rg\n`;
+        s += `BT /F1 11 Tf ${M+10} ${H-M-17} Td (${escPDF('Story Liberator - Assertion Rehearsal (continued)')}) Tj ET\n`;
+        y = H - M - 44;
+      }
+    }
+
+    function drawSectionLabel(label) {
+      ensureSpace(20);
+      s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF(label.toUpperCase())}) Tj ET\n`;
+      y -= 6;
+    }
+
+    function drawTextBlock(text, opts) {
+      const o = opts || {};
+      const bg = o.bg || lightGrey;
+      const fg = o.fg || '0.13 0.18 0.24';
+      const fontSize = o.fontSize || 10;
+      const maxChars = o.maxChars || 78;
+      const padX = o.padX || 12;
+      const padY = o.padY || 12;
+      const minHeight = o.minHeight || 30;
+      const italic = o.italic ? 'F3' : 'F2';
+      const lines = wrapText(text || '(not specified)', maxChars);
+      const blockH = Math.max(minHeight, lines.length * lh + padY*2 - 4);
+      ensureSpace(blockH + 8);
+      s += `${bg} rg\n${M} ${y - blockH} ${W-2*M} ${blockH} re f\n${fg} rg\n`;
+      let ty = y - padY - 8;
+      lines.forEach(l => {
+        s += `BT /${italic} ${fontSize} Tf ${M + padX} ${ty} Td (${escPDF(l)}) Tj ET\n`;
+        ty -= lh;
+      });
+      y -= blockH + 14;
+    }
+
+    function drawQuoteBlock(text, label) {
+      const lines = wrapText(text || '(not specified)', 76);
+      const blockH = Math.max(38, lines.length * (lh+1) + 22);
+      ensureSpace(blockH + 14);
+      // Side bar in navy
+      s += `${navy} rg\n${M} ${y - blockH} 4 ${blockH} re f\n`;
+      // Light bg
+      s += `${accentBg} rg\n${M+4} ${y - blockH} ${W-2*M-4} ${blockH} re f\n`;
+      // Text
+      s += `${navyDark} rg\n`;
+      let ty = y - 16;
+      if (label) {
+        s += `${grey} rg\nBT /F1 8 Tf ${M+14} ${ty} Td (${escPDF(label.toUpperCase())}) Tj ET\n`;
+        ty -= 12;
+      }
+      s += `${navyDark} rg\n`;
+      lines.forEach(l => {
+        s += `BT /F3 11 Tf ${M+14} ${ty} Td (${escPDF('"' + l + '"')}) Tj ET\n`;
+        ty -= lh+1;
+      });
+      y -= blockH + 14;
+    }
+
+    // ── PAGE 1: Header ──
+    s += `${navy} rg\n${M} ${H-M-46} ${W-2*M} 46 re f\n${white} rg\n`;
+    s += `BT /F1 16 Tf ${M+12} ${H-M-29} Td (${escPDF('Story Liberator - Assertion Rehearsal')}) Tj ET\n`;
+    s += `BT /F2 8 Tf ${W-M-160} ${H-M-29} Td (${escPDF('Liberator Programme | p.167-174')}) Tj ET\n`;
+    // Subtitle band
+    s += `0.92 0.94 0.97 rg\n${M} ${H-M-72} ${W-2*M} 26 re f\n${navyDark} rg\n`;
+    s += `BT /F3 10 Tf ${M+12} ${H-M-58} Td (${escPDF('A rehearsal script for an upcoming conversation. Read it through before you speak.')}) Tj ET\n`;
+    y = H - M - 92;
+
+    // Conversation with
+    drawSectionLabel('Conversation with');
+    drawTextBlock(state.name, { bg: lightGrey, minHeight: 28, fontSize: 12 });
+
+    // Situation
+    drawSectionLabel('The situation');
+    drawTextBlock(state.situation, { bg: lightGrey, minHeight: 50 });
+
+    // Core message - highlighted
+    drawSectionLabel('My core message (the line I keep coming back to)');
+    drawQuoteBlock(state.coreMessage);
+
+    // Feeling
+    drawSectionLabel('How I feel about it');
+    drawQuoteBlock(state.feeling);
+
+    // What I want
+    drawSectionLabel('What I specifically want');
+    drawQuoteBlock(state.want);
+
+    // Diversions
+    const filled = (state.diversions || []).filter(d => (d.them && d.them.trim()) || (d.you && d.you.trim()));
+    if (filled.length) {
+      drawSectionLabel('Broken record: my prepared responses');
+      filled.forEach((d, i) => {
+        ensureSpace(80);
+        // Light bordered card
+        const themLines = wrapText('If they say: ' + (d.them || '(not specified)'), 78);
+        const youLines = wrapText('I will say: ' + (d.you || '(not specified)'), 78);
+        const blockH = Math.max(70, themLines.length*lh + youLines.length*lh + 36);
+        s += `${lightGrey} rg\n${M} ${y - blockH} ${W-2*M} ${blockH} re f\n`;
+        s += `${navy} rg\n${M} ${y - blockH} 3 ${blockH} re f\n`;
+        let ty = y - 16;
+        s += `${grey} rg\nBT /F1 8 Tf ${M+14} ${ty} Td (${escPDF('DIVERSION ' + (i+1))}) Tj ET\n`;
+        ty -= 12;
+        s += `0.20 0.20 0.20 rg\n`;
+        themLines.forEach(l => { s += `BT /F2 10 Tf ${M+14} ${ty} Td (${escPDF(l)}) Tj ET\n`; ty -= lh; });
+        ty -= 4;
+        s += `${navyDark} rg\n`;
+        youLines.forEach(l => { s += `BT /F1 10 Tf ${M+14} ${ty} Td (${escPDF(l)}) Tj ET\n`; ty -= lh; });
+        y -= blockH + 10;
+      });
+    }
+
+    // Mindset commitments
+    drawSectionLabel('Mindset commitments before I speak');
+    const commits = [
+      { ok: state.mindset && state.mindset.iup, label: 'I will hold both of us as fundamentally OK. I treat them as a person of worth, even if their behaviour on this occasion is not.' },
+      { ok: state.mindset && state.mindset.tone, label: 'I will use a clean, even tone. No sarcasm, no stings, no dressing it up.' },
+      { ok: state.mindset && state.mindset.hold, label: 'I will hold my ground without trampling theirs. I will not be deflected.' }
+    ];
+    commits.forEach(c => {
+      ensureSpace(24);
+      // Tick box
+      s += `${white} rg\n${M+1} ${y-16} 14 14 re f\n`;
+      s += `0.6 0.6 0.6 RG\n0.8 w\n${M+1} ${y-16} 14 14 re S\n`;
+      if (c.ok) {
+        s += `${navy} rg\n${M+3} ${y-14} 10 10 re f\n${white} rg\n`;
+        // Simple tick (drawn as two lines)
+        s += `1 w\n${M+5} ${y-9} m ${M+7} ${y-12} l ${M+13} ${y-5} l S\n`;
+      }
+      s += `0.20 0.20 0.20 rg\n`;
+      const lns = wrapText(c.label, 84);
+      let ty = y - 11;
+      lns.forEach((l, idx) => {
+        s += `BT /F2 10 Tf ${M+22} ${ty} Td (${escPDF(l)}) Tj ET\n`;
+        ty -= lh;
+      });
+      y -= Math.max(20, lns.length * lh + 6);
+    });
+
+    // Footer (last page)
+    s += `${grey} rg\nBT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Assertion Rehearsal - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+    pages.push(s);
+
+    // ── Build PDF ──
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId = addObj('');
+    const font1Id = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const font3Id = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique >>');
+
+    const pageIds = [];
+    pages.forEach(pageContent => {
+      const streamBytes = new TextEncoder().encode(pageContent);
+      const streamId = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${pageContent}endstream`);
+      const pageId = addObj(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R /F3 ${font3Id} 0 R >> >> >>`);
+      pageIds.push(pageId);
+    });
+    objects[1].data = `<< /Type /Pages /Kids [${pageIds.map(id => id + ' 0 R').join(' ')}] /Count ${pageIds.length} >>`;
+
+    let pdf = '%PDF-1.4\n'; const offsets = [];
+    objects.forEach(obj => { offsets.push(pdf.length); pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`; });
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objCount+1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10,'0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount+1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = 'Assertion-Rehearsal-' + new Date().toISOString().slice(0,10) + '.pdf';
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   } catch(e) { console.error('PDF error', e); }
 }
