@@ -284,12 +284,33 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 /* Print styles for PDF download */
 @media print{
   body{background:white!important}
-  .header,.back-btn,.ws-actions,.ws-back-btns,.welcome-overlay{display:none!important}
+  .header,.back-btn,.ws-actions,.ws-back-btns,.welcome-overlay,.btt-wrap{display:none!important}
   .page{animation:none!important;min-height:auto!important}
   .ws-card{box-shadow:none!important;padding:20px!important;border-radius:0!important}
   .ws-input,.ws-col-body textarea{border-color:#ccc!important;background:white!important}
   .container{padding:0!important}
 }
+
+/* Back to top button (footer of detail and worksheet pages) */
+.btt-wrap{display:flex;justify-content:center;margin:48px auto 24px;animation:bttFade .5s ease both;animation-delay:.2s;opacity:0}
+.btt-btn{display:inline-flex;align-items:center;gap:9px;background:white;border:none;border-radius:24px;padding:11px 22px 11px 18px;cursor:pointer;font-family:'Barlow',sans-serif;font-weight:600;font-size:13.5px;color:#0061AD;box-shadow:0 4px 16px rgba(0,97,173,.10);transition:all .18s ease;letter-spacing:.02em}
+.btt-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,97,173,.18);color:#004B86}
+.btt-btn:active{transform:scale(.97)}
+.btt-btn svg{flex-shrink:0;transition:transform .18s ease}
+.btt-btn:hover svg{transform:translateY(-2px)}
+@keyframes bttFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Companion concept preview card (temporary scaffolding on D1 page) */
+.companion-preview{max-width:1180px;margin:32px auto 0;background:linear-gradient(135deg,#f7fbfb 0%,#eef8f8 100%);border-radius:18px;padding:18px 22px;border-left:4px solid #01A4AB;box-shadow:0 4px 18px rgba(1,164,171,.10);transition:transform .18s ease, box-shadow .18s ease}
+.companion-preview:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(1,164,171,.18)}
+.cc-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#007579;margin-bottom:10px}
+.cc-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.cc-icon{flex:0 0 50px;width:50px;height:50px;border-radius:13px;background:linear-gradient(135deg,#01A4AB 0%,#007579 100%);display:flex;align-items:center;justify-content:center;color:white;box-shadow:0 4px 14px rgba(1,164,171,.28)}
+.cc-body{flex:1;min-width:240px}
+.cc-title{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:800;color:#1A3A5C;line-height:1.15;margin-bottom:4px}
+.cc-text{font-size:13.5px;color:#445566;line-height:1.6}
+.cc-cta{flex:0 0 auto;align-self:center;background:#01A4AB;color:white;border:none;border-radius:22px;padding:10px 18px;font-family:'Barlow',sans-serif;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(1,164,171,.28);transition:all .18s ease}
+.cc-cta:hover{background:#007579;transform:translateY(-1px);box-shadow:0 8px 20px rgba(1,164,171,.42)}
 
 @media(max-width:900px){
   .wheel-layout{flex-direction:column;align-items:center}
@@ -793,12 +814,20 @@ const SEGMENTS = [
   {
     id:'momentum', label:'Resiliently maintain momentum',
     quadrant:'Mobilising', startAngle:162, endAngle:180,
-    tagline:'Keeping energy and progress alive',
-    desc:'Momentum does not sustain itself. Resilient leaders maintain forward motion through setbacks by celebrating small wins, addressing fatigue, and keeping the team focused on progress rather than perfection.',
-    modelTitle:'The PDCA Cycle (Deming)',
-    modelDesc:'Plan, Do, Check, Act is a continuous improvement cycle. It provides a rhythm for maintaining momentum by encouraging leaders to plan small experiments, execute them, review what happened, and adjust before going again. It prevents stagnation and builds a habit of forward motion.',
-    bullets:['Use short cycles to maintain a sense of progress','Check and adjust regularly rather than waiting for the end','Celebrate learning as much as outcomes'],
-    modelType:'pdca'
+    tagline:'Holding direction through setbacks',
+    desc:'Maintaining momentum is not about pushing harder. It is about giving yourself permission to pause regularly so you can learn from events, restore your energy, and re-engage with your overall sense of direction. Without these pauses, the developing part of leadership is the first thing squeezed out by day-to-day pressure.',
+    modelTitle:'The Pause Point',
+    modelDesc:'There is no single model for resilience. There is a discipline. The Pause Point is a four-stage practice grounded in The Liberator: pause to notice what is happening, learn rapidly from events and experiences, re-energise to refresh perspective and capacity, and re-engage with your overall vision and focus. Resilient leaders do not wait until they are forced to stop. They build small, deliberate pauses into the rhythm of their work.',
+    bullets:[
+      'Resilience is not toughness or refusal to be affected, it is the capacity to retain direction and overall vision when setbacks come',
+      'Pulling out the learning from events is what keeps the developing part of leadership alive when day-to-day pressure crowds it out',
+      'Re-energising is not optional self-indulgence, it is the practice that allows continued progress without the leader, or the team, suffering as a result'
+    ],
+    modelType:'pause-point',
+    bookPages:'89',
+    noteTitle:'The discipline of stepping back',
+    noteText:'When leaders are bogged down in their day-to-day tasks, the constant meetings, and the pressure of deadlines, strategic focus is the first casualty. The developing part of the Leader-Developer role gets forgotten and people suffer as a result. The Pause Point Check-in below is a structured way to build a regular practice of reflection, learning and re-engagement into your week. Used well, it keeps you on course.',
+    hasMomentumCheckin: true
   },
 
   // ── Developing (bottom-left, 180° to 270°, 3 segments) ──
@@ -807,11 +836,11 @@ const SEGMENTS = [
     quadrant:'Developing', startAngle:180, endAngle:210,
     tagline:'Understanding what drives each person',
     desc:'Every person in your team is motivated differently. The Motivation Inventory reveals 21 distinct motivational factors across three categories: People, Achievement and Enjoyment. Understanding these patterns, starting with your own, is the foundation of effective people development.',
-    modelTitle:'Motivation Inventory (Ali Stewart & Co)',
+    modelTitle:'The Motivation Inventory',
     modelDesc:'The Motivation Inventory identifies 21 motivational factors grouped into three categories: People, Achievement and Enjoyment. Rather than labelling people, it reveals the unique pattern of what drives each individual. Effective Leader-Developers tend to have high People and Achievement motivation, with sufficient Enjoyment to avoid tunnel vision. Understanding your own pattern first is the essential starting point for understanding others.',
     bullets:['Understanding your own motivation pattern comes before understanding anyone else\'s','It is the combination and relative weight of factors that matters, not any single driver in isolation','Leaders with high People motivation need it paired with high Achievement, or the team risks becoming a social group without direction'],
     modelType:'motivation-inventory',
-    bookPages:'223-229',
+    bookPages:'224-225',
     noteTitle:'The pattern is the point',
     noteText:'Two people can both be highly people-motivated yet be completely different in what that means. One wants to influence, the other to nurture. One thrives with a crowd, another needs solitude. The value of this framework is not the category, it is the conversation it creates.'
   },
@@ -1085,6 +1114,7 @@ function buildModelVisual(seg) {
     strokes: buildStrokesVisual,
     catchright: buildCatchRightVisual,
     pdca: buildPDCAVisual,
+    'pause-point': buildPausePointVisual,
     maslow: buildMaslowVisual,
     insights: buildInsightsVisual,
     'leadership-styles': buildLeadershipStylesVisual,
@@ -2962,6 +2992,153 @@ function buildPDCAVisual() {
   return svg;
 }
 
+function buildPausePointVisual() {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;opacity:0;transition:opacity .6s ease';
+  const uid = 'pp' + Math.random().toString(36).slice(2, 7);
+
+  wrap.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;border-radius:14px;overflow:hidden">
+      <style>
+        .${uid}-stars circle { animation: ${uid}-twinkle 4.5s ease-in-out infinite; }
+        .${uid}-stars circle:nth-child(2) { animation-delay: .9s; }
+        .${uid}-stars circle:nth-child(3) { animation-delay: 1.7s; }
+        .${uid}-stars circle:nth-child(4) { animation-delay: 2.4s; }
+        .${uid}-stars circle:nth-child(5) { animation-delay: .4s; }
+        .${uid}-stars circle:nth-child(6) { animation-delay: 3.1s; }
+        .${uid}-stars circle:nth-child(7) { animation-delay: 2s; }
+        .${uid}-sun { transform-origin: 540px 195px; animation: ${uid}-breathe 7s ease-in-out infinite; }
+        .${uid}-glow { transform-origin: 540px 200px; animation: ${uid}-pulse 8s ease-in-out infinite; transform-box: fill-box; }
+        .${uid}-far { animation: ${uid}-driftFar 14s ease-in-out infinite; }
+        .${uid}-mid { animation: ${uid}-driftMid 11s ease-in-out infinite; }
+        .${uid}-figure { transform-origin: 70px 290px; animation: ${uid}-bob 5.5s ease-in-out infinite; }
+        .${uid}-wp { transform-box: fill-box; transform-origin: center; }
+        .${uid}-wp1 { animation: ${uid}-wpPulse 6s 0s ease-in-out infinite; }
+        .${uid}-wp2 { animation: ${uid}-wpPulse 6s 1.5s ease-in-out infinite; }
+        .${uid}-wp3 { animation: ${uid}-wpPulse 6s 3s ease-in-out infinite; }
+        .${uid}-wp4 { animation: ${uid}-wpPulse 6s 4.5s ease-in-out infinite; }
+        .${uid}-path { animation: ${uid}-shimmer 14s linear infinite; }
+        .${uid}-label { transition: opacity .4s ease; }
+        @keyframes ${uid}-twinkle { 0%,100% { opacity: .25 } 50% { opacity: 1 } }
+        @keyframes ${uid}-breathe { 0%,100% { transform: scale(1); opacity: .95 } 50% { transform: scale(1.05); opacity: 1 } }
+        @keyframes ${uid}-pulse { 0%,100% { opacity: .55 } 50% { opacity: .78 } }
+        @keyframes ${uid}-driftFar { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-1px) } }
+        @keyframes ${uid}-driftMid { 0%,100% { transform: translateY(0) } 50% { transform: translateY(.6px) } }
+        @keyframes ${uid}-bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-1.5px) } }
+        @keyframes ${uid}-wpPulse {
+          0%, 100% { transform: scale(1); opacity: .6 }
+          22% { transform: scale(1.45); opacity: 1 }
+          50% { transform: scale(1); opacity: .6 }
+        }
+        @keyframes ${uid}-shimmer { from { stroke-dashoffset: 0 } to { stroke-dashoffset: -120 } }
+      </style>
+      <defs>
+        <linearGradient id="${uid}-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a1830"/>
+          <stop offset="50%" stop-color="#1A3A5C"/>
+          <stop offset="80%" stop-color="#5C5277"/>
+          <stop offset="100%" stop-color="#C68E5A"/>
+        </linearGradient>
+        <linearGradient id="${uid}-far" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3A5778" stop-opacity=".85"/>
+          <stop offset="100%" stop-color="#1A3A5C" stop-opacity=".9"/>
+        </linearGradient>
+        <linearGradient id="${uid}-mid" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1A3A5C"/>
+          <stop offset="100%" stop-color="#0d2440"/>
+        </linearGradient>
+        <linearGradient id="${uid}-near" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a1c30"/>
+          <stop offset="100%" stop-color="#04101e"/>
+        </linearGradient>
+        <radialGradient id="${uid}-sunglow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFD7A8" stop-opacity=".95"/>
+          <stop offset="40%" stop-color="#F4A766" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#F4A766" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="${uid}-wpglow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFE2B5" stop-opacity="1"/>
+          <stop offset="55%" stop-color="#F4A766" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#F4A766" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Sky -->
+      <rect x="0" y="0" width="800" height="220" fill="url(#${uid}-sky)"/>
+
+      <!-- Stars -->
+      <g class="${uid}-stars" opacity=".7">
+        <circle cx="100" cy="38" r=".9" fill="#fff"/>
+        <circle cx="180" cy="62" r=".6" fill="#fff"/>
+        <circle cx="265" cy="32" r=".7" fill="#fff"/>
+        <circle cx="340" cy="55" r=".5" fill="#fff"/>
+        <circle cx="135" cy="82" r=".5" fill="#fff"/>
+        <circle cx="220" cy="100" r=".4" fill="#fff"/>
+        <circle cx="395" cy="40" r=".5" fill="#fff"/>
+      </g>
+
+      <!-- Sun glow (broad warm wash at horizon) -->
+      <ellipse class="${uid}-glow" cx="540" cy="200" rx="280" ry="80" fill="url(#${uid}-sunglow)"/>
+
+      <!-- Sun disc -->
+      <circle class="${uid}-sun" cx="540" cy="195" r="22" fill="#FFC384"/>
+
+      <!-- Far mountains -->
+      <g class="${uid}-far">
+        <path d="M0,202 L0,180 Q60,160 120,170 Q180,150 250,160 Q310,142 380,156 Q460,140 540,162 Q620,144 700,170 Q760,152 800,166 L800,202 Z" fill="url(#${uid}-far)"/>
+      </g>
+
+      <!-- Mid mountains -->
+      <g class="${uid}-mid">
+        <path d="M0,212 L0,196 Q60,180 120,190 Q200,170 280,184 Q340,172 420,182 Q500,167 580,180 Q640,172 720,186 Q780,180 800,190 L800,212 Z" fill="url(#${uid}-mid)" opacity=".95"/>
+      </g>
+
+      <!-- Near hill -->
+      <path d="M0,360 L0,228 Q120,212 240,222 Q360,200 480,222 Q620,214 800,232 L800,360 Z" fill="url(#${uid}-near)"/>
+
+      <!-- Path along the foreground hill -->
+      <path class="${uid}-path" d="M70,295 Q200,275 340,260 Q470,250 600,238" fill="none" stroke="#F4A766" stroke-width="1.4" stroke-dasharray="4 6" opacity=".5"/>
+
+      <!-- Waypoints (Pause, Learn, Re-energise, Re-engage) -->
+      <g class="${uid}-wp ${uid}-wp1">
+        <circle cx="120" cy="285" r="14" fill="url(#${uid}-wpglow)"/>
+        <circle cx="120" cy="285" r="3.5" fill="#FFE2B5"/>
+      </g>
+      <g class="${uid}-wp ${uid}-wp2">
+        <circle cx="290" cy="265" r="14" fill="url(#${uid}-wpglow)"/>
+        <circle cx="290" cy="265" r="3.5" fill="#FFE2B5"/>
+      </g>
+      <g class="${uid}-wp ${uid}-wp3">
+        <circle cx="450" cy="252" r="14" fill="url(#${uid}-wpglow)"/>
+        <circle cx="450" cy="252" r="3.5" fill="#FFE2B5"/>
+      </g>
+      <g class="${uid}-wp ${uid}-wp4">
+        <circle cx="595" cy="240" r="14" fill="url(#${uid}-wpglow)"/>
+        <circle cx="595" cy="240" r="3.5" fill="#FFE2B5"/>
+      </g>
+
+      <!-- Waypoint labels (size and opacity diminish with distance for atmospheric depth) -->
+      <text class="${uid}-label" x="120" y="320" text-anchor="middle" fill="#fff" font-family="Barlow Condensed,sans-serif" font-size="13" font-weight="700" letter-spacing=".12em" opacity=".88">PAUSE</text>
+      <text class="${uid}-label" x="290" y="299" text-anchor="middle" fill="#fff" font-family="Barlow Condensed,sans-serif" font-size="12.5" font-weight="700" letter-spacing=".12em" opacity=".8">LEARN</text>
+      <text class="${uid}-label" x="450" y="285" text-anchor="middle" fill="#fff" font-family="Barlow Condensed,sans-serif" font-size="11.5" font-weight="700" letter-spacing=".12em" opacity=".72">RE-ENERGISE</text>
+      <text class="${uid}-label" x="595" y="272" text-anchor="middle" fill="#fff" font-family="Barlow Condensed,sans-serif" font-size="11" font-weight="700" letter-spacing=".12em" opacity=".64">RE-ENGAGE</text>
+
+      <!-- Figure silhouette on the foreground ridge, looking out toward the horizon -->
+      <g class="${uid}-figure" transform="translate(70,287)">
+        <ellipse cx="0" cy="14" rx="6.5" ry="1.6" fill="#000" opacity=".45"/>
+        <path d="M-2.5,-2 Q-3,3 -3,9 L-2.5,14 L-1,14 L-0.5,9 L0.5,9 L1,14 L2.5,14 L3,9 Q3,3 2.5,-2 Z" fill="#04101e"/>
+        <circle cx="0" cy="-6" r="3" fill="#04101e"/>
+        <path d="M2.7,-5 Q3.5,2 3.2,9" fill="none" stroke="#F4A766" stroke-width=".5" opacity=".6"/>
+        <path d="M3,-3 Q3.4,0 3.2,4" fill="none" stroke="#FFE2B5" stroke-width=".3" opacity=".5"/>
+      </g>
+    </svg>
+    <div style="font-size:11px;color:#8fa0b0;text-align:center;margin-top:12px;font-style:italic;letter-spacing:.05em">Pause &rarr; Learn &rarr; Re-energise &rarr; Re-engage</div>
+  `;
+
+  requestAnimationFrame(() => { wrap.style.opacity = '1'; });
+  return wrap;
+}
+
 function buildMaslowVisual() {
   const svg = createSVG(400, 230);
   const levels = [
@@ -3466,459 +3643,588 @@ function buildLeadershipStylesVisual() {
 function buildMotivationInventoryVisual() {
   const uid = 'mi' + Math.random().toString(36).slice(2,7);
 
-  const CATS = [
-    { id:'people', label:'People', color:'#C0395B', light:'rgba(192,57,91,.10)',
-      factors:[
-        {name:'Influence',               desc:'Persuading, communicating, developing; convincing people towards a course of action'},
-        {name:'Nurture',                 desc:'Helping people achieve their goals; listening to them; providing close support as well as time and attention'},
-        {name:'Gregariousness',          desc:'Meeting and working with a wide range of people, including the public'},
-        {name:'Solitude',                desc:'Having space to get on with things without contact or distraction from other people'},
-        {name:'Affiliation',             desc:'Having close relationships; being part of a team; working interdependently with others and being liked and respected by them'},
-        {name:'Dedication',              desc:'Helping the wider community; doing something worthwhile; making the world a better place to be'},
-        {name:'Relating',                desc:'Responding to different individual needs; dealing with difficult interpersonal situations; trusting and being trusted; resolving conflict'}
-      ]},
-    { id:'achievement', label:'Achievement', color:'#1A3A5C', light:'rgba(26,58,92,.10)',
-      factors:[
-        {name:'Task Focus',              desc:'Having a liking for detail and analysis; using skills and knowledge; enjoying specific tasks; intellectual challenge; focusing on the job in hand'},
-        {name:'Goal Orientation',        desc:'Working to targets; a future perspective to achieve tangible results; output rather than input focused; problem solving; achieving business results'},
-        {name:'Power & Authority',       desc:'Having control over others; being able to direct them and control work and events; making big decisions; being regarded as the source of authority'},
-        {name:'Responsibility',          desc:'Leading others; taking and accepting responsibility for decisions; making a difference; doing what is necessary to ensure company success'},
-        {name:'Initiative & Independence',desc:'Using own initiative; dislike of bureaucracy and red tape; operating independently; deciding own course of action'},
-        {name:'Creativity',              desc:'Generating ideas; producing something new; finding new ways'},
-        {name:'Challenge',               desc:'Being stretched; liking energy and hard work and competitive situations; responding to pressure and deadlines; being active and challenged'}
-      ]},
-    { id:'enjoyment', label:'Enjoyment', color:'#009FA0', light:'rgba(0,159,160,.10)',
-      factors:[
-        {name:'Suitability',             desc:'Comfort in knowing capability to do job based on previous experience; perceived match of knowledge and skills'},
-        {name:'Structure',               desc:'Operating to guidelines and systems; organising and planning; meeting standards; creating order, procedure and systems'},
-        {name:'Security',                desc:'Job security; knowing what is going on; a liking for certainty'},
-        {name:'Tangible Reward',         desc:'Money; status; glamour; perks'},
-        {name:'Variety & Fun',           desc:'Enjoyment and fun; difference; travel; location; not repetitive or being bored'},
-        {name:'Recognition',             desc:'Being well regarded and appreciated; feeling good about self and work; self-development'},
-        {name:'Comfort',                 desc:'Working moderate hours; not dealing with unpleasant or difficult situations; keeping clear of anxiety and stress; avoiding failure'}
-      ]}
+  // Official 21 statements from The Liberator (pp. 224-225)
+  const STATEMENTS = [
+    { id: 1,  text: 'Knowing what is going on; a liking for certainty; job security', factor: 'Security', cat: 'Enjoyment' },
+    { id: 2,  text: 'Using own initiative; dislike of bureaucracy and red tape; operating independently; deciding own course of action', factor: 'Initiative and Independence', cat: 'Achievement' },
+    { id: 3,  text: 'Knowing own capability to do job based on previous experience; own match of knowledge and skills', factor: 'Suitability', cat: 'Enjoyment' },
+    { id: 4,  text: 'Helping people achieve their goals; listening to them; providing close support as well as time and attention', factor: 'Nurture', cat: 'People' },
+    { id: 5,  text: 'Achieving tangible results; connecting with a future perspective; problem solving; output rather than input focused', factor: 'Goal Orientation', cat: 'Achievement' },
+    { id: 6,  text: 'Having close relationships; being part of a team; working interdependently with others and being liked and respected by them', factor: 'Affiliation', cat: 'People' },
+    { id: 7,  text: 'Persuading, communicating, developing; convincing people towards a course of action', factor: 'Influence', cat: 'People' },
+    { id: 8,  text: 'Having enjoyment, fun and variety; not repetitive work; travel; location', factor: 'Variety and Fun', cat: 'Enjoyment' },
+    { id: 9,  text: 'Being stretched; liking energy and hard work and competitive situations; responding to pressure and deadlines; being active and challenged', factor: 'Challenge', cat: 'Achievement' },
+    { id: 10, text: 'Meeting and working with a wide range of people including the public', factor: 'Gregariousness', cat: 'People' },
+    { id: 11, text: 'Operating to guidelines and systems; organising and planning; meeting standards; creating order, procedure and systems', factor: 'Structure', cat: 'Enjoyment' },
+    { id: 12, text: 'Having space to get on with things without distraction from other people', factor: 'Solitude', cat: 'People' },
+    { id: 13, text: 'Leading others; taking and accepting responsibility for decisions; making a difference; doing what is necessary to ensure company success; representing others', factor: 'Responsibility', cat: 'Achievement' },
+    { id: 14, text: 'Being well rewarded financially; having good perks and status; glamour', factor: 'Tangible Reward', cat: 'Enjoyment' },
+    { id: 15, text: 'Dealing with difficult interpersonal situations; resolving conflict; responding to different individual needs', factor: 'Relating', cat: 'People' },
+    { id: 16, text: 'Having control over others; being able to direct own team and control work and events; making big decisions; being regarded as the source of authority', factor: 'Power and Authority', cat: 'Achievement' },
+    { id: 17, text: 'Generating ideas; producing something new; finding new ways', factor: 'Creativity', cat: 'Achievement' },
+    { id: 18, text: "Helping the company's wider society and the community; doing something worthwhile; making the world a better place to be", factor: 'Dedication', cat: 'People' },
+    { id: 19, text: 'Working moderate hours; not dealing with unpleasant or difficult situations; keeping clear of anxiety and stress; avoiding failure', factor: 'Comfort', cat: 'Enjoyment' },
+    { id: 20, text: 'Being well regarded and appreciated; feeling good about self and work; self development', factor: 'Recognition', cat: 'Enjoyment' },
+    { id: 21, text: 'Having a liking for detail and analysis; using skills and knowledge; enjoying specific tasks, intellectual challenge; focusing on the job in hand', factor: 'Task Focus', cat: 'Achievement' }
   ];
 
-  const ALL = [];
-  CATS.forEach(cat => cat.factors.forEach(f => ALL.push(Object.assign({}, f, {catId:cat.id, catLabel:cat.label, catColor:cat.color, catLight:cat.light}))));
+  const CATS = {
+    'People':      { color: '#0061AD', dark: '#004B86' },
+    'Achievement': { color: '#1A3A5C', dark: '#0d2440' },
+    'Enjoyment':   { color: '#01A4AB', dark: '#007579' }
+  };
+  const CAT_ORDER = ['People','Achievement','Enjoyment'];
 
-  let phase = 'browse';
-  let activeTab = 'people';
-  let sel6 = new Set();
-  let top2 = new Set();
-  let leastSet = new Set();
+  // Wizard state
+  let step = 0;          // 0 = welcome, 1-4 = picks, 5 = results
+  let s1 = new Set();    // 6 most important
+  let topId = null;      // chosen 6-pointer
+  let s3 = new Set();    // 5 high importance (3 pts)
+  let s4 = new Set();    // 5 moderate (2 pts)
+  // Remaining 5 implicitly receive 1 point each
+
+  function getById(id) { return STATEMENTS.find(s => s.id === id); }
+  function pointsFor(id) {
+    if (topId === id) return 6;
+    if (s1.has(id)) return 4;
+    if (s3.has(id)) return 3;
+    if (s4.has(id)) return 2;
+    return 1;
+  }
+  function categoryTotal(cat) {
+    return STATEMENTS.filter(s => s.cat === cat).reduce((sum, s) => sum + pointsFor(s.id), 0);
+  }
 
   const wrap = document.createElement('div');
   wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%;user-select:none';
 
   const styleEl = document.createElement('style');
   styleEl.textContent = `
-    .${uid}-steps{display:flex;align-items:center;gap:0;margin-bottom:16px}
-    .${uid}-step{flex:1;height:3px;border-radius:2px;background:#e4edf5;transition:background .3s}
-    .${uid}-step.done{background:#009FA0}
-    .${uid}-step.active{background:#0061AD}
-    .${uid}-step-gap{width:4px}
-    .${uid}-instr{background:#f0f6fc;border-radius:12px;padding:12px 16px;margin-bottom:12px}
-    .${uid}-instr-title{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:16px;color:#004B86;margin-bottom:3px}
-    .${uid}-instr-sub{font-size:12px;color:#666;line-height:1.5}
-    .${uid}-counter{display:inline-flex;align-items:center;gap:8px;background:#0061AD;color:white;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;margin-bottom:12px;transition:background .3s}
-    .${uid}-counter.full{background:#009FA0}
-    .${uid}-tabs{display:flex;gap:6px;margin-bottom:12px}
-    .${uid}-tab{flex:1;padding:8px 4px;border:none;border-radius:10px;font-family:"Barlow",sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .18s;background:#e4edf5;color:#666}
-    .${uid}-tab.active{color:white}
-    .${uid}-rows{display:flex;flex-direction:column;gap:6px}
-    .${uid}-row{background:white;border-radius:10px;border:1.5px solid #e4edf5;border-left-width:3px;padding:10px 14px;animation:${uid}FIn .22s ease both}
-    @keyframes ${uid}FIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-    .${uid}-row-name{font-weight:700;font-size:13px;margin-bottom:3px}
-    .${uid}-row-desc{font-size:11.5px;color:#666;line-height:1.5}
-    .${uid}-chips{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-    .${uid}-chip{border-radius:12px;padding:10px 12px 10px 12px;border:2px solid transparent;cursor:pointer;transition:all .2s;position:relative;background:#f4f8fc;animation:${uid}FIn .22s ease both}
-    .${uid}-chip:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
-    .${uid}-chip-cat{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
-    .${uid}-chip-name{font-size:12px;font-weight:700;color:#004B86;line-height:1.3;padding-right:20px}
-    .${uid}-chip-desc{font-size:10px;color:#666;line-height:1.4;margin-top:5px}
-    .${uid}-chip.selected{background:white;box-shadow:0 4px 16px rgba(0,0,0,.1)}
-    .${uid}-chip.dimmed{opacity:.28;pointer-events:none}
-    .${uid}-chip.top2-pick{outline:3px solid gold;outline-offset:1px}
-    .${uid}-chip-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;background:#e4edf5;color:#aaa;font-weight:700;transition:all .18s;flex-shrink:0}
-    .${uid}-chip.selected .${uid}-chip-check{color:white}
-    .${uid}-pae{margin:14px 0}
-    .${uid}-pae-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-    .${uid}-pae-label{font-size:11px;font-weight:700;width:82px;flex-shrink:0}
-    .${uid}-pae-track{flex:1;background:#e4edf5;border-radius:20px;height:20px;overflow:hidden}
-    .${uid}-pae-fill{height:100%;border-radius:20px;transition:width 1.1s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;padding-left:8px;width:0%}
-    .${uid}-pae-count{font-size:10px;font-weight:800;color:white;white-space:nowrap}
-    .${uid}-pae-score{font-size:11px;font-weight:700;width:28px;text-align:right;flex-shrink:0}
-    .${uid}-hero-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-    .${uid}-hero{border-radius:14px;padding:14px 14px 14px 14px;color:white;position:relative;overflow:hidden;animation:${uid}FIn .36s ease both}
-    .${uid}-hero-eyebrow{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px}
-    .${uid}-hero-name{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;letter-spacing:.02em;margin-bottom:6px;padding-right:28px}
-    .${uid}-hero-desc{font-size:10px;color:rgba(255,255,255,.85);line-height:1.55}
-    .${uid}-hero-num{position:absolute;top:8px;right:12px;font-family:"Barlow Condensed",sans-serif;font-size:42px;font-weight:800;color:rgba(255,255,255,.14);line-height:1}
-    .${uid}-tag-group{margin-bottom:12px}
-    .${uid}-tag-group-label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8A8E91;margin-bottom:7px}
-    .${uid}-tags{display:flex;flex-wrap:wrap;gap:6px}
-    .${uid}-tag{border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;color:white}
-    .${uid}-tag.least{background:#e4edf5;color:#666}
-    .${uid}-interp{background:linear-gradient(135deg,#004B86,#0061AD);border-radius:14px;padding:16px 18px;margin:14px 0}
-    .${uid}-interp-label{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px}
-    .${uid}-interp-text{font-size:12px;color:rgba(255,255,255,.9);line-height:1.7}
-    .${uid}-nav{display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap}
-    .${uid}-btn{border:none;border-radius:20px;padding:11px 20px;font-family:"Barlow",sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .15s}
-    .${uid}-btn-primary{background:#0061AD;color:white;box-shadow:0 4px 14px rgba(0,97,173,.2)}
-    .${uid}-btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,97,173,.3)}
-    .${uid}-btn-primary:disabled{background:#b0c4d8;cursor:not-allowed}
-    .${uid}-btn-ghost{background:#e4edf5;color:#666}
-    .${uid}-btn-ghost:hover{background:#d0dce8;color:#333}
-    .${uid}-btn-download{background:#009FA0;color:white;box-shadow:0 4px 14px rgba(0,159,160,.2)}
-    .${uid}-btn-download:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,159,160,.3)}
-    .${uid}-ml{margin-left:auto}
-    .${uid}-begin{display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 0 6px}
-    .${uid}-begin-title{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:18px;color:#004B86;margin-bottom:6px}
-    .${uid}-begin-sub{font-size:12px;color:#666;line-height:1.6;max-width:320px;margin-bottom:16px}
-    .${uid}-divider{height:1px;background:#e4edf5;margin:14px 0}
+    .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:18px}
+    .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
+    .${uid}-pseg.done{background:#01A4AB}
+    .${uid}-pseg.active{background:#0061AD}
+    .${uid}-pgap{width:6px;flex:0 0 6px}
+
+    .${uid}-hd{margin-bottom:18px;display:flex;align-items:flex-start;gap:14px}
+    .${uid}-hd-icon{flex:0 0 50px;width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,#01A4AB 0%,#007579 100%);display:flex;align-items:center;justify-content:center;color:white;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:22px;box-shadow:0 4px 14px rgba(1,164,171,.25)}
+    .${uid}-hd-text{flex:1;min-width:0}
+    .${uid}-hnum{font-size:11px;font-weight:700;color:#8fa0b0;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#01A4AB;line-height:1.15}
+    .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
+
+    .${uid}-counter{display:inline-flex;align-items:center;gap:9px;background:#0061AD;color:white;border-radius:20px;padding:6px 16px;font-size:12px;font-weight:700;margin-bottom:14px;letter-spacing:.04em;transition:background .3s,transform .3s}
+    .${uid}-counter.full{background:#01A4AB;transform:scale(1.04)}
+    .${uid}-counter-num{font-size:14px}
+
+    .${uid}-list{display:flex;flex-direction:column;gap:8px}
+    .${uid}-card{display:flex;align-items:flex-start;gap:14px;background:white;border:2px solid #e4edf5;border-radius:12px;padding:14px 16px 14px 14px;cursor:pointer;transition:all .18s ease;position:relative;animation:${uid}fi .25s ease both}
+    .${uid}-card:hover:not(.locked):not(.dimmed){border-color:#0061AD;background:#f7fbff;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,97,173,.08)}
+    .${uid}-card.selected{border-color:#01A4AB;background:#f0fbfb;box-shadow:0 4px 14px rgba(1,164,171,.14)}
+    .${uid}-card.top{border-color:#F4A766;background:linear-gradient(135deg,#fff8ef 0%,#fff 60%);box-shadow:0 4px 18px rgba(244,167,102,.22)}
+    .${uid}-card.dimmed{opacity:.42;pointer-events:none}
+    .${uid}-card.locked{opacity:.78;pointer-events:none;background:#f7fbff;border-color:#d4e3f0}
+    .${uid}-num{flex:0 0 38px;width:38px;height:38px;border-radius:10px;background:#1A3A5C;color:white;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:18px;letter-spacing:.02em;transition:all .2s}
+    .${uid}-card.selected .${uid}-num{background:#01A4AB}
+    .${uid}-card.top .${uid}-num{background:linear-gradient(135deg,#F4A766 0%,#E08A4A 100%);box-shadow:0 4px 12px rgba(244,167,102,.4)}
+    .${uid}-card.locked .${uid}-num{background:#8fa0b0}
+    .${uid}-text{flex:1;font-size:13.5px;line-height:1.55;color:#222;padding-top:6px;padding-right:30px}
+    .${uid}-badge{flex:0 0 auto;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:13px;letter-spacing:.05em;color:white;border-radius:14px;padding:4px 11px;align-self:center;margin-right:4px}
+    .${uid}-tick{position:absolute;top:10px;right:12px;width:22px;height:22px;border-radius:50%;background:#e4edf5;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .2s}
+    .${uid}-card.selected .${uid}-tick{background:#01A4AB}
+    .${uid}-card.top .${uid}-tick{background:linear-gradient(135deg,#F4A766 0%,#E08A4A 100%)}
+
+    .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+    .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .18s}
+    .${uid}-ghost{background:#f0f5fa;color:#556677}
+    .${uid}-ghost:hover{background:#e0ecf5}
+    .${uid}-primary{background:#01A4AB;color:white;box-shadow:0 4px 16px rgba(1,164,171,.28)}
+    .${uid}-primary:hover:not(:disabled){background:#007579;transform:translateY(-1px)}
+    .${uid}-primary:disabled{background:#b0c4d8;cursor:not-allowed;box-shadow:none}
+    .${uid}-primary.${uid}-ready{animation:${uid}readyPulse 1.2s ease-in-out 2}
+    @keyframes ${uid}readyPulse{0%{transform:translateY(0) scale(1);box-shadow:0 4px 16px rgba(1,164,171,.28)}50%{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 28px rgba(1,164,171,.55)}100%{transform:translateY(0) scale(1);box-shadow:0 4px 16px rgba(1,164,171,.28)}}
+    .${uid}-dl{background:#01A4AB;color:white;box-shadow:0 6px 20px rgba(1,164,171,.32);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{background:#007579;transform:translateY(-2px);box-shadow:0 8px 24px rgba(1,164,171,.42)}
+
+    .${uid}-wel{background:linear-gradient(135deg,#01A4AB 0%,#007579 100%);border-radius:16px;padding:24px 24px 22px;color:white;position:relative;overflow:hidden}
+    .${uid}-wel::after{content:'';position:absolute;right:-50px;top:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18) 0%,transparent 60%);pointer-events:none}
+    .${uid}-wel-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:5px;position:relative}
+    .${uid}-wel-title{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:800;line-height:1.15;margin-bottom:10px;position:relative}
+    .${uid}-wel-text{font-size:13.5px;color:rgba(255,255,255,.92);line-height:1.65;margin-bottom:8px;position:relative;max-width:560px}
+    .${uid}-wel-list{font-size:13px;color:rgba(255,255,255,.92);line-height:1.7;margin-top:10px;padding-left:20px;position:relative}
+    .${uid}-wel-list li{margin-bottom:3px}
+    .${uid}-wel-cta{margin-top:18px;position:relative}
+    .${uid}-wel-btn{background:white;color:#01A4AB;border:none;border-radius:22px;padding:12px 26px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.18);transition:transform .18s, box-shadow .18s}
+    .${uid}-wel-btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.24)}
+
+    .${uid}-res-hd{margin-bottom:18px}
+    .${uid}-res-eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#01A4AB;margin-bottom:6px}
+    .${uid}-res-title{font-family:"Barlow Condensed",sans-serif;font-size:28px;font-weight:800;color:#1A3A5C;line-height:1.15}
+    .${uid}-res-sub{font-size:13.5px;color:#556677;line-height:1.65;margin-top:10px;max-width:600px}
+
+    .${uid}-bal{background:white;border-radius:14px;padding:18px 20px;border:1px solid #e4edf5;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+    .${uid}-bal-title{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:800;color:#1A3A5C;margin-bottom:14px;display:flex;align-items:center;gap:8px;letter-spacing:.02em}
+    .${uid}-bar-row{margin-bottom:13px}
+    .${uid}-bar-row:last-child{margin-bottom:0}
+    .${uid}-bar-lbl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+    .${uid}-bar-name{font-weight:700;font-size:13.5px;color:#1A3A5C;letter-spacing:.02em}
+    .${uid}-bar-score{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:20px}
+    .${uid}-bar-track{height:14px;border-radius:10px;background:#f0f5fa;overflow:hidden}
+    .${uid}-bar-fill{height:100%;border-radius:10px;transition:width 1.1s cubic-bezier(.34,1.56,.64,1);width:0}
+
+    .${uid}-top-card{border-radius:16px;background:linear-gradient(135deg,#fff8ef 0%,#fff 70%);border:2px solid #F4A766;padding:18px 20px;margin-bottom:16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 6px 22px rgba(244,167,102,.18)}
+    .${uid}-top-icon{flex:0 0 46px;width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#F4A766 0%,#E08A4A 100%);display:flex;align-items:center;justify-content:center;color:white;font-size:22px;box-shadow:0 4px 14px rgba(244,167,102,.4)}
+    .${uid}-top-body{flex:1;min-width:0}
+    .${uid}-top-eyebrow{font-size:9.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#C68548;margin-bottom:3px}
+    .${uid}-top-factor{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#8B4F1E;line-height:1.1;margin-bottom:6px}
+    .${uid}-top-text{font-size:12.5px;color:#5C3819;line-height:1.55}
+
+    .${uid}-fb{margin-top:18px}
+    .${uid}-fb-title{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:800;color:#1A3A5C;margin-bottom:12px;letter-spacing:.02em}
+    .${uid}-fb-cat{margin-bottom:14px;border-radius:12px;overflow:hidden;border:1px solid #e4edf5}
+    .${uid}-fb-cat-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;color:white;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+    .${uid}-fb-cat-tot{font-size:18px}
+    .${uid}-fb-list{display:flex;flex-direction:column;gap:1px;background:#e4edf5}
+    .${uid}-fb-row{display:flex;align-items:center;gap:12px;padding:9px 12px;background:white}
+    .${uid}-fb-pts{flex:0 0 28px;width:28px;height:24px;border-radius:6px;color:white;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:13px}
+    .${uid}-fb-name{font-size:13px;font-weight:700;color:#1A3A5C;flex:0 0 auto}
+    .${uid}-fb-stmt{flex:1;font-size:11.5px;color:#778899;line-height:1.45;padding-left:6px}
+
+    .${uid}-interp{background:linear-gradient(135deg,#0a2238 0%,#1A3A5C 100%);border-radius:14px;padding:18px 22px;color:white;margin-top:18px;position:relative;overflow:hidden}
+    .${uid}-interp::after{content:'';position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(244,167,102,.18) 0%,transparent 65%);pointer-events:none}
+    .${uid}-interp-eyebrow{font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px;position:relative}
+    .${uid}-interp-text{font-size:13px;line-height:1.7;color:rgba(255,255,255,.92);position:relative}
+    .${uid}-interp-text strong{color:#F4A766;font-weight:700}
+
+    .${uid}-hint{font-size:12px;color:#8fa0b0;font-style:italic;text-align:center;margin-top:12px;line-height:1.55}
+
+    @keyframes ${uid}fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
   `;
+  wrap.appendChild(styleEl);
 
-  function getCat(id) { return CATS.find(c => c.id === id); }
-  function getFactor(name) { return ALL.find(f => f.name === name); }
-
-  function buildSteps(current) {
-    const d = document.createElement('div');
-    d.className = uid+'-steps';
-    [1,2,3,4].forEach((n,i) => {
-      const s = document.createElement('div');
-      s.className = uid+'-step'+(n < current?' done':n===current?' active':'');
-      d.appendChild(s);
-      if (i<3){const g=document.createElement('div');g.className=uid+'-step-gap';d.appendChild(g);}
-    });
-    return d;
+  function buildProg() {
+    const p = document.createElement('div'); p.className = uid + '-prog';
+    const TOTAL = 4;
+    const current = step >= 5 ? 5 : step;
+    for (let i = 1; i <= TOTAL; i++) {
+      const seg = document.createElement('div'); seg.className = uid + '-pseg';
+      if (current > i) seg.classList.add('done');
+      else if (current === i) seg.classList.add('active');
+      p.appendChild(seg);
+      if (i < TOTAL) { const g = document.createElement('div'); g.className = uid + '-pgap'; p.appendChild(g); }
+    }
+    return p;
   }
 
-  function buildCounter(count, max, label) {
-    const d = document.createElement('div');
-    d.className = uid+'-counter'+(count>=max?' full':'');
-    d.innerHTML = '<span>'+count+' / '+max+'</span><span>'+label+'</span>';
-    return d;
+  function mkHd(num, title, sub) {
+    const el = document.createElement('div'); el.className = uid + '-hd';
+    el.innerHTML = '<div class="' + uid + '-hd-icon">' + num + '</div>' +
+      '<div class="' + uid + '-hd-text">' +
+      '<div class="' + uid + '-hnum">Step ' + num + ' of 4</div>' +
+      '<div class="' + uid + '-htitle">' + title + '</div>' +
+      '<div class="' + uid + '-hsub">' + sub + '</div></div>';
+    return el;
   }
 
-  function buildChip(f, isSelected, isDimmed, isTop2) {
-    const chip = document.createElement('div');
-    chip.className = uid+'-chip'+(isSelected?' selected':'')+(isDimmed?' dimmed':'')+(isTop2?' top2-pick':'');
-    chip.style.borderColor = isSelected ? f.catColor : 'transparent';
-    chip.style.color = f.catColor;
-    chip.innerHTML =
-      '<div class="'+uid+'-chip-cat">'+f.catLabel+'</div>'+
-      '<div class="'+uid+'-chip-name">'+f.name+'</div>'+
-      (isSelected ? '<div class="'+uid+'-chip-desc">'+f.desc+'</div>' : '')+
-      '<div class="'+uid+'-chip-check" style="background:'+(isSelected?f.catColor:'#e4edf5')+'">'+
-        (isTop2?'&#9733;':'&#10003;')+'</div>';
-    return chip;
+  function mkCounter(count, max, label) {
+    const c = document.createElement('div'); c.className = uid + '-counter' + (count >= max ? ' full' : '');
+    c.innerHTML = '<span class="' + uid + '-counter-num">' + count + ' / ' + max + '</span> <span>' + label + '</span>';
+    return c;
   }
 
-  function renderBrowse() {
-    wrap.innerHTML = '';
-    wrap.appendChild(styleEl);
+  function mkCard(stmt, opts) {
+    opts = opts || {};
+    const card = document.createElement('div');
+    card.className = uid + '-card';
+    if (opts.selected) card.classList.add('selected');
+    if (opts.top) card.classList.add('top');
+    if (opts.dimmed) card.classList.add('dimmed');
+    if (opts.locked) card.classList.add('locked');
 
-    const tabBar = document.createElement('div');
-    tabBar.className = uid+'-tabs';
-    CATS.forEach(cat => {
-      const t = document.createElement('button');
-      t.className = uid+'-tab'+(cat.id===activeTab?' active':'');
-      t.textContent = cat.label;
-      t.style.background = cat.id===activeTab ? cat.color : '';
-      t.addEventListener('click', () => { playMITab(cat.id); activeTab=cat.id; renderBrowse(); });
-      tabBar.appendChild(t);
-    });
-    wrap.appendChild(tabBar);
+    const num = document.createElement('div'); num.className = uid + '-num'; num.textContent = stmt.id;
+    const text = document.createElement('div'); text.className = uid + '-text'; text.textContent = stmt.text;
+    card.appendChild(num);
+    card.appendChild(text);
 
-    const cat = getCat(activeTab);
-    const rows = document.createElement('div');
-    rows.className = uid+'-rows';
-    cat.factors.forEach((f,i) => {
-      const row = document.createElement('div');
-      row.className = uid+'-row';
-      row.style.animationDelay = (i*0.04)+'s';
-      row.style.borderLeftColor = cat.color;
-      row.innerHTML = '<div class="'+uid+'-row-name" style="color:'+cat.color+'">'+f.name+'</div>'+
-                      '<div class="'+uid+'-row-desc">'+f.desc+'</div>';
-      rows.appendChild(row);
-    });
-    wrap.appendChild(rows);
-
-    const begin = document.createElement('div');
-    begin.className = uid+'-begin';
-    begin.innerHTML = '<div class="'+uid+'-begin-title">Ready to explore your motivation pattern?</div>'+
-      '<div class="'+uid+'-begin-sub">Browse all three categories first, then begin your personal reflection. It takes about two minutes and works best when you are honest with yourself.</div>';
-    const btn = document.createElement('button');
-    btn.className = uid+'-btn '+uid+'-btn-primary';
-    btn.textContent = 'Begin reflection \u2192';
-    btn.addEventListener('click', () => { playMIBegin(); sel6.clear(); top2.clear(); leastSet.clear(); renderSelect6(); });
-    begin.appendChild(btn);
-    wrap.appendChild(begin);
-  }
-
-  function renderSelect6() {
-    wrap.innerHTML = '';
-    wrap.appendChild(styleEl);
-    wrap.appendChild(buildSteps(2));
-
-    const instr = document.createElement('div');
-    instr.className = uid+'-instr';
-    instr.innerHTML = '<div class="'+uid+'-instr-title">Step 1: Select your top 6</div>'+
-      '<div class="'+uid+'-instr-sub">Which six factors matter most to you? Think about who you are, not who you think you should be.</div>';
-    wrap.appendChild(instr);
-    wrap.appendChild(buildCounter(sel6.size, 6, 'selected'));
-
-    const chips = document.createElement('div');
-    chips.className = uid+'-chips';
-    ALL.forEach((f,i) => {
-      const isSel = sel6.has(f.name);
-      const isDim = sel6.size>=6 && !isSel;
-      const chip = buildChip(f, isSel, isDim, false);
-      chip.style.animationDelay = (i*0.025)+'s';
-      chip.addEventListener('click', () => {
-        if (sel6.has(f.name)) { sel6.delete(f.name); playMIDeselect(); }
-        else if (sel6.size<6) { sel6.add(f.name); playMISelect(); }
-        renderSelect6();
-      });
-      chips.appendChild(chip);
-    });
-    wrap.appendChild(chips);
-
-    const nav = document.createElement('div');
-    nav.className = uid+'-nav';
-    const back = document.createElement('button');
-    back.className = uid+'-btn '+uid+'-btn-ghost';
-    back.textContent = '\u2190 Browse factors';
-    back.addEventListener('click', () => { playMIBack(); renderBrowse(); });
-    const next = document.createElement('button');
-    next.className = uid+'-btn '+uid+'-btn-primary '+uid+'-ml';
-    next.textContent = 'Next: Pick your top 2 \u2192';
-    next.disabled = sel6.size!==6;
-    next.addEventListener('click', () => { if(sel6.size===6){ playMINext(); top2.clear();renderSelect2();} });
-    nav.appendChild(back); nav.appendChild(next);
-    wrap.appendChild(nav);
-  }
-
-  function renderSelect2() {
-    wrap.innerHTML = '';
-    wrap.appendChild(styleEl);
-    wrap.appendChild(buildSteps(3));
-
-    const instr = document.createElement('div');
-    instr.className = uid+'-instr';
-    instr.innerHTML = '<div class="'+uid+'-instr-title">Step 2: Your top 2 of all</div>'+
-      '<div class="'+uid+'-instr-sub">From your six, which two are your most important motivators of all? These are your primary drivers.</div>';
-    wrap.appendChild(instr);
-    wrap.appendChild(buildCounter(top2.size, 2, 'chosen'));
-
-    const chips = document.createElement('div');
-    chips.className = uid+'-chips';
-    sel6.forEach((name,i) => {
-      const f = getFactor(name);
-      const isSel = top2.has(name);
-      const isDim = top2.size>=2 && !isSel;
-      const chip = buildChip(f, isSel, isDim, isSel);
-      chip.addEventListener('click', () => {
-        if (top2.has(name)) { top2.delete(name); playMIDeselect(); }
-        else if (top2.size<2) { top2.add(name); playMISelect(); }
-        renderSelect2();
-      });
-      chips.appendChild(chip);
-    });
-    wrap.appendChild(chips);
-
-    const nav = document.createElement('div');
-    nav.className = uid+'-nav';
-    const back = document.createElement('button');
-    back.className = uid+'-btn '+uid+'-btn-ghost';
-    back.textContent = '\u2190 Back';
-    back.addEventListener('click', () => { playMIBack(); renderSelect6(); });
-    const next = document.createElement('button');
-    next.className = uid+'-btn '+uid+'-btn-primary '+uid+'-ml';
-    next.textContent = 'Next: Least important \u2192';
-    next.disabled = top2.size!==2;
-    next.addEventListener('click', () => { if(top2.size===2){ playMINext(); leastSet.clear();renderSelectLeast();} });
-    nav.appendChild(back); nav.appendChild(next);
-    wrap.appendChild(nav);
-  }
-
-  function renderSelectLeast() {
-    wrap.innerHTML = '';
-    wrap.appendChild(styleEl);
-    wrap.appendChild(buildSteps(4));
-
-    const instr = document.createElement('div');
-    instr.className = uid+'-instr';
-    instr.innerHTML = '<div class="'+uid+'-instr-title">Step 3: Least important</div>'+
-      '<div class="'+uid+'-instr-sub">From the remaining factors, select those that matter least to you right now. There is no right or wrong answer here.</div>';
-    wrap.appendChild(instr);
-
-    const counter = document.createElement('div');
-    counter.className = uid+'-counter'+(leastSet.size>0?' full':'');
-    counter.textContent = leastSet.size+' selected';
-    wrap.appendChild(counter);
-
-    const chips = document.createElement('div');
-    chips.className = uid+'-chips';
-    ALL.filter(f => !sel6.has(f.name)).forEach((f,i) => {
-      const isSel = leastSet.has(f.name);
-      const chip = buildChip(f, isSel, false, false);
-      chip.style.animationDelay = (i*0.03)+'s';
-      chip.addEventListener('click', () => {
-        if (leastSet.has(f.name)) { leastSet.delete(f.name); playMIDeselect(); }
-        else { leastSet.add(f.name); playMISelect(); }
-        renderSelectLeast();
-      });
-      chips.appendChild(chip);
-    });
-    wrap.appendChild(chips);
-
-    const nav = document.createElement('div');
-    nav.className = uid+'-nav';
-    const back = document.createElement('button');
-    back.className = uid+'-btn '+uid+'-btn-ghost';
-    back.textContent = '\u2190 Back';
-    back.addEventListener('click', () => { playMIBack(); renderSelect2(); });
-    const next = document.createElement('button');
-    next.className = uid+'-btn '+uid+'-btn-primary '+uid+'-ml';
-    next.textContent = 'See my profile \u2192';
-    next.addEventListener('click', () => { playMIComplete(); renderProfile(); });
-    nav.appendChild(back); nav.appendChild(next);
-    wrap.appendChild(nav);
-  }
-
-  function renderProfile() {
-    wrap.innerHTML = '';
-    wrap.appendChild(styleEl);
-    wrap.appendChild(buildSteps(5));
-
-    const scores = {people:0, achievement:0, enjoyment:0};
-    sel6.forEach(name => { const f=getFactor(name); if(f) scores[f.catId]++; });
-
-    const titleEl = document.createElement('div');
-    titleEl.style.cssText = 'font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#004B86;margin-bottom:14px';
-    titleEl.textContent = 'Your Motivation Profile';
-    wrap.appendChild(titleEl);
-
-    // PAE bars
-    const pae = document.createElement('div');
-    pae.className = uid+'-pae';
-    CATS.forEach(cat => {
-      const score = scores[cat.id];
-      const pct = Math.round((score/6)*100);
-      const row = document.createElement('div');
-      row.className = uid+'-pae-row';
-      const fill = document.createElement('div');
-      fill.className = uid+'-pae-fill';
-      fill.style.background = cat.color;
-      fill.setAttribute('data-pct', pct);
-      fill.innerHTML = score>0?'<span class="'+uid+'-pae-count">'+score+' of 6</span>':'';
-      row.innerHTML = '<div class="'+uid+'-pae-label" style="color:'+cat.color+'">'+cat.label+'</div>'+
-                      '<div class="'+uid+'-pae-track"></div>'+
-                      '<div class="'+uid+'-pae-score" style="color:'+cat.color+'">'+score+'</div>';
-      row.querySelector('.'+uid+'-pae-track').appendChild(fill);
-      pae.appendChild(row);
-    });
-    wrap.appendChild(pae);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        wrap.querySelectorAll('.'+uid+'-pae-fill').forEach(el => { el.style.width = el.getAttribute('data-pct')+'%'; });
-      });
-    });
-
-    // Top 2 heroes
-    const heroLabel = document.createElement('div');
-    heroLabel.className = uid+'-tag-group-label';
-    heroLabel.textContent = 'Your top 2 motivators';
-    wrap.appendChild(heroLabel);
-
-    const heroPair = document.createElement('div');
-    heroPair.className = uid+'-hero-pair';
-    [...top2].forEach((name,i) => {
-      const f = getFactor(name);
-      const hero = document.createElement('div');
-      hero.className = uid+'-hero';
-      hero.style.background = f.catColor;
-      hero.style.animationDelay = (i*0.1)+'s';
-      hero.innerHTML = '<div class="'+uid+'-hero-num">'+(i+1)+'</div>'+
-                       '<div class="'+uid+'-hero-eyebrow">'+f.catLabel+'</div>'+
-                       '<div class="'+uid+'-hero-name">'+f.name+'</div>'+
-                       '<div class="'+uid+'-hero-desc">'+f.desc+'</div>';
-      heroPair.appendChild(hero);
-    });
-    wrap.appendChild(heroPair);
-
-    // Top 6 tags
-    const top6Group = document.createElement('div');
-    top6Group.className = uid+'-tag-group';
-    top6Group.innerHTML = '<div class="'+uid+'-tag-group-label">All 6 of your key motivators</div>';
-    const top6Tags = document.createElement('div');
-    top6Tags.className = uid+'-tags';
-    sel6.forEach(name => {
-      const f = getFactor(name);
-      const tag = document.createElement('div');
-      tag.className = uid+'-tag';
-      tag.style.background = f.catColor;
-      tag.textContent = f.name + (top2.has(name)?' \u2605':'');
-      top6Tags.appendChild(tag);
-    });
-    top6Group.appendChild(top6Tags);
-    wrap.appendChild(top6Group);
-
-    // Least important
-    if (leastSet.size>0) {
-      const leastGroup = document.createElement('div');
-      leastGroup.className = uid+'-tag-group';
-      leastGroup.innerHTML = '<div class="'+uid+'-tag-group-label">Factors you rated least important</div>';
-      const leastTags = document.createElement('div');
-      leastTags.className = uid+'-tags';
-      leastSet.forEach(name => {
-        const tag = document.createElement('div');
-        tag.className = uid+'-tag least';
-        tag.textContent = name;
-        leastTags.appendChild(tag);
-      });
-      leastGroup.appendChild(leastTags);
-      wrap.appendChild(leastGroup);
+    if (opts.locked && opts.points) {
+      const badge = document.createElement('div'); badge.className = uid + '-badge';
+      const colourMap = { 6:'linear-gradient(135deg,#F4A766 0%,#E08A4A 100%)', 4:'#01A4AB', 3:'#0061AD', 2:'#5a8bb8', 1:'#8fa0b0' };
+      badge.style.background = colourMap[opts.points] || '#8fa0b0';
+      badge.textContent = '+' + opts.points;
+      card.appendChild(badge);
+    } else {
+      const tick = document.createElement('div'); tick.className = uid + '-tick';
+      tick.textContent = opts.top ? '\u2605' : (opts.selected ? '\u2713' : '');
+      card.appendChild(tick);
     }
 
-    // Interpretation
-    const domCat = CATS.reduce((a,b) => scores[a.id]>=scores[b.id]?a:b);
-    const interpMap = {
-      people:'Your profile shows a strong People orientation. To make the most of this as a leader, pair it with Achievement focus to ensure your care for others drives real results. High People motivation is your superpower when it creates movement, not just connection.',
-      achievement:'Your profile shows a strong Achievement orientation. This is a hallmark of effective Leader-Developers. Stay mindful of your Enjoyment needs to prevent tunnel vision, and keep People motivation visible so your team feels the human side of your drive.',
-      enjoyment:'Your profile shows strong Enjoyment motivators. These are the conditions that allow you to sustain performance without burning out. Work to ensure Achievement and People motivators are also present, so your environment supports both you and the people around you.'
-    };
-    const interp = document.createElement('div');
-    interp.className = uid+'-interp';
-    interp.innerHTML = '<div class="'+uid+'-interp-label">A note on your profile</div>'+
-                       '<div class="'+uid+'-interp-text">'+interpMap[domCat.id]+'</div>';
-    wrap.appendChild(interp);
+    if (opts.onClick) card.addEventListener('click', opts.onClick);
+    return card;
+  }
 
-    const div = document.createElement('div');
-    div.className = uid+'-divider';
-    wrap.appendChild(div);
+  function clearWrap() {
+    [...wrap.children].forEach(c => { if (c !== styleEl) c.remove(); });
+  }
 
-    const nav = document.createElement('div');
-    nav.className = uid+'-nav';
-    const restart = document.createElement('button');
-    restart.className = uid+'-btn '+uid+'-btn-ghost';
-    restart.textContent = '\u21BA Start again';
+  let prevStep = 0;
+
+  function isStepComplete() {
+    if (step === 1) return s1.size === 6;
+    if (step === 2) return topId !== null;
+    if (step === 3) return s3.size === 5;
+    if (step === 4) return s4.size === 5;
+    return false;
+  }
+
+  function scrollToWizardTop() {
+    try {
+      const rect = wrap.getBoundingClientRect();
+      const target = window.scrollY + rect.top - 84;
+      window.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+    } catch(e) {}
+  }
+
+  function celebrateCompletion() {
+    setTimeout(() => {
+      const nextBtn = wrap.querySelector('.' + uid + '-primary');
+      if (!nextBtn) return;
+      nextBtn.classList.add(uid + '-ready');
+      try { nextBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e) {}
+      setTimeout(() => { try { nextBtn.classList.remove(uid + '-ready'); } catch(e) {} }, 2400);
+    }, 60);
+  }
+
+  function render() {
+    clearWrap();
+    if (step !== 0) wrap.appendChild(buildProg());
+    if (step === 0) renderWelcome();
+    else if (step === 1) renderS1();
+    else if (step === 2) renderS2();
+    else if (step === 3) renderS3();
+    else if (step === 4) renderS4();
+    else if (step === 5) renderResults();
+
+    if (prevStep !== step) {
+      prevStep = step;
+      setTimeout(scrollToWizardTop, 30);
+    }
+  }
+
+  function renderWelcome() {
+    const wel = document.createElement('div'); wel.className = uid + '-wel';
+    wel.innerHTML =
+      '<div class="' + uid + '-wel-eyebrow">Motivation Inventory</div>' +
+      '<div class="' + uid + '-wel-title">What truly drives you at work?</div>' +
+      '<p class="' + uid + '-wel-text">This inventory is designed to help you get in touch with your own patterns of motivation in a job, and gain greater clarity on what matters for the people you work with. The results will only be of value if you are scrupulously honest, on the basis of who you are, not who you feel you should be.</p>' +
+      '<p class="' + uid + '-wel-text">There is no right answer. After all, no-one is likely to know you as well as you know yourself.</p>' +
+      '<ul class="' + uid + '-wel-list">' +
+      '<li>Step 1: Choose your six most important statements</li>' +
+      '<li>Step 2: From those six, mark the ONE of over-riding importance</li>' +
+      '<li>Step 3: From the remaining fifteen, choose five of high importance</li>' +
+      '<li>Step 4: From the remaining ten, choose five of moderate importance</li>' +
+      '</ul>' +
+      '<div class="' + uid + '-wel-cta"><button class="' + uid + '-wel-btn">Begin the inventory \u2192</button></div>';
+    wel.querySelector('button').addEventListener('click', () => {
+      playMIBegin();
+      step = 1; render();
+    });
+    wrap.appendChild(wel);
+  }
+
+  function renderS1() {
+    wrap.appendChild(mkHd(1, 'The six that matter most', 'Be honest in identifying the six statements that are most important to you. Don\'t have in mind what you think you should be, but rather who you are.'));
+    wrap.appendChild(mkCounter(s1.size, 6, 'chosen'));
+
+    const list = document.createElement('div'); list.className = uid + '-list';
+    STATEMENTS.forEach(stmt => {
+      const isSel = s1.has(stmt.id);
+      const isLimited = !isSel && s1.size >= 6;
+      const card = mkCard(stmt, {
+        selected: isSel,
+        dimmed: isLimited,
+        onClick: () => {
+          const wasComplete = isStepComplete();
+          if (isSel) { s1.delete(stmt.id); playMIDeselect(); }
+          else if (s1.size < 6) { s1.add(stmt.id); playMISelect(); }
+          render();
+          if (!wasComplete && isStepComplete()) celebrateCompletion();
+        }
+      });
+      list.appendChild(card);
+    });
+    wrap.appendChild(list);
+
+    const nav = document.createElement('div'); nav.className = uid + '-nav';
+    const left = document.createElement('div'); left.className = uid + '-navl';
+    const restart = document.createElement('button'); restart.className = uid + '-btn ' + uid + '-ghost';
+    restart.innerHTML = '\u21BA Start over';
     restart.addEventListener('click', () => {
       playMIBack();
-      sel6.clear(); top2.clear(); leastSet.clear();
-      phase='browse'; activeTab='people'; renderBrowse();
+      s1.clear(); topId = null; s3.clear(); s4.clear(); step = 0; render();
     });
-    const dl = document.createElement('button');
-    dl.className = uid+'-btn '+uid+'-btn-download '+uid+'-ml';
-    dl.textContent = '\u2193 Download profile';
-    dl.addEventListener('click', () => { playMIDownload(); generateMotivationPDF(top2, sel6, leastSet, scores); });
-    nav.appendChild(restart); nav.appendChild(dl);
+    left.appendChild(restart);
+
+    const next = document.createElement('button'); next.className = uid + '-btn ' + uid + '-primary';
+    next.disabled = s1.size !== 6;
+    next.innerHTML = 'Next: Pick your top one \u2192';
+    next.addEventListener('click', () => {
+      if (s1.size === 6) { playMINext(); step = 2; render(); }
+    });
+
+    nav.appendChild(left); nav.appendChild(next);
     wrap.appendChild(nav);
   }
 
-  renderBrowse();
+  function renderS2() {
+    wrap.appendChild(mkHd(2, 'Your over-riding motivator', 'From the six you chose, mark the ONE statement of over-riding importance to you. The other five will receive 4 points each as very high importance.'));
+
+    const list = document.createElement('div'); list.className = uid + '-list';
+    STATEMENTS.filter(s => s1.has(s.id)).forEach(stmt => {
+      const isTop = topId === stmt.id;
+      const card = mkCard(stmt, {
+        top: isTop,
+        selected: !isTop && topId !== null,
+        onClick: () => {
+          const wasComplete = isStepComplete();
+          if (topId === stmt.id) { topId = null; playMIDeselect(); }
+          else { topId = stmt.id; playMISelect(); }
+          render();
+          if (!wasComplete && isStepComplete()) celebrateCompletion();
+        }
+      });
+      list.appendChild(card);
+    });
+    wrap.appendChild(list);
+
+    const hint = document.createElement('div'); hint.className = uid + '-hint';
+    hint.textContent = topId ? 'Your top motivator is highlighted in amber. The other five will receive 4 points each.' : 'Select one statement that stands out above all others.';
+    wrap.appendChild(hint);
+
+    const nav = document.createElement('div'); nav.className = uid + '-nav';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back';
+    back.addEventListener('click', () => { playMIBack(); step = 1; render(); });
+
+    const next = document.createElement('button'); next.className = uid + '-btn ' + uid + '-primary';
+    next.disabled = topId === null;
+    next.innerHTML = 'Next: High importance \u2192';
+    next.addEventListener('click', () => {
+      if (topId !== null) { playMINext(); step = 3; render(); }
+    });
+
+    nav.appendChild(back); nav.appendChild(next);
+    wrap.appendChild(nav);
+  }
+
+  function renderS3() {
+    wrap.appendChild(mkHd(3, 'Five of high importance', 'From the remaining fifteen statements, choose the FIVE that are of high importance to you. These will receive 3 points each.'));
+    wrap.appendChild(mkCounter(s3.size, 5, 'chosen'));
+
+    const list = document.createElement('div'); list.className = uid + '-list';
+    STATEMENTS.forEach(stmt => {
+      if (s1.has(stmt.id)) {
+        const isTop = topId === stmt.id;
+        const card = mkCard(stmt, { locked: true, points: isTop ? 6 : 4 });
+        list.appendChild(card);
+      } else {
+        const isSel = s3.has(stmt.id);
+        const isLimited = !isSel && s3.size >= 5;
+        const card = mkCard(stmt, {
+          selected: isSel,
+          dimmed: isLimited,
+          onClick: () => {
+            const wasComplete = isStepComplete();
+            if (isSel) { s3.delete(stmt.id); playMIDeselect(); }
+            else if (s3.size < 5) { s3.add(stmt.id); playMISelect(); }
+            render();
+            if (!wasComplete && isStepComplete()) celebrateCompletion();
+          }
+        });
+        list.appendChild(card);
+      }
+    });
+    wrap.appendChild(list);
+
+    const nav = document.createElement('div'); nav.className = uid + '-nav';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back';
+    back.addEventListener('click', () => { playMIBack(); step = 2; render(); });
+
+    const next = document.createElement('button'); next.className = uid + '-btn ' + uid + '-primary';
+    next.disabled = s3.size !== 5;
+    next.innerHTML = 'Next: Moderate importance \u2192';
+    next.addEventListener('click', () => {
+      if (s3.size === 5) { playMINext(); step = 4; render(); }
+    });
+
+    nav.appendChild(back); nav.appendChild(next);
+    wrap.appendChild(nav);
+  }
+
+  function renderS4() {
+    wrap.appendChild(mkHd(4, 'Five of moderate importance', 'From the remaining ten, choose the FIVE that are of moderate importance to you. These will receive 2 points each. The remaining five will receive 1 point.'));
+    wrap.appendChild(mkCounter(s4.size, 5, 'chosen'));
+
+    const list = document.createElement('div'); list.className = uid + '-list';
+    STATEMENTS.forEach(stmt => {
+      if (s1.has(stmt.id)) {
+        const isTop = topId === stmt.id;
+        const card = mkCard(stmt, { locked: true, points: isTop ? 6 : 4 });
+        list.appendChild(card);
+      } else if (s3.has(stmt.id)) {
+        const card = mkCard(stmt, { locked: true, points: 3 });
+        list.appendChild(card);
+      } else {
+        const isSel = s4.has(stmt.id);
+        const isLimited = !isSel && s4.size >= 5;
+        const card = mkCard(stmt, {
+          selected: isSel,
+          dimmed: isLimited,
+          onClick: () => {
+            const wasComplete = isStepComplete();
+            if (isSel) { s4.delete(stmt.id); playMIDeselect(); }
+            else if (s4.size < 5) { s4.add(stmt.id); playMISelect(); }
+            render();
+            if (!wasComplete && isStepComplete()) celebrateCompletion();
+          }
+        });
+        list.appendChild(card);
+      }
+    });
+    wrap.appendChild(list);
+
+    const nav = document.createElement('div'); nav.className = uid + '-nav';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back';
+    back.addEventListener('click', () => { playMIBack(); step = 3; render(); });
+
+    const next = document.createElement('button'); next.className = uid + '-btn ' + uid + '-primary';
+    next.disabled = s4.size !== 5;
+    next.innerHTML = 'Reveal results \u2192';
+    next.addEventListener('click', () => {
+      if (s4.size === 5) { playMIComplete(); step = 5; render(); }
+    });
+
+    nav.appendChild(back); nav.appendChild(next);
+    wrap.appendChild(nav);
+  }
+
+  function renderResults() {
+    const totals = {};
+    CAT_ORDER.forEach(cat => totals[cat] = categoryTotal(cat));
+    const maxTotal = Math.max(...Object.values(totals));
+
+    const hd = document.createElement('div'); hd.className = uid + '-res-hd';
+    hd.innerHTML =
+      '<div class="' + uid + '-res-eyebrow">Your Motivation Profile</div>' +
+      '<div class="' + uid + '-res-title">What drives you most</div>' +
+      '<p class="' + uid + '-res-sub">Below is a summary of where your motivation sits across the three categories: People, Achievement and Enjoyment. Effective Leader-Developers tend to have both high Achievement and People motivation, with sufficient Enjoyment to avoid stress or tunnel vision.</p>';
+    wrap.appendChild(hd);
+
+    // Top motivator
+    const topStmt = getById(topId);
+    const topCard = document.createElement('div'); topCard.className = uid + '-top-card';
+    topCard.innerHTML =
+      '<div class="' + uid + '-top-icon">\u2605</div>' +
+      '<div class="' + uid + '-top-body">' +
+      '<div class="' + uid + '-top-eyebrow">Most over-riding motivator \u00B7 ' + topStmt.cat + '</div>' +
+      '<div class="' + uid + '-top-factor">' + topStmt.factor + '</div>' +
+      '<div class="' + uid + '-top-text">' + topStmt.text + '</div></div>';
+    wrap.appendChild(topCard);
+
+    // Category bars
+    const bal = document.createElement('div'); bal.className = uid + '-bal';
+    const balTitle = document.createElement('div'); balTitle.className = uid + '-bal-title';
+    balTitle.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A3A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l9-12 9 12"/></svg> Category balance';
+    bal.appendChild(balTitle);
+
+    CAT_ORDER.forEach((cat, idx) => {
+      const total = totals[cat];
+      const pct = (total / maxTotal) * 100;
+      const row = document.createElement('div'); row.className = uid + '-bar-row';
+      row.innerHTML =
+        '<div class="' + uid + '-bar-lbl">' +
+        '<div class="' + uid + '-bar-name">' + cat + '</div>' +
+        '<div class="' + uid + '-bar-score" style="color:' + CATS[cat].color + '">' + total + '</div>' +
+        '</div>' +
+        '<div class="' + uid + '-bar-track"><div class="' + uid + '-bar-fill" style="background:' + CATS[cat].color + '"></div></div>';
+      bal.appendChild(row);
+      setTimeout(() => {
+        const fill = row.querySelector('.' + uid + '-bar-fill');
+        if (fill) fill.style.width = pct + '%';
+      }, 120 + idx * 80);
+    });
+    wrap.appendChild(bal);
+
+    // Factor breakdown
+    const fb = document.createElement('div'); fb.className = uid + '-fb';
+    const fbTitle = document.createElement('div'); fbTitle.className = uid + '-fb-title';
+    fbTitle.textContent = 'Factor breakdown';
+    fb.appendChild(fbTitle);
+
+    CAT_ORDER.forEach(cat => {
+      const catEl = document.createElement('div'); catEl.className = uid + '-fb-cat';
+      const catHd = document.createElement('div'); catHd.className = uid + '-fb-cat-hd';
+      catHd.style.background = CATS[cat].color;
+      catHd.innerHTML = '<span>' + cat + '</span><span class="' + uid + '-fb-cat-tot">' + totals[cat] + '</span>';
+      catEl.appendChild(catHd);
+
+      const list = document.createElement('div'); list.className = uid + '-fb-list';
+      const catStmts = STATEMENTS.filter(s => s.cat === cat).sort((a, b) => pointsFor(b.id) - pointsFor(a.id));
+      catStmts.forEach(s => {
+        const pts = pointsFor(s.id);
+        const row = document.createElement('div'); row.className = uid + '-fb-row';
+        row.innerHTML =
+          '<div class="' + uid + '-fb-pts" style="background:' + CATS[cat].color + '">' + pts + '</div>' +
+          '<div class="' + uid + '-fb-name">' + s.factor + '</div>';
+        list.appendChild(row);
+      });
+      catEl.appendChild(list);
+      fb.appendChild(catEl);
+    });
+    wrap.appendChild(fb);
+
+    // Interpretation
+    const interp = document.createElement('div'); interp.className = uid + '-interp';
+    interp.innerHTML =
+      '<div class="' + uid + '-interp-eyebrow">Reading your profile</div>' +
+      '<p class="' + uid + '-interp-text">An individual\u2019s scores cannot be classified as \u2018good\u2019 or \u2018bad\u2019. Whether they are right depends on a match with the role and situation. The key insight is the <strong>combination</strong> of factors. The expression \u2018they are a people person\u2019 is meaningless: a strong orientation towards others may be to influence them, support them, just be with them, or have deeper relationships with them. Both Task Focus and Goal Orientation are forms of Achievement motivation, but they differ in kind. Look at the relative weights, and consider how this pattern shows up in your work.</p>';
+    wrap.appendChild(interp);
+
+    // Nav
+    const nav = document.createElement('div'); nav.className = uid + '-nav';
+    const left = document.createElement('div'); left.className = uid + '-navl';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back';
+    back.addEventListener('click', () => { playMIBack(); step = 4; render(); });
+    const restart = document.createElement('button'); restart.className = uid + '-btn ' + uid + '-ghost';
+    restart.innerHTML = '\u21BA Start over';
+    restart.addEventListener('click', () => {
+      playMIBack();
+      s1.clear(); topId = null; s3.clear(); s4.clear(); step = 0; render();
+    });
+    left.appendChild(back); left.appendChild(restart);
+
+    const dl = document.createElement('button'); dl.className = uid + '-btn ' + uid + '-dl';
+    dl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download profile';
+    dl.addEventListener('click', () => {
+      playMIDownload();
+      generateMotivationPDF({
+        topId: topId,
+        s1: Array.from(s1),
+        s3: Array.from(s3),
+        s4: Array.from(s4),
+        statements: STATEMENTS,
+        totals: totals
+      });
+    });
+
+    nav.appendChild(left); nav.appendChild(dl);
+    wrap.appendChild(nav);
+  }
+
+  render();
   return wrap;
 }
 
@@ -4321,6 +4627,20 @@ function addTrapezoid(svg, x, y, w, h, fill, r) {
 // ============================================================
 //  HEADER
 // ============================================================
+function buildBackToTopButton(label) {
+  const wrap = document.createElement('div');
+  wrap.className = 'btt-wrap';
+  const btn = document.createElement('button');
+  btn.className = 'btt-btn';
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg> ' + (label || 'Back to top');
+  btn.addEventListener('click', () => {
+    try { playReturn(); } catch(e) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  wrap.appendChild(btn);
+  return wrap;
+}
+
 function buildHeader(rightEl) {
   const header = document.createElement('div');
   header.className = 'header';
@@ -5105,12 +5425,13 @@ function buildDetailPage(seg, onBack) {
   const flightPlanCallout = seg.hasFlightPlanSheet ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> This section includes a Flight Plan Sheet below. Map out a support journey and download it as a PDF.</div>' : '';
   const actionPlannerCallout = seg.hasActionPlanner ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Run the Navigator above, then use the Action Planner below to turn your diagnosis into a committed plan.</div>' : '';
   const rehearsalCallout = seg.hasAssertionRehearsal ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> This section includes an Assertion Rehearsal below. Prepare and download a script for an upcoming conversation.</div>' : '';
+  const checkinCallout = seg.hasMomentumCheckin ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> This section includes a Pause Point Check-in below. Work through four short reflection steps and download your check-in as a PDF.</div>' : '';
   hero.innerHTML = `
     <div class="hero-blob1"></div><div class="hero-blob2"></div>
     <p class="hero-eyebrow">${seg.quadrant}</p>
     <h1>${seg.label}</h1>
     <p>${seg.desc}</p>
-    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}${rehearsalCallout}
+    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}${rehearsalCallout}${checkinCallout}
   `;
 
   const modelCard = document.createElement('div');
@@ -5692,6 +6013,76 @@ function buildDetailPage(seg, onBack) {
     cont.appendChild(arBook);
   }
 
+  // Inline Pause Point Check-in (Momentum)
+  if (seg.hasMomentumCheckin) {
+    const mcDiv = document.createElement('div');
+    mcDiv.className = 'ws-divider slide-up delay4';
+    mcDiv.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Pause Point Check-in</div><div class="ws-divider-line"></div>';
+    const mcCard = document.createElement('div');
+    mcCard.className = 'ws-card slide-up delay4';
+    mcCard.innerHTML = '<h2>Pause Point Check-in</h2><p class="ws-subtitle">Use this check-in as a regular, deliberate pause in your week. Work through the four short stages: notice what is going on, pull out the learning, attend to your energy, and re-engage with your sense of direction. Download your reflection at the end and revisit it next time.</p>';
+    const mcWrap = document.createElement('div');
+    mcWrap.style.marginTop = '18px';
+    mcWrap.appendChild(buildMomentumCheckin());
+    mcCard.appendChild(mcWrap);
+    const mcBook = document.createElement('div');
+    mcBook.className = 'book-card slide-up delay4';
+    mcBook.style.cssText = 'max-width:800px;margin:20px auto 0';
+    const mcBookIcon = document.createElement('div');
+    mcBookIcon.className = 'book-icon';
+    mcBookIcon.innerHTML = `<div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+    const mcBookInfo = document.createElement('div');
+    mcBookInfo.className = 'book-info';
+    mcBookInfo.innerHTML = '<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 89</div>';
+    mcBook.appendChild(mcBookIcon);
+    mcBook.appendChild(mcBookInfo);
+    cont.appendChild(mcDiv);
+    cont.appendChild(mcCard);
+    cont.appendChild(mcBook);
+  }
+
+  // Temporary preview links for sub-pages (will be replaced by the full
+  // companion-concepts panel in a later build step)
+  if (seg.id === 'individual-needs') {
+    const previews = [
+      {
+        title: 'Maslow as a tower of bricks',
+        text: 'A short interactive piece on why each level of motivation depends on the one below, and what happens when one is disturbed.',
+        icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3"  width="12" height="3.6" rx="1"/><rect x="6" y="7"  width="12" height="3.6" rx="1"/><rect x="6" y="11" width="12" height="3.6" rx="1"/><rect x="6" y="15" width="12" height="3.6" rx="1"/></svg>',
+        action: () => { try { playMINext(); } catch(e) {} goMaslow(); }
+      },
+      {
+        title: 'Building blocks for motivation',
+        text: 'Seven blocks that effective Leader-Developers focus on when motivating others and building self-esteem.',
+        icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/></svg>',
+        action: () => { try { playMINext(); } catch(e) {} goBuildingBlocks(); }
+      }
+    ];
+
+    previews.forEach(prev => {
+      const ccWrap = document.createElement('div');
+      ccWrap.className = 'companion-preview slide-up delay4';
+      ccWrap.innerHTML =
+        '<div class="cc-eyebrow">Companion concept &middot; preview</div>' +
+        '<div class="cc-row">' +
+        '<div class="cc-icon">' + prev.icon + '</div>' +
+        '<div class="cc-body"><div class="cc-title">' + prev.title + '</div>' +
+        '<div class="cc-text">' + prev.text + '</div></div>' +
+        '<button class="cc-cta">Open <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>' +
+        '</div>';
+      const ccBtn = ccWrap.querySelector('.cc-cta');
+      ccBtn.addEventListener('click', prev.action);
+      ccWrap.style.cursor = 'pointer';
+      ccWrap.addEventListener('click', (e) => {
+        if (e.target.closest('.cc-cta')) return;
+        prev.action();
+      });
+      cont.appendChild(ccWrap);
+    });
+  }
+
+  cont.appendChild(buildBackToTopButton('Back to top'));
+
   page.appendChild(buildHeader(headerBtnGroup));
   page.appendChild(cont);
   return page;
@@ -5814,6 +6205,7 @@ function buildWorksheetPage(seg) {
   cont.appendChild(hero);
   cont.appendChild(wsCard);
   cont.appendChild(wsBookCard);
+  cont.appendChild(buildBackToTopButton('Back to top'));
 
   page.appendChild(buildHeader(btnRow));
   page.appendChild(cont);
@@ -5832,6 +6224,552 @@ function buildWorksheetPage(seg) {
   }, 100);
 
   return page;
+}
+
+// ============================================================
+//  MASLOW SUB-PAGE (companion concept to D1: Know individual needs)
+// ============================================================
+function goMaslow() {
+  const parentSeg = SEGMENTS.find(s => s.id === 'individual-needs');
+  if (!parentSeg) return goHome();
+  window.location.hash = '#/individual-needs/maslow';
+  showPage(buildMaslowPage(parentSeg));
+}
+
+function buildMaslowPage(parentSeg) {
+  const page = document.createElement('div');
+  page.className = 'page';
+  page.style.background = '#EAF4FB';
+
+  const qColour = '#009FA0';
+  const qColourDark = '#007579';
+
+  // Header buttons
+  const backBtn = document.createElement('button');
+  backBtn.className = 'back-btn';
+  backBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back to ' + parentSeg.label;
+  backBtn.addEventListener('click', () => { playReturn(); goDetail('individual-needs'); });
+
+  const wheelBtn = document.createElement('button');
+  wheelBtn.className = 'back-btn';
+  wheelBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Return to wheel';
+  wheelBtn.addEventListener('click', () => { playReturn(); goHome(); });
+
+  const btnRow = document.createElement('div');
+  btnRow.className = 'ws-back-btns';
+  btnRow.appendChild(backBtn);
+  btnRow.appendChild(wheelBtn);
+
+  // Hero
+  const hero = document.createElement('div');
+  hero.className = 'hero slide-up delay1';
+  hero.style.background = qColour;
+  hero.innerHTML = `
+    <div class="hero-blob1"></div><div class="hero-blob2"></div>
+    <p class="hero-eyebrow">Companion concept &middot; Developing</p>
+    <h1>Maslow as a tower of bricks</h1>
+    <p>Maslow's classic five-level hierarchy of needs, presented as a tower. Each level rests on the one below, and when one is disturbed, what stands above it becomes unstable.</p>
+  `;
+
+  // Thread banner
+  const threadBanner = document.createElement('div');
+  threadBanner.className = 'thread-banner slide-up delay3';
+  threadBanner.innerHTML = '<div class="thread-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="thread-text"><span class="thread-main">High Challenge &amp; High Support</span><span class="thread-sub">with Positive Regard &amp; Genuineness</span></div>';
+
+  // Model card with the tower
+  const modelCard = document.createElement('div');
+  modelCard.className = 'model-card slide-up delay2';
+  modelCard.innerHTML = `
+    <p class="model-eyebrow">Model</p>
+    <h2>Maslow's Hierarchy of Needs (re-imagined)</h2>
+    <p class="desc">Maslow's hierarchy is most often shown as a pyramid: meet the lower needs first, and the higher ones become available. We can also think of this model as a tower of bricks. Each block bears weight from above. Take one out, through change, threat, or neglect, and the structure does not just lose that level. It becomes unstable as a whole.</p>
+  `;
+  modelCard.appendChild(buildMaslowTowerVisual());
+
+  // Key takeaways
+  const bulletsCard = document.createElement('div');
+  bulletsCard.className = 'bullets-card slide-up delay3';
+  bulletsCard.innerHTML = '<h2>Key Takeaways</h2>';
+  const bullets = [
+    'Each brick depends on the one below: take one out and what stands above becomes unstable.',
+    'Self-esteem and self-actualisation are powerful motivators, but only when security and belonging are secure.',
+    'When leading through change, address what is being threatened lower in the tower before reaching for inspiration at the top.'
+  ];
+  bullets.forEach(b => {
+    const item = document.createElement('div');
+    item.className = 'bullet-item';
+    item.style.borderLeft = '3px solid ' + qColour;
+    item.textContent = b;
+    bulletsCard.appendChild(item);
+  });
+
+  // Note card
+  const noteCard = document.createElement('div');
+  noteCard.className = 'note-card slide-up delay4';
+  noteCard.style.background = qColour;
+  noteCard.innerHTML = '<p class="note-eyebrow">What this means for leaders</p><p>Change initiatives often focus on vision, purpose and growth, the top of the tower. But people can only engage with those when their foundations feel secure. If you are leading through uncertainty, address the lower blocks first. Self-esteem and self-actualisation will follow once security and belonging are firm.</p>';
+
+  // Book reference
+  const bookCard = document.createElement('div');
+  bookCard.className = 'book-card slide-up delay4';
+  bookCard.innerHTML = `<div class="book-icon"><div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div></div><div class="book-info"><div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 218</div></div>`;
+
+  const rightCol = document.createElement('div');
+  rightCol.className = 'right-col';
+  rightCol.appendChild(bulletsCard);
+  rightCol.appendChild(noteCard);
+  rightCol.appendChild(bookCard);
+
+  const detailGrid = document.createElement('div');
+  detailGrid.className = 'detail-grid';
+  detailGrid.appendChild(modelCard);
+  detailGrid.appendChild(rightCol);
+
+  const cont = document.createElement('div');
+  cont.className = 'container';
+  cont.appendChild(hero);
+  cont.appendChild(threadBanner);
+  cont.appendChild(detailGrid);
+  cont.appendChild(buildBackToTopButton('Back to top'));
+
+  page.appendChild(buildHeader(btnRow));
+  page.appendChild(cont);
+  return page;
+}
+
+function buildMaslowTowerVisual() {
+  const uid = 'mas' + Math.random().toString(36).slice(2,7);
+
+  // Levels from top to bottom (5 = self-actualisation, 1 = physiological)
+  const LEVELS = [
+    { num: 5, label: 'Self-actualisation', sub: 'Creative; using full potential; determiner of your own life',
+      msg: 'A person may keep performing, but the work feels less meaningful. Without scope to be creative or use their full potential, they may look elsewhere to find it.' },
+    { num: 4, label: 'Self-esteem', sub: 'Recognition; feeling worthwhile; respected',
+      msg: 'Without recognition or feeling worthwhile, self-actualisation also wobbles. Growth and contribution feel hollow when nobody notices or respects the work.' },
+    { num: 3, label: 'Belonging', sub: 'Love; acceptance; part of a group',
+      msg: 'Isolation destabilises self-esteem and self-actualisation. Achievement and growth feel empty without acceptance or being part of a group.' },
+    { num: 2, label: 'Security', sub: 'Protection from threat and danger',
+      msg: 'When people feel under threat, belonging, self-esteem and self-actualisation all become hard to access. They retreat to protect themselves.' },
+    { num: 1, label: 'Physiological', sub: 'Food, water, shelter',
+      msg: 'With basic needs unmet, nothing above can stand. Food, water and shelter are the floor that everything else rests on.' }
+  ];
+
+  const wrap = document.createElement('div');
+  wrap.className = uid + '-wrap';
+
+  // Inject scoped styles
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-wrap{margin-top:18px}
+    .${uid}-instr{display:flex;align-items:center;gap:10px;background:#f0fbfb;border-radius:10px;padding:11px 16px;margin-bottom:18px;border-left:3px solid #009FA0}
+    .${uid}-instr-icon{flex:0 0 24px;color:#007579}
+    .${uid}-instr-text{font-size:13.5px;color:#1A3A5C;line-height:1.55;font-weight:600}
+    .${uid}-stage{display:flex;flex-direction:column;align-items:center;padding:28px 16px 0;position:relative;perspective:1200px;min-height:460px}
+    .${uid}-tower{display:flex;flex-direction:column;gap:6px;align-items:center;position:relative;z-index:2;will-change:transform}
+    .${uid}-brick{display:flex;align-items:center;gap:14px;width:340px;padding:13px 20px 13px 16px;background:linear-gradient(180deg,#01A4AB 0%,#007579 100%);color:white;border-radius:6px;cursor:pointer;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -2px 0 rgba(0,0,0,.18),0 4px 10px rgba(0,97,108,.18);transition:transform .28s ease, box-shadow .28s ease, opacity .6s ease;transform-origin:center}
+    .${uid}-brick::before{content:'';position:absolute;left:6px;right:6px;top:5px;height:1px;background:rgba(255,255,255,.22);border-radius:2px;pointer-events:none}
+    .${uid}-brick::after{content:'';position:absolute;left:18px;top:50%;width:30px;height:1px;background:rgba(255,255,255,.18);transform:translateY(-50%);pointer-events:none;display:none}
+    .${uid}-brick:hover{transform:translateY(-2px) scale(1.02);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -2px 0 rgba(0,0,0,.22),0 8px 18px rgba(0,97,108,.32)}
+    .${uid}-brick:active{transform:translateY(0) scale(.99)}
+    .${uid}-num{flex:0 0 38px;width:38px;height:38px;border-radius:8px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:22px;letter-spacing:.02em;border:1.5px solid rgba(255,255,255,.32)}
+    .${uid}-text{flex:1;display:flex;flex-direction:column;gap:1px;min-width:0}
+    .${uid}-label{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:18px;letter-spacing:.04em;text-transform:uppercase;line-height:1.1}
+    .${uid}-sub{font-size:11.5px;color:rgba(255,255,255,.82);line-height:1.4;font-weight:500}
+    .${uid}-brick.removed{transform:translateX(180px) rotate(8deg);opacity:0;pointer-events:none;transition:transform .55s cubic-bezier(.55,.085,.68,.53), opacity .55s ease}
+    .${uid}-brick.tumble{pointer-events:none}
+    .${uid}-brick.tumble.fall-l{animation:${uid}tumbleL .85s cubic-bezier(.55,.085,.68,.53) forwards}
+    .${uid}-brick.tumble.fall-r{animation:${uid}tumbleR .85s cubic-bezier(.55,.085,.68,.53) forwards}
+    @keyframes ${uid}tumbleL{
+      0%{transform:translate(0,0) rotate(0);opacity:1}
+      30%{transform:translate(-30px,40px) rotate(-22deg);opacity:.92}
+      100%{transform:translate(-160px,360px) rotate(-72deg);opacity:0}
+    }
+    @keyframes ${uid}tumbleR{
+      0%{transform:translate(0,0) rotate(0);opacity:1}
+      30%{transform:translate(30px,40px) rotate(22deg);opacity:.92}
+      100%{transform:translate(160px,360px) rotate(72deg);opacity:0}
+    }
+    .${uid}-ground{position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(180deg,rgba(26,58,92,.12) 0%,rgba(26,58,92,0) 100%);z-index:1}
+    .${uid}-msg{margin-top:22px;background:white;border:2px solid #e4edf5;border-radius:14px;padding:16px 20px;min-height:78px;transition:all .35s ease}
+    .${uid}-msg.impact{border-color:#F4A766;background:linear-gradient(135deg,#fff8ef 0%,#fff 80%);box-shadow:0 4px 18px rgba(244,167,102,.18)}
+    .${uid}-msg-default{display:flex;align-items:center;gap:12px;color:#667788;font-size:13.5px;line-height:1.55;font-style:italic}
+    .${uid}-msg-default-icon{flex:0 0 22px;color:#01A4AB}
+    .${uid}-msg-eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#C68548;margin-bottom:5px}
+    .${uid}-msg-text{font-size:13.5px;line-height:1.6;color:#5C3819}
+    .${uid}-rebuild-row{display:flex;justify-content:center;margin-top:18px}
+    .${uid}-rebuild{background:#01A4AB;color:white;border:none;border-radius:22px;padding:11px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(1,164,171,.28);transition:all .18s ease;opacity:0;transform:translateY(6px);pointer-events:none}
+    .${uid}-rebuild.show{opacity:1;transform:translateY(0);pointer-events:auto}
+    .${uid}-rebuild:hover{background:#007579;transform:translateY(-2px);box-shadow:0 8px 22px rgba(1,164,171,.42)}
+  `;
+  wrap.appendChild(styleEl);
+
+  // Instruction
+  const instr = document.createElement('div');
+  instr.className = uid + '-instr';
+  instr.innerHTML =
+    '<div class="' + uid + '-instr-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>' +
+    '<div class="' + uid + '-instr-text">Click any brick to see what happens when it is removed.</div>';
+  wrap.appendChild(instr);
+
+  // Stage with tower
+  const stage = document.createElement('div');
+  stage.className = uid + '-stage';
+
+  const tower = document.createElement('div');
+  tower.className = uid + '-tower';
+
+  const ground = document.createElement('div');
+  ground.className = uid + '-ground';
+
+  const brickEls = {};
+  LEVELS.forEach(level => {
+    const brick = document.createElement('div');
+    brick.className = uid + '-brick';
+    brick.dataset.level = level.num;
+    brick.innerHTML =
+      '<div class="' + uid + '-num">' + level.num + '</div>' +
+      '<div class="' + uid + '-text">' +
+      '<span class="' + uid + '-label">' + level.label + '</span>' +
+      '<span class="' + uid + '-sub">' + level.sub + '</span></div>';
+    brick.addEventListener('click', () => removeBrick(level.num));
+    tower.appendChild(brick);
+    brickEls[level.num] = brick;
+  });
+
+  stage.appendChild(tower);
+  stage.appendChild(ground);
+  wrap.appendChild(stage);
+
+  // Message panel
+  const msg = document.createElement('div');
+  msg.className = uid + '-msg';
+  msg.innerHTML =
+    '<div class="' + uid + '-msg-default">' +
+    '<div class="' + uid + '-msg-default-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>' +
+    '<div>The tower is whole. Click any brick to disturb it.</div></div>';
+  wrap.appendChild(msg);
+
+  // Rebuild button
+  const rebuildRow = document.createElement('div');
+  rebuildRow.className = uid + '-rebuild-row';
+  const rebuildBtn = document.createElement('button');
+  rebuildBtn.className = uid + '-rebuild';
+  rebuildBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 14.85-6.85L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-14.85 6.85L3 16"/><path d="M3 21v-5h5"/></svg> Rebuild the tower';
+  rebuildBtn.addEventListener('click', rebuild);
+  rebuildRow.appendChild(rebuildBtn);
+  wrap.appendChild(rebuildRow);
+
+  let isAnimating = false;
+
+  function removeBrick(level) {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    LEVELS.forEach(lv => {
+      const el = brickEls[lv.num];
+      if (lv.num === level) {
+        el.classList.add('removed');
+      } else if (lv.num > level) {
+        // Bricks above the removed one tumble; closer to the gap goes first
+        const distance = lv.num - level;
+        const fallDir = (distance % 2 === 1) ? 'fall-l' : 'fall-r';
+        const delay = (distance - 1) * 0.10;
+        el.style.animationDelay = delay + 's';
+        setTimeout(() => {
+          el.classList.add('tumble', fallDir);
+        }, 80);
+      }
+    });
+
+    // Update message after a brief beat to feel reactive
+    const removed = LEVELS.find(l => l.num === level);
+    setTimeout(() => {
+      msg.classList.add('impact');
+      msg.innerHTML =
+        '<div class="' + uid + '-msg-eyebrow">' + removed.label + ' removed</div>' +
+        '<div class="' + uid + '-msg-text">' + removed.msg + '</div>';
+    }, 200);
+
+    // Show rebuild button after animation settles
+    setTimeout(() => {
+      rebuildBtn.classList.add('show');
+      isAnimating = false;
+    }, 1100);
+
+    try { playReturn(); } catch(e) {}
+  }
+
+  function rebuild() {
+    if (isAnimating) return;
+    isAnimating = true;
+    LEVELS.forEach(lv => {
+      const el = brickEls[lv.num];
+      el.classList.remove('removed', 'tumble', 'fall-l', 'fall-r');
+      el.style.animationDelay = '';
+    });
+    msg.classList.remove('impact');
+    msg.innerHTML =
+      '<div class="' + uid + '-msg-default">' +
+      '<div class="' + uid + '-msg-default-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>' +
+      '<div>The tower is whole. Click any brick to disturb it.</div></div>';
+    rebuildBtn.classList.remove('show');
+    try { playMIBegin(); } catch(e) {}
+    setTimeout(() => { isAnimating = false; }, 400);
+  }
+
+  return wrap;
+}
+
+// ============================================================
+//  BUILDING BLOCKS SUB-PAGE (companion concept to D1)
+// ============================================================
+function goBuildingBlocks() {
+  const parentSeg = SEGMENTS.find(s => s.id === 'individual-needs');
+  if (!parentSeg) return goHome();
+  window.location.hash = '#/individual-needs/building-blocks';
+  showPage(buildBuildingBlocksPage(parentSeg));
+}
+
+function buildBuildingBlocksPage(parentSeg) {
+  const page = document.createElement('div');
+  page.className = 'page';
+  page.style.background = '#EAF4FB';
+
+  const qColour = '#009FA0';
+
+  // Header buttons
+  const backBtn = document.createElement('button');
+  backBtn.className = 'back-btn';
+  backBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back to ' + parentSeg.label;
+  backBtn.addEventListener('click', () => { playReturn(); goDetail('individual-needs'); });
+
+  const wheelBtn = document.createElement('button');
+  wheelBtn.className = 'back-btn';
+  wheelBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Return to wheel';
+  wheelBtn.addEventListener('click', () => { playReturn(); goHome(); });
+
+  const btnRow = document.createElement('div');
+  btnRow.className = 'ws-back-btns';
+  btnRow.appendChild(backBtn);
+  btnRow.appendChild(wheelBtn);
+
+  // Hero
+  const hero = document.createElement('div');
+  hero.className = 'hero slide-up delay1';
+  hero.style.background = qColour;
+  hero.innerHTML = `
+    <div class="hero-blob1"></div><div class="hero-blob2"></div>
+    <p class="hero-eyebrow">Companion concept &middot; Developing</p>
+    <h1>Building blocks for motivation</h1>
+    <p>Effective Leader-Developers focus on these seven blocks because they know they are an important starting point when motivating others and building their self-esteem.</p>
+  `;
+
+  // Thread banner
+  const threadBanner = document.createElement('div');
+  threadBanner.className = 'thread-banner slide-up delay3';
+  threadBanner.innerHTML = '<div class="thread-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="thread-text"><span class="thread-main">High Challenge &amp; High Support</span><span class="thread-sub">with Positive Regard &amp; Genuineness</span></div>';
+
+  // Model card
+  const modelCard = document.createElement('div');
+  modelCard.className = 'model-card slide-up delay2';
+  modelCard.innerHTML = `
+    <p class="model-eyebrow">Model</p>
+    <h2>Seven blocks for motivation</h2>
+    <p class="desc">Effective Leader-Developers have developed their skill in setting the right situation or context for learning and growth. They have done this by focusing on the following building blocks because they know these are an important starting point when motivating others and building their self-esteem.</p>
+  `;
+  modelCard.appendChild(buildBuildingBlocksVisual());
+
+  // Key takeaways
+  const bulletsCard = document.createElement('div');
+  bulletsCard.className = 'bullets-card slide-up delay3';
+  bulletsCard.innerHTML = '<h2>Key Takeaways</h2>';
+  const bullets = [
+    'Effective leaders set the situation as much as the task: motivation grows from context, not just content.',
+    'High Expectations and High Support sit on either side of every block. Drop one and motivation falters.',
+    'Goal clarity, early success, and constant reinforcement create the cycle that builds self-esteem and sustains motivation.'
+  ];
+  bullets.forEach(b => {
+    const item = document.createElement('div');
+    item.className = 'bullet-item';
+    item.style.borderLeft = '3px solid ' + qColour;
+    item.textContent = b;
+    bulletsCard.appendChild(item);
+  });
+
+  // Note card
+  const noteCard = document.createElement('div');
+  noteCard.className = 'note-card slide-up delay4';
+  noteCard.style.background = qColour;
+  noteCard.innerHTML = '<p class="note-eyebrow">What this means for leaders</p><p>These seven blocks are not a checklist to tick off. They describe how an effective Leader-Developer creates the conditions in which motivation grows. The skill lies in keeping all seven in play, calibrated to the individual and the moment.</p>';
+
+  // Book reference
+  const bookCard = document.createElement('div');
+  bookCard.className = 'book-card slide-up delay4';
+  bookCard.innerHTML = `<div class="book-icon"><div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div></div><div class="book-info"><div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 221-223</div></div>`;
+
+  const rightCol = document.createElement('div');
+  rightCol.className = 'right-col';
+  rightCol.appendChild(bulletsCard);
+  rightCol.appendChild(noteCard);
+  rightCol.appendChild(bookCard);
+
+  const detailGrid = document.createElement('div');
+  detailGrid.className = 'detail-grid';
+  detailGrid.appendChild(modelCard);
+  detailGrid.appendChild(rightCol);
+
+  const cont = document.createElement('div');
+  cont.className = 'container';
+  cont.appendChild(hero);
+  cont.appendChild(threadBanner);
+  cont.appendChild(detailGrid);
+  cont.appendChild(buildBackToTopButton('Back to top'));
+
+  page.appendChild(buildHeader(btnRow));
+  page.appendChild(cont);
+  return page;
+}
+
+function buildBuildingBlocksVisual() {
+  const uid = 'bb' + Math.random().toString(36).slice(2,7);
+
+  const BLOCKS = [
+    { num: 1, title: 'Have high expectations',
+      text: 'If your expectations about someone\u2019s performance are low or moderate, you will get just that. If your expectations are high (but not artificially or unrealistically so) you will tend to get that more. High Expectations are essential for the Challenge part of High Challenge-High Support.' },
+    { num: 2, title: 'Create goal focus and clarity',
+      text: 'This is where Explicitness is important. There is a direct relationship between goal clarity and motivation; if the goal isn\u2019t clear and felt worthwhile, motivation, even if high initially, won\u2019t be sustained. Such a situation can even be experienced as stressful.' },
+    { num: 3, title: 'Build (realistic) self-esteem',
+      sub: 'Make the performance level attainable',
+      text: 'Enable and facilitate an early success and celebrate and build on it. If people feel the goal they are being asked to pursue is too difficult or impossible, or the effort and rewards balance is not right, their motivation will be low. This fits with working in a series of smaller steps, reinforced at each stage with rewards or consequences appropriate to the individual.' },
+    { num: 4, title: 'Reinforce good performance',
+      text: 'Catch someone doing something right and encourage them to do more of the same, giving constant feedback.' },
+    { num: 5, title: 'Work to \u2018meta\u2019 goals',
+      text: 'Create a world to which people want to belong through vision and common purpose, so their energies and intrinsic motivation are engaged; developing in partnership with the person, providing the context so they can create their own success, and not just narrow task skills.' },
+    { num: 6, title: 'Provide High Support',
+      text: 'The necessary complement to High Challenge, but more than that, so that your relationship is valued, and you are seen as a trusted mentor.' },
+    { num: 7, title: 'Apply Situational Leadership',
+      text: 'This is concerned with flexing your style to each person\u2019s level of development. It will be described in more detail in the next section, as skill in this area is key and where The Gear Change is felt most acutely.' }
+  ];
+
+  const wrap = document.createElement('div');
+  wrap.className = uid + '-wrap';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-wrap{margin-top:18px}
+    .${uid}-instr{display:flex;align-items:center;gap:10px;background:#f0fbfb;border-radius:10px;padding:11px 16px;margin-bottom:16px;border-left:3px solid #009FA0}
+    .${uid}-instr-icon{flex:0 0 22px;color:#007579}
+    .${uid}-instr-text{font-size:13.5px;color:#1A3A5C;line-height:1.55;font-weight:600;flex:1}
+    .${uid}-controls{display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px}
+    .${uid}-ctrl-btn{background:#f0f5fa;color:#556677;border:none;border-radius:18px;padding:6px 14px;font-family:"Barlow",sans-serif;font-weight:700;font-size:11.5px;cursor:pointer;transition:all .15s ease;display:inline-flex;align-items:center;gap:6px;letter-spacing:.04em}
+    .${uid}-ctrl-btn:hover{background:#e0ecf5;color:#1A3A5C}
+    .${uid}-ctrl-btn svg{width:11px;height:11px}
+    .${uid}-list{display:flex;flex-direction:column;gap:10px;position:relative}
+    .${uid}-list::before{content:'';position:absolute;left:0;right:0;bottom:-8px;height:6px;background:linear-gradient(180deg,rgba(26,58,92,.10),rgba(26,58,92,0));border-radius:3px;pointer-events:none}
+    .${uid}-card{background:white;border:1.5px solid #d4e3f0;border-left:4px solid #01A4AB;border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s ease;position:relative;box-shadow:0 2px 0 rgba(26,58,92,.06),0 4px 12px rgba(0,97,108,.05);animation:${uid}fi .35s ease both}
+    .${uid}-card:hover{transform:translateY(-1px);box-shadow:0 3px 0 rgba(26,58,92,.08),0 8px 18px rgba(0,97,108,.10);border-color:#01A4AB}
+    .${uid}-card.open{box-shadow:0 3px 0 rgba(1,164,171,.20),0 10px 24px rgba(0,97,108,.16);border-color:#01A4AB}
+    .${uid}-card.open .${uid}-head{background:linear-gradient(180deg,#f7fbfb 0%,#fff 100%)}
+    .${uid}-head{display:flex;align-items:center;gap:14px;padding:13px 16px 13px 14px;position:relative;transition:background .2s ease}
+    .${uid}-num{flex:0 0 36px;width:36px;height:36px;border-radius:8px;background:linear-gradient(180deg,#01A4AB 0%,#007579 100%);color:white;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:18px;letter-spacing:.02em;box-shadow:inset 0 1px 0 rgba(255,255,255,.20),inset 0 -2px 0 rgba(0,0,0,.18),0 2px 6px rgba(0,97,108,.18)}
+    .${uid}-head-text{flex:1;min-width:0}
+    .${uid}-title{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:18px;color:#1A3A5C;line-height:1.2;letter-spacing:.01em}
+    .${uid}-sub{font-size:12px;color:#667788;margin-top:3px;line-height:1.45;font-weight:500;font-style:italic}
+    .${uid}-chev{flex:0 0 20px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:#8fa0b0;transition:transform .25s ease}
+    .${uid}-card.open .${uid}-chev{transform:rotate(180deg);color:#01A4AB}
+    .${uid}-body{max-height:0;overflow:hidden;transition:max-height .3s ease,opacity .25s ease;opacity:0}
+    .${uid}-card.open .${uid}-body{max-height:500px;opacity:1;transition:max-height .35s ease, opacity .35s ease .05s}
+    .${uid}-body-inner{padding:0 16px 14px 64px;font-size:13.5px;color:#334455;line-height:1.65;border-top:1px dashed #e4edf5;padding-top:13px;margin-top:0}
+    @keyframes ${uid}fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  `;
+  wrap.appendChild(styleEl);
+
+  // Instruction
+  const instr = document.createElement('div');
+  instr.className = uid + '-instr';
+  instr.innerHTML =
+    '<div class="' + uid + '-instr-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>' +
+    '<div class="' + uid + '-instr-text">Tap any block to read more, or use the controls on the right to expand them all at once.</div>';
+  wrap.appendChild(instr);
+
+  // Controls
+  const controls = document.createElement('div');
+  controls.className = uid + '-controls';
+  const expandAllBtn = document.createElement('button');
+  expandAllBtn.className = uid + '-ctrl-btn';
+  expandAllBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> Show all';
+  const collapseAllBtn = document.createElement('button');
+  collapseAllBtn.className = uid + '-ctrl-btn';
+  collapseAllBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg> Collapse all';
+  controls.appendChild(expandAllBtn);
+  controls.appendChild(collapseAllBtn);
+  wrap.appendChild(controls);
+
+  // Block list
+  const list = document.createElement('div');
+  list.className = uid + '-list';
+
+  const cardEls = [];
+  BLOCKS.forEach(block => {
+    const card = document.createElement('div');
+    card.className = uid + '-card';
+    card.style.animationDelay = (block.num * 0.04) + 's';
+
+    const head = document.createElement('div');
+    head.className = uid + '-head';
+
+    const num = document.createElement('div');
+    num.className = uid + '-num';
+    num.textContent = block.num;
+
+    const headText = document.createElement('div');
+    headText.className = uid + '-head-text';
+    headText.innerHTML =
+      '<div class="' + uid + '-title">' + block.title + '</div>' +
+      (block.sub ? '<div class="' + uid + '-sub">' + block.sub + '</div>' : '');
+
+    const chev = document.createElement('div');
+    chev.className = uid + '-chev';
+    chev.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+    head.appendChild(num);
+    head.appendChild(headText);
+    head.appendChild(chev);
+
+    const body = document.createElement('div');
+    body.className = uid + '-body';
+    const bodyInner = document.createElement('div');
+    bodyInner.className = uid + '-body-inner';
+    bodyInner.textContent = block.text;
+    body.appendChild(bodyInner);
+
+    card.appendChild(head);
+    card.appendChild(body);
+
+    card.addEventListener('click', () => {
+      const wasOpen = card.classList.contains('open');
+      card.classList.toggle('open');
+      try {
+        if (wasOpen) playMIDeselect(); else playMISelect();
+      } catch(e) {}
+    });
+
+    list.appendChild(card);
+    cardEls.push(card);
+  });
+
+  wrap.appendChild(list);
+
+  expandAllBtn.addEventListener('click', () => {
+    cardEls.forEach(c => c.classList.add('open'));
+    try { playMINext(); } catch(e) {}
+  });
+  collapseAllBtn.addEventListener('click', () => {
+    cardEls.forEach(c => c.classList.remove('open'));
+    try { playMIBack(); } catch(e) {}
+  });
+
+  return wrap;
 }
 
 // ============================================================
@@ -5992,6 +6930,8 @@ function handleHash() {
   if (hash === '#/coming-soon') { goComingSoon(); return; }
   if (hash.startsWith('#/')) {
     const path = hash.slice(2);
+    if (path === 'individual-needs/maslow') { goMaslow(); return; }
+    if (path === 'individual-needs/building-blocks') { goBuildingBlocks(); return; }
     if (path.endsWith('/worksheet')) {
       const id = path.replace('/worksheet','');
       const seg = SEGMENTS.find(s => s.id === id);
@@ -7975,6 +8915,390 @@ function downloadAssertionRehearsalPDF(state) {
   } catch(e) { console.error('PDF error', e); }
 }
 
+// ── Pause Point Check-in (Resiliently maintain momentum) ──
+function buildMomentumCheckin() {
+  const uid = 'mc' + Math.random().toString(36).slice(2, 7);
+  let step = 1;
+  const TOTAL = 4;
+  const state = {
+    pauseThreats: '', pauseEnergy: '',
+    learnForward: '', learnDifferent: '',
+    energiseRestores: '', energiseLast: '',
+    engageDirection: '', engageNextSteps: ''
+  };
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
+    .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
+    .${uid}-pseg.done{background:#1A3A5C}
+    .${uid}-pseg.active{background:#1A3A5C}
+    .${uid}-pgap{width:6px;flex:0 0 6px}
+
+    .${uid}-hd{margin-bottom:18px;display:flex;align-items:flex-start;gap:14px}
+    .${uid}-hd-icon{flex:0 0 50px;width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,#1A3A5C 0%,#0d2440 100%);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .${uid}-hd-icon::before{content:'';position:absolute;width:80%;height:80%;border-radius:50%;background:radial-gradient(circle,rgba(244,167,102,.6) 0%,transparent 65%);top:60%;left:60%;transform:translate(-50%,-50%);pointer-events:none}
+    .${uid}-hd-icon-dot{position:relative;width:7px;height:7px;border-radius:50%;background:#FFE2B5;box-shadow:0 0 12px rgba(244,167,102,.95)}
+    .${uid}-hd-text{flex:1;min-width:0}
+    .${uid}-hnum{font-size:11px;font-weight:700;color:#8fa0b0;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#1A3A5C;line-height:1.15}
+    .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
+
+    .${uid}-lbl{font-size:12px;font-weight:600;color:#445566;margin-bottom:6px;margin-top:14px;letter-spacing:.04em;display:block}
+    .${uid}-inp{width:100%;border:2px solid #d4e3f0;border-radius:10px;padding:10px 14px;font-family:"Barlow",sans-serif;font-size:14px;color:#222;resize:vertical;transition:border-color .2s;outline:none;background:white;box-sizing:border-box;line-height:1.6}
+    .${uid}-inp:focus{border-color:#1A3A5C}
+    .${uid}-ta{min-height:84px}
+    .${uid}-hint{font-size:11.5px;color:#99aabb;margin-top:4px;font-style:italic;line-height:1.55}
+
+    .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+    .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
+    .${uid}-ghost{background:#f0f5fa;color:#556677}
+    .${uid}-ghost:hover{background:#e0ecf5}
+    .${uid}-primary{background:#1A3A5C;color:white;box-shadow:0 4px 16px rgba(26,58,92,.28)}
+    .${uid}-primary:hover{background:#0f2640;transform:translateY(-1px)}
+    .${uid}-dl{background:#1A3A5C;color:white;box-shadow:0 6px 20px rgba(26,58,92,.32);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{background:#0f2640;transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,58,92,.42)}
+
+    .${uid}-preview{margin-top:24px;border-radius:14px;overflow:hidden;animation:${uid}Fi .35s ease both;box-shadow:0 4px 18px rgba(26,58,92,.10)}
+    .${uid}-prevhd{padding:16px 20px;background:linear-gradient(135deg,#1A3A5C 0%,#0d2440 100%);position:relative;overflow:hidden}
+    .${uid}-prevhd::after{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(244,167,102,.42) 0%,transparent 65%);pointer-events:none}
+    .${uid}-prevey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px;position:relative}
+    .${uid}-prevname{font-family:"Barlow Condensed",sans-serif;font-size:21px;font-weight:800;color:white;line-height:1.1;position:relative}
+    .${uid}-prevdate{font-size:12px;color:rgba(255,255,255,.78);margin-top:5px;position:relative}
+    .${uid}-prevbody{background:white;padding:14px 20px 12px}
+    .${uid}-prevsection{margin-bottom:13px;padding-left:14px;border-left:3px solid #F4A766}
+    .${uid}-prevseclbl{font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#1A3A5C;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .${uid}-prevsubrow{margin-bottom:6px}
+    .${uid}-prevsublbl{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#99aabb;margin-bottom:2px}
+    .${uid}-prevsubval{font-size:13px;color:#222;line-height:1.55}
+
+    @keyframes ${uid}Fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  `;
+  wrap.appendChild(styleEl);
+
+  function buildProg() {
+    const prog = document.createElement('div'); prog.className = uid + '-prog';
+    for (let i = 1; i <= TOTAL; i++) {
+      const seg = document.createElement('div'); seg.className = uid + '-pseg';
+      if (i < step) seg.classList.add('done'); else if (i === step) seg.classList.add('active');
+      prog.appendChild(seg);
+      if (i < TOTAL) { const g = document.createElement('div'); g.className = uid + '-pgap'; prog.appendChild(g); }
+    }
+    return prog;
+  }
+
+  function buildPreview() {
+    const today = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const pr = document.createElement('div'); pr.className = uid + '-preview';
+    const hd = document.createElement('div'); hd.className = uid + '-prevhd';
+    hd.innerHTML = `<div class="${uid}-prevey">Pause Point Check-in</div><div class="${uid}-prevname">A reflective pause</div><div class="${uid}-prevdate">${today}</div>`;
+    pr.appendChild(hd);
+    const body = document.createElement('div'); body.className = uid + '-prevbody';
+
+    const sections = [
+      { label:'Pause and notice', filled: !!(state.pauseThreats || state.pauseEnergy),
+        rows: [
+          { lbl:'Threatened to throw me off course', val: state.pauseThreats },
+          { lbl:'Where my energy and attention went', val: state.pauseEnergy }
+        ]},
+      { label:'Pull out the learning', filled: !!(state.learnForward || state.learnDifferent),
+        rows: [
+          { lbl:'Learning to carry forward', val: state.learnForward },
+          { lbl:'What I would do differently', val: state.learnDifferent }
+        ]},
+      { label:'Re-energise', filled: !!(state.energiseRestores || state.energiseLast),
+        rows: [
+          { lbl:'What restores me', val: state.energiseRestores },
+          { lbl:'When I last gave time to these', val: state.energiseLast }
+        ]},
+      { label:'Re-engage with vision', filled: !!(state.engageDirection || state.engageNextSteps),
+        rows: [
+          { lbl:'My sense of direction and focus', val: state.engageDirection },
+          { lbl:'Next steps for me, my team, and individuals', val: state.engageNextSteps }
+        ]}
+    ];
+
+    sections.forEach(sec => {
+      if (!sec.filled) return;
+      const sd = document.createElement('div'); sd.className = uid + '-prevsection';
+      let inner = `<div class="${uid}-prevseclbl"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3.8" fill="#F4A766"/></svg>${sec.label}</div>`;
+      sec.rows.forEach(r => {
+        if (r.val && r.val.trim()) {
+          const safe = r.val.replace(/[<>]/g, c => c === '<' ? '&lt;' : '&gt;');
+          const truncated = safe.length > 160 ? safe.substring(0, 160) + '...' : safe;
+          inner += `<div class="${uid}-prevsubrow"><div class="${uid}-prevsublbl">${r.lbl}</div><div class="${uid}-prevsubval">${truncated.replace(/\n/g,'<br>')}</div></div>`;
+        }
+      });
+      sd.innerHTML = inner;
+      body.appendChild(sd);
+    });
+
+    pr.appendChild(body);
+    return pr;
+  }
+
+  function hasAnyContent() {
+    return Object.values(state).some(v => v && v.trim());
+  }
+
+  function render() {
+    [...wrap.children].forEach(c => { if (c !== styleEl) c.remove(); });
+    wrap.appendChild(buildProg());
+    const cont = document.createElement('div');
+    cont.style.animation = uid + 'Fi .3s ease both';
+    if (step === 1) s1(cont);
+    else if (step === 2) s2(cont);
+    else if (step === 3) s3(cont);
+    else if (step === 4) s4(cont);
+    wrap.appendChild(cont);
+    if (hasAnyContent()) wrap.appendChild(buildPreview());
+  }
+
+  function mkHd(num, title, sub) {
+    const el = document.createElement('div'); el.className = uid + '-hd';
+    el.innerHTML = `<div class="${uid}-hd-icon"><div class="${uid}-hd-icon-dot"></div></div><div class="${uid}-hd-text"><div class="${uid}-hnum">Step ${num} of ${TOTAL}</div><div class="${uid}-htitle">${title}</div><div class="${uid}-hsub">${sub}</div></div>`;
+    return el;
+  }
+
+  function mkInp(placeholder, val, rows, onInput) {
+    const el = rows ? document.createElement('textarea') : document.createElement('input');
+    el.className = uid + '-inp' + (rows ? ' ' + uid + '-ta' : '');
+    if (!rows) el.type = 'text';
+    el.placeholder = placeholder;
+    el.value = val;
+    el.addEventListener('input', onInput);
+    return el;
+  }
+
+  function s1(c) {
+    c.appendChild(mkHd(1, 'Pause and notice', 'Take time out. What is going on for you right now?'));
+
+    const l1 = document.createElement('label'); l1.className = uid + '-lbl'; l1.textContent = 'What has recently threatened to throw you off course?'; c.appendChild(l1);
+    c.appendChild(mkInp('Setbacks, difficulties, things that have unsettled you...', state.pauseThreats, 3, e => { state.pauseThreats = e.target.value; }));
+    const h1 = document.createElement('div'); h1.className = uid + '-hint'; h1.textContent = 'Naming what is happening is the first step to retaining direction in spite of it.'; c.appendChild(h1);
+
+    const l2 = document.createElement('label'); l2.className = uid + '-lbl'; l2.textContent = 'Where has your energy or attention been pulled?'; c.appendChild(l2);
+    c.appendChild(mkInp('Day-to-day pressures, meetings, deadlines, anything that has crowded out the strategic view...', state.pauseEnergy, 3, e => { state.pauseEnergy = e.target.value; }));
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    navRow.appendChild(document.createElement('span'));
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.innerHTML = 'Next: Pull out the learning \u2192';
+    nxt.addEventListener('click', () => { playMINext(); step = 2; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s2(c) {
+    c.appendChild(mkHd(2, 'Pull out the learning', 'Look back at events and experiences. What does the learning say?'));
+
+    const l1 = document.createElement('label'); l1.className = uid + '-lbl'; l1.textContent = 'What learning do you want to carry forward from this period?'; c.appendChild(l1);
+    c.appendChild(mkInp('A pattern you have noticed, a lesson from a setback, an unexpected insight...', state.learnForward, 3, e => { state.learnForward = e.target.value; }));
+    const h1 = document.createElement('div'); h1.className = uid + '-hint'; h1.textContent = 'Pulling out the learning is what keeps the developing part of leadership alive.'; c.appendChild(h1);
+
+    const l2 = document.createElement('label'); l2.className = uid + '-lbl'; l2.textContent = 'What would you do differently next time?'; c.appendChild(l2);
+    c.appendChild(mkInp('A specific change in approach, timing, or response...', state.learnDifferent, 3, e => { state.learnDifferent = e.target.value; }));
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back'; back.addEventListener('click', () => { playMIBack(); step = 1; render(); });
+    navRow.appendChild(back);
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.innerHTML = 'Next: Re-energise \u2192';
+    nxt.addEventListener('click', () => { playMINext(); step = 3; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s3(c) {
+    c.appendChild(mkHd(3, 'Re-energise', 'Tend to yourself before you tend to anything else.'));
+
+    const l1 = document.createElement('label'); l1.className = uid + '-lbl'; l1.textContent = 'What activities or practices restore your focus and energy?'; c.appendChild(l1);
+    c.appendChild(mkInp('Walking, reading, time with family, exercise, time without screens, time alone...', state.energiseRestores, 3, e => { state.energiseRestores = e.target.value; }));
+    const h1 = document.createElement('div'); h1.className = uid + '-hint'; h1.textContent = 'Re-energising is not optional. Without it, the developing part of leadership is the first to suffer.'; c.appendChild(h1);
+
+    const l2 = document.createElement('label'); l2.className = uid + '-lbl'; l2.textContent = 'When did you last give meaningful time to these?'; c.appendChild(l2);
+    c.appendChild(mkInp('A date, a week, an honest answer...', state.energiseLast, 2, e => { state.energiseLast = e.target.value; }));
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back'; back.addEventListener('click', () => { playMIBack(); step = 2; render(); });
+    navRow.appendChild(back);
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.innerHTML = 'Next: Re-engage \u2192';
+    nxt.addEventListener('click', () => { playMINext(); step = 4; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s4(c) {
+    c.appendChild(mkHd(4, 'Re-engage with vision', 'Reconnect with your overall direction. Identify the next steps.'));
+
+    const l1 = document.createElement('label'); l1.className = uid + '-lbl'; l1.textContent = 'What is your overall sense of direction and focus right now?'; c.appendChild(l1);
+    c.appendChild(mkInp('Your overall vision, the bigger picture you want to keep in view...', state.engageDirection, 3, e => { state.engageDirection = e.target.value; }));
+    const h1 = document.createElement('div'); h1.className = uid + '-hint'; h1.textContent = 'A clear sense of direction is what keeps you on course when setbacks come.'; c.appendChild(h1);
+
+    const l2 = document.createElement('label'); l2.className = uid + '-lbl'; l2.textContent = 'What are the next steps for you, your team, and individuals within it?'; c.appendChild(l2);
+    c.appendChild(mkInp('Concrete actions for yourself, for the team, and for specific individuals...', state.engageNextSteps, 3, e => { state.engageNextSteps = e.target.value; }));
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const leftBtns = document.createElement('div'); leftBtns.className = uid + '-navl';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back'; back.addEventListener('click', () => { playMIBack(); step = 3; render(); });
+    const restart = document.createElement('button'); restart.className = uid + '-btn ' + uid + '-ghost';
+    restart.innerHTML = '\u21BA Start again'; restart.addEventListener('click', () => {
+      playMIBack();
+      Object.keys(state).forEach(k => { state[k] = ''; });
+      step = 1; render();
+    });
+    leftBtns.appendChild(back); leftBtns.appendChild(restart);
+    const dlBtn = document.createElement('button'); dlBtn.className = uid + '-btn ' + uid + '-dl';
+    dlBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download Check-in';
+    dlBtn.addEventListener('click', () => { playMIDownload(); downloadMomentumCheckinPDF(state); });
+    navRow.appendChild(leftBtns); navRow.appendChild(dlBtn); c.appendChild(navRow);
+  }
+
+  render();
+  return wrap;
+}
+
+function downloadMomentumCheckinPDF(state) {
+  try {
+    const W = 595.28, H = 841.89, M = 50;
+    let objCount = 0;
+    const objects = [];
+    function addObj(data) { objCount++; objects.push({ id: objCount, data }); return objCount; }
+    function escPDF(str) { return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str) {
+      if (!str) return '';
+      return String(str).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2013|\u2014/g,'-').replace(/\u2026/g,'...').replace(/[^\x00-\x7F]/g,'');
+    }
+    function wrapText(text, maxChars) {
+      if (!text) return [''];
+      const words = sanitize(text).split(/\s+/); const lines = []; let line = '';
+      words.forEach(w => { if ((line+' '+w).trim().length > maxChars) { lines.push(line.trim()); line = w; } else { line = (line+' '+w).trim(); } });
+      if (line) lines.push(line.trim());
+      return lines.length ? lines : [''];
+    }
+
+    const navy   = '0.10 0.23 0.36';
+    const navyD  = '0.05 0.14 0.25';
+    const amber  = '0.96 0.65 0.40';
+    const amberL = '1.00 0.89 0.71';
+    const white  = '1 1 1';
+    const grey   = '0.45 0.45 0.45';
+    const greyL  = '0.65 0.70 0.75';
+    const light  = '0.95 0.97 0.99';
+    const text   = '0.15 0.15 0.15';
+    const lh = 14;
+    let s = ''; let y = H - M;
+
+    // Header bar
+    s += `${navy} rg\n${M} ${H-M-58} ${W-2*M} 58 re f\n`;
+    // Warm amber accent stripe at bottom of header
+    s += `${amber} rg\n${M} ${H-M-62} ${W-2*M} 4 re f\n`;
+    s += `${white} rg\n`;
+    s += `BT /F1 17 Tf ${M+14} ${H-M-26} Td (${escPDF('Pause Point Check-in')}) Tj ET\n`;
+    s += `BT /F2 9 Tf ${M+14} ${H-M-44} Td (${escPDF('A reflective pause - Liberator Programme | p.89')}) Tj ET\n`;
+
+    y = H - M - 80;
+
+    // Date stamp
+    const today = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('CHECK-IN DATE')}) Tj ET\n`; y -= 7;
+    s += `${light} rg\n${M} ${y-26} ${W-2*M} 26 re f\n${text} rg\n`;
+    s += `BT /F2 11 Tf ${M+10} ${y-17} Td (${escPDF(today)}) Tj ET\n`; y -= 40;
+
+    // Section drawing helper
+    function drawSection(title, rows, accent) {
+      // Section header
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF(title.toUpperCase())}) Tj ET\n`; y -= 8;
+      const rowBlocks = [];
+      let totalRowsHeight = 0;
+      rows.forEach(r => {
+        if (!r.val || !sanitize(r.val).trim()) return;
+        const lines = wrapText(r.val, 84);
+        const blockH = 12 + lines.length*lh + 6;
+        rowBlocks.push({ label: r.label, lines, height: blockH });
+        totalRowsHeight += blockH + 2;
+      });
+      if (rowBlocks.length === 0) {
+        const eh = 26;
+        s += `${light} rg\n${M} ${y-eh} ${W-2*M} ${eh} re f\n`;
+        s += `${greyL} rg\n${M} ${y-eh} 4 ${eh} re f\n${greyL} rg\n`;
+        s += `BT /F2 10 Tf ${M+12} ${y-17} Td (${escPDF('(Not completed)')}) Tj ET\n`;
+        y -= eh + 14;
+        return;
+      }
+      const totalH = totalRowsHeight + 10;
+      // Background block
+      s += `${light} rg\n${M} ${y-totalH} ${W-2*M} ${totalH} re f\n`;
+      // Accent stripe
+      s += `${accent} rg\n${M} ${y-totalH} 4 ${totalH} re f\n`;
+      // Render each row
+      let ry = y - 10;
+      rowBlocks.forEach(rb => {
+        s += `${grey} rg\n`;
+        s += `BT /F1 8 Tf ${M+12} ${ry-2} Td (${escPDF(rb.label.toUpperCase())}) Tj ET\n`;
+        ry -= 12;
+        s += `${text} rg\n`;
+        rb.lines.forEach(l => {
+          s += `BT /F2 10 Tf ${M+12} ${ry-2} Td (${escPDF(l)}) Tj ET\n`;
+          ry -= lh;
+        });
+        ry -= 2;
+      });
+      y -= totalH + 14;
+    }
+
+    drawSection('Pause and notice', [
+      { label: 'Threatened to throw me off course', val: state.pauseThreats },
+      { label: 'Where my energy and attention went', val: state.pauseEnergy }
+    ], amber);
+
+    drawSection('Pull out the learning', [
+      { label: 'Learning to carry forward', val: state.learnForward },
+      { label: 'What I would do differently', val: state.learnDifferent }
+    ], navy);
+
+    drawSection('Re-energise', [
+      { label: 'What restores me', val: state.energiseRestores },
+      { label: 'When I last gave time to these', val: state.energiseLast }
+    ], amber);
+
+    drawSection('Re-engage with vision', [
+      { label: 'My sense of direction and focus', val: state.engageDirection },
+      { label: 'Next steps for me, my team, and individuals', val: state.engageNextSteps }
+    ], navy);
+
+    // Footer
+    s += `${grey} rg\nBT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Pause Point Check-in - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId   = addObj('');
+    const font1Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const streamBytes = new TextEncoder().encode(s);
+    const streamId  = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${s}endstream`);
+    const pageId    = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R >> >> >>`);
+    objects[1].data = `<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>`;
+
+    let pdf = '%PDF-1.4\n'; const offsets = [];
+    objects.forEach(obj => { offsets.push(pdf.length); pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`; });
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objCount+1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10,'0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount+1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type:'application/pdf' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href = url;
+    a.download = 'Pause-Point-Check-in-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) { console.error('PDF error', e); }
+}
+
 // ── PDF Generator ──
 function downloadChangeSheetPDF(issue, less, more) {
   // Simple PDF builder - no libraries needed
@@ -8140,126 +9464,142 @@ function downloadChangeSheetPDF(issue, less, more) {
 }
 
 // ── Motivation Profile PDF ──
-function generateMotivationPDF(top2, sel6, leastSet, scores) {
+function generateMotivationPDF(state) {
   try {
-    const W = 595, H = 842, M = 44;
+    const W = 595.28, H = 841.89, M = 50;
     let objCount = 0;
     const objects = [];
     function addObj(data) { objCount++; objects.push({ id: objCount, data }); return objCount; }
-    function escPDF(str) {
-      return String(str).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+    function escPDF(str) { return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str) {
+      if (!str) return '';
+      return String(str).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2013|\u2014/g,'-').replace(/\u2026/g,'...').replace(/[^\x00-\x7F]/g,'');
     }
-    function getCatId(name) {
-      if (['Task Focus','Goal Orientation','Power & Authority','Responsibility','Initiative & Independence','Creativity','Challenge'].indexOf(name) !== -1) return 'achievement';
-      if (['Suitability','Structure','Security','Tangible Reward','Variety & Fun','Recognition','Comfort'].indexOf(name) !== -1) return 'enjoyment';
-      return 'people';
+    function wrapText(text, maxChars) {
+      if (!text) return [''];
+      const words = sanitize(text).split(/\s+/); const lines = []; let line = '';
+      words.forEach(w => { if ((line+' '+w).trim().length > maxChars) { lines.push(line.trim()); line = w; } else { line = (line+' '+w).trim(); } });
+      if (line) lines.push(line.trim());
+      return lines.length ? lines : [''];
     }
 
-    const blue = '0.00 0.38 0.68';
-    const teal = '0.00 0.62 0.63';
-    const pink = '0.75 0.22 0.36';
-    const dark = '0.10 0.23 0.36';
-    const white = '1 1 1';
-    const grey = '0.55 0.55 0.55';
-    const catColors = { people: pink, achievement: dark, enjoyment: teal };
-    const catLabels = { people: 'People', achievement: 'Achievement', enjoyment: 'Enjoyment' };
+    // Colours (RGB 0-1)
+    const navy   = '0.10 0.23 0.36';
+    const teal   = '0.00 0.64 0.65';
+    const tealD  = '0.00 0.46 0.47';
+    const blue   = '0.00 0.38 0.68';
+    const amber  = '0.96 0.65 0.40';
+    const amberL = '1.00 0.95 0.88';
+    const amberT = '0.55 0.31 0.12';
+    const white  = '1 1 1';
+    const grey   = '0.45 0.45 0.45';
+    const light  = '0.95 0.97 0.99';
+    const text   = '0.15 0.15 0.15';
 
-    let s = '';
-    const lh = 16;
-    let y = H - M;
+    const lh = 13;
+    let s = ''; let y = H - M;
 
-    // Title bar
-    s += `${blue} rg\n`;
-    s += `${M} ${H - M - 44} ${W - 2*M} 44 re f\n`;
+    // Header bar (teal with amber stripe)
+    s += `${tealD} rg\n${M} ${H-M-58} ${W-2*M} 58 re f\n`;
+    s += `${amber} rg\n${M} ${H-M-62} ${W-2*M} 4 re f\n`;
     s += `${white} rg\n`;
-    s += `BT /F1 15 Tf ${M + 12} ${H - M - 28} Td (${escPDF('Story Liberator - Motivation Profile')}) Tj ET\n`;
-    s += `BT /F2 8 Tf ${W - M - 140} ${H - M - 28} Td (${escPDF('Liberator Programme | Ali Stewart & Co')}) Tj ET\n`;
-    y = H - M - 62;
+    s += `BT /F1 17 Tf ${M+14} ${H-M-26} Td (${escPDF('Motivation Inventory')}) Tj ET\n`;
+    s += `BT /F2 9 Tf ${M+14} ${H-M-44} Td (${escPDF('Your motivation profile - Liberator Programme | pp. 224-225')}) Tj ET\n`;
 
-    // Section: Top 2
-    s += `${grey} rg\n`;
-    s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('YOUR TOP 2 MOTIVATORS')}) Tj ET\n`;
-    y -= 8;
-    const top2arr = [...top2];
-    const colW = (W - 2*M - 10) / 2;
-    top2arr.forEach((name, i) => {
-      const x = M + (i * (colW + 10));
-      const bh = 68;
-      const catId = getCatId(name);
-      const cc = catColors[catId];
-      s += `${cc} rg\n`;
-      s += `${x} ${y - bh} ${colW} ${bh} re f\n`;
-      s += `${white} rg\n`;
-      s += `BT /F2 8 Tf ${x + 10} ${y - 16} Td (${escPDF(catLabels[catId] + ' | #' + (i + 1))}) Tj ET\n`;
-      s += `BT /F1 13 Tf ${x + 10} ${y - 32} Td (${escPDF(name)}) Tj ET\n`;
+    y = H - M - 80;
+
+    // Date
+    const today = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('GENERATED')}) Tj ET\n`; y -= 7;
+    s += `${light} rg\n${M} ${y-22} ${W-2*M} 22 re f\n${text} rg\n`;
+    s += `BT /F2 11 Tf ${M+10} ${y-15} Td (${escPDF(today)}) Tj ET\n`; y -= 36;
+
+    // Top motivator
+    const topStmt = state.statements.find(st => st.id === state.topId);
+    const topLines = wrapText(topStmt.text, 76);
+    const topBoxH = 32 + topLines.length * lh;
+
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('MOST OVER-RIDING MOTIVATOR')}) Tj ET\n`; y -= 8;
+    s += `${amberL} rg\n${M} ${y-topBoxH} ${W-2*M} ${topBoxH} re f\n`;
+    s += `${amber} rg\n${M} ${y-topBoxH} 4 ${topBoxH} re f\n`;
+    s += `${amberT} rg\nBT /F1 8 Tf ${M+12} ${y-14} Td (${escPDF((topStmt.cat + ' - ' + topStmt.factor).toUpperCase())}) Tj ET\n`;
+    let ty = y - 14 - 14;
+    s += `${text} rg\n`;
+    topLines.forEach(l => {
+      s += `BT /F2 10 Tf ${M+12} ${ty} Td (${escPDF(l)}) Tj ET\n`;
+      ty -= lh;
     });
-    y -= 78;
+    y -= topBoxH + 14;
 
-    // Section: PAE balance bars
-    s += `${grey} rg\n`;
-    s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('MOTIVATION BALANCE')}) Tj ET\n`;
-    y -= 8;
-    const barW = W - 2*M - 50;
-    [
-      { id:'people',      label:'People',      color: pink },
-      { id:'achievement', label:'Achievement', color: dark },
-      { id:'enjoyment',   label:'Enjoyment',   color: teal }
-    ].forEach(cat => {
-      const score = scores[cat.id] || 0;
-      const fillW = Math.max(8, Math.round((score / 6) * barW));
-      s += `${cat.color} rg\n`;
-      s += `${M} ${y - 14} ${fillW} 14 re f\n`;
-      s += `0.88 0.90 0.93 rg\n`;
-      s += `${M + fillW} ${y - 14} ${barW - fillW} 14 re f\n`;
-      s += `${cat.color} rg\n`;
-      s += `BT /F1 9 Tf ${M + barW + 6} ${y - 10} Td (${escPDF(score + '/6')}) Tj ET\n`;
-      s += `${white} rg\n`;
-      s += `BT /F2 8 Tf ${M + 4} ${y - 10} Td (${escPDF(cat.label)}) Tj ET\n`;
-      y -= 20;
+    // Category balance
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('CATEGORY BALANCE')}) Tj ET\n`; y -= 8;
+
+    const cats = ['People','Achievement','Enjoyment'];
+    const catColours = { 'People': blue, 'Achievement': navy, 'Enjoyment': teal };
+    const totals = state.totals;
+    const maxTotal = Math.max(...cats.map(c => totals[c]));
+    const labelW = 100;
+    const scoreW = 30;
+    const trackX = M + labelW;
+    const trackW = (W - 2*M) - labelW - scoreW;
+
+    cats.forEach(cat => {
+      const total = totals[cat];
+      const colour = catColours[cat];
+      const fillW = trackW * (total / maxTotal);
+      const barH = 20;
+
+      // Background
+      s += `${light} rg\n${M} ${y-barH} ${W-2*M} ${barH} re f\n`;
+      // Label
+      s += `${text} rg\nBT /F1 11 Tf ${M+10} ${y-14} Td (${escPDF(cat)}) Tj ET\n`;
+      // Track
+      s += `${white} rg\n${trackX} ${y-barH+4} ${trackW} ${barH-8} re f\n`;
+      // Fill
+      s += `${colour} rg\n${trackX} ${y-barH+4} ${fillW} ${barH-8} re f\n`;
+      // Score on right
+      s += `${colour} rg\nBT /F1 12 Tf ${trackX + trackW + 6} ${y-14} Td (${escPDF(total.toString())}) Tj ET\n`;
+
+      y -= barH + 3;
     });
-    y -= 12;
+    y -= 14;
 
-    // Section: Top 6
-    s += `${grey} rg\n`;
-    s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('ALL 6 KEY MOTIVATORS')}) Tj ET\n`;
-    y -= 8;
-    [...sel6].forEach(name => {
-      const isStar = top2.has(name);
-      const catId = getCatId(name);
-      const cc = catColors[catId];
-      s += `${cc} rg\n`;
-      s += `${M} ${y - 18} ${W - 2*M} 18 re f\n`;
-      s += `${white} rg\n`;
-      s += `BT /F1 9 Tf ${M + 6} ${y - 12} Td (${escPDF((isStar ? '** ' : '   ') + name)}) Tj ET\n`;
-      s += `BT /F2 8 Tf ${W - M - 75} ${y - 12} Td (${escPDF(catLabels[catId])}) Tj ET\n`;
-      y -= 22;
-    });
-    s += `${grey} rg\n`;
-    s += `BT /F2 7 Tf ${M + 6} ${y - 10} Td (${escPDF('** = top 2 motivator')}) Tj ET\n`;
-    y -= 24;
+    // Factor breakdown by category
+    cats.forEach(cat => {
+      const colour = catColours[cat];
+      // Cat header
+      s += `${colour} rg\n${M} ${y-22} ${W-2*M} 22 re f\n`;
+      s += `${white} rg\nBT /F1 11 Tf ${M+12} ${y-15} Td (${escPDF(cat.toUpperCase())}) Tj ET\n`;
+      s += `BT /F1 12 Tf ${W-M-32} ${y-15} Td (${escPDF(totals[cat].toString())}) Tj ET\n`;
+      y -= 24;
 
-    // Section: Least important
-    if (leastSet.size > 0) {
-      y -= 4;
-      s += `${grey} rg\n`;
-      s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('FACTORS RATED LEAST IMPORTANT')}) Tj ET\n`;
-      y -= 8;
-      [...leastSet].forEach(name => {
-        s += `0.92 0.94 0.96 rg\n`;
-        s += `${M} ${y - 18} ${W - 2*M} 18 re f\n`;
-        s += `0.40 0.40 0.40 rg\n`;
-        s += `BT /F2 9 Tf ${M + 8} ${y - 12} Td (${escPDF(name)}) Tj ET\n`;
-        y -= 22;
+      const catStmts = state.statements
+        .filter(st => st.cat === cat)
+        .map(st => {
+          const pts = state.topId === st.id ? 6 : (state.s1.includes(st.id) ? 4 : (state.s3.includes(st.id) ? 3 : (state.s4.includes(st.id) ? 2 : 1)));
+          return { st, pts };
+        })
+        .sort((a, b) => b.pts - a.pts);
+
+      catStmts.forEach(({ st, pts }) => {
+        const rowH = 16;
+        s += `${light} rg\n${M} ${y-rowH} ${W-2*M} ${rowH} re f\n`;
+        // Score badge
+        s += `${colour} rg\n${M+6} ${y-rowH+2} 24 ${rowH-4} re f\n`;
+        s += `${white} rg\nBT /F1 11 Tf ${M+14} ${y-12} Td (${escPDF(pts.toString())}) Tj ET\n`;
+        // Factor name
+        s += `${text} rg\nBT /F1 9 Tf ${M+38} ${y-11} Td (${escPDF(st.factor)}) Tj ET\n`;
+        y -= rowH + 1;
       });
-    }
+      y -= 8;
+    });
 
     // Footer
-    s += `${grey} rg\n`;
-    s += `BT /F2 7 Tf ${M} ${M - 8} Td (${escPDF('Story Contracting - Liberator Programme - Motivation Profile - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+    s += `${grey} rg\nBT /F2 8 Tf ${M} ${M-16} Td (${escPDF('Story Contracting - Liberator Programme - Motivation Inventory - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
 
-    // Build PDF objects
+    // Build PDF
     const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
-    const pagesId   = addObj(''); // placeholder
+    const pagesId   = addObj('');
     const font1Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
     const font2Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
     const streamBytes = new TextEncoder().encode(s);
@@ -8267,33 +9607,19 @@ function generateMotivationPDF(top2, sel6, leastSet, scores) {
     const pageId    = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R >> >> >>`);
     objects[1].data = `<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>`;
 
-    // Assemble
-    let pdf = '%PDF-1.4\n';
-    const offsets = [];
-    objects.forEach(obj => {
-      offsets.push(pdf.length);
-      pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`;
-    });
+    let pdf = '%PDF-1.4\n'; const offsets = [];
+    objects.forEach(obj => { offsets.push(pdf.length); pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`; });
     const xrefOffset = pdf.length;
-    pdf += `xref\n0 ${objCount + 1}\n0000000000 65535 f \n`;
-    offsets.forEach(off => { pdf += String(off).padStart(10, '0') + ' 00000 n \n'; });
-    pdf += `trailer\n<< /Size ${objCount + 1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+    pdf += `xref\n0 ${objCount+1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10,'0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount+1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
 
-    // Download
-    const blob = new Blob([pdf], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Motivation-Profile-' + new Date().toISOString().slice(0, 10) + '.pdf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-  } catch(err) {
-    console.error('Motivation PDF error:', err);
-    alert('PDF generation error: ' + err.message);
-  }
+    const blob = new Blob([pdf], { type:'application/pdf' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href = url;
+    a.download = 'Motivation-Inventory-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) { console.error('Motivation PDF error', e); }
 }
 
 // ── Initialize ──
