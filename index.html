@@ -4641,6 +4641,22 @@ function buildBackToTopButton(label) {
   return wrap;
 }
 
+function buildMagnifyButton(page) {
+  const offIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Larger text';
+  const onIcon  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Reset text';
+  const btn = document.createElement('button');
+  btn.className = 'magnify-btn';
+  btn.title = 'Toggle larger text';
+  btn.innerHTML = offIcon;
+  btn.addEventListener('click', () => {
+    try { playTextSizeClick(); } catch(e) {}
+    const isActive = page.classList.toggle('text-lg');
+    btn.classList.toggle('active', isActive);
+    btn.innerHTML = isActive ? onIcon : offIcon;
+  });
+  return btn;
+}
+
 function buildHeader(rightEl) {
   const header = document.createElement('div');
   header.className = 'header';
@@ -6259,6 +6275,7 @@ function buildMaslowPage(parentSeg) {
   btnRow.className = 'ws-back-btns';
   btnRow.appendChild(backBtn);
   btnRow.appendChild(wheelBtn);
+  btnRow.appendChild(buildMagnifyButton(page));
 
   // Hero
   const hero = document.createElement('div');
@@ -6552,6 +6569,7 @@ function buildBuildingBlocksPage(parentSeg) {
   btnRow.className = 'ws-back-btns';
   btnRow.appendChild(backBtn);
   btnRow.appendChild(wheelBtn);
+  btnRow.appendChild(buildMagnifyButton(page));
 
   // Hero
   const hero = document.createElement('div');
