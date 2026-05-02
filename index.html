@@ -61,6 +61,23 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 
 /* Wheel container */
 .wheel-wrap{position:relative;width:100%;background:white;border-radius:28px;padding:16px 16px 0;box-shadow:0 16px 48px rgba(0,97,173,.13),0 2px 12px rgba(0,0,0,.05);overflow:hidden}
+
+/* Zoom-into-cog transition (when the user clicks the centre of the wheel) */
+.wheel-wrap.zoom-into-cog{animation:zoomIntoCog .48s cubic-bezier(.55,.06,.68,.19) forwards;transform-origin:center 46%;z-index:50;position:relative;will-change:transform,opacity}
+@keyframes zoomIntoCog{
+  0%   {transform:scale(1);opacity:1;filter:blur(0)}
+  60%  {opacity:.85}
+  100% {transform:scale(2.6);opacity:0;filter:blur(2px)}
+}
+.cog-page-zoom-in{animation:cogPageZoomIn .42s cubic-bezier(.16,1,.3,1) both}
+@keyframes cogPageZoomIn{
+  from {opacity:0;transform:scale(.94)}
+  to   {opacity:1;transform:scale(1)}
+}
+@media (prefers-reduced-motion: reduce){
+  .wheel-wrap.zoom-into-cog{animation:none;opacity:0}
+  .cog-page-zoom-in{animation:none}
+}
 .wheel-svg-container{position:relative;width:100%;padding-bottom:100%}
 .wheel-svg-container>svg{position:absolute;top:0;left:0;width:100%;height:100%}
 .wheel-svg-container>#overlay-svg{z-index:2;cursor:pointer}
@@ -253,6 +270,11 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .ws-actions{display:flex;gap:12px;margin-top:24px;justify-content:flex-end;flex-wrap:wrap}
 .ws-download-btn{display:inline-flex;align-items:center;gap:8px;background:#0061AD;color:white;border:none;border-radius:20px;padding:12px 24px;font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 16px rgba(0,97,173,.15);transition:transform .15s ease}
 .ws-download-btn:hover{transform:translateY(-2px)}
+.ws-reset-btn{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#5a6c7c;border:1.5px solid #d0dce8;border-radius:20px;padding:10.5px 22px;font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:transform .15s ease,border-color .18s ease,color .18s ease,background .18s ease}
+.ws-reset-btn:hover{transform:translateY(-2px);border-color:#a3b8cc;color:#0061AD;background:#f6fbfe}
+.ws-reset-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(0,97,173,.32)}
+.ws-reset-btn svg{transition:transform .4s cubic-bezier(.4,1.4,.6,1)}
+.ws-reset-btn:hover svg{transform:rotate(-90deg)}
 .ws-back-btns{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
 
 /* Magnify toggle button */
@@ -395,6 +417,143 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
 .detail-grid.fullwidth .right-col{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:24px;width:100%}
 @media (max-width:820px){
   .detail-grid.fullwidth .right-col{grid-template-columns:1fr}
+}
+
+/* ── The Cog Hub & sub-pages ──────────────────────────────────── */
+.cog-headline{background:linear-gradient(135deg,#003B6A 0%,#0061AD 55%,#1683D0 100%);border-radius:24px;padding:34px 38px;margin-bottom:26px;color:white;position:relative;overflow:hidden;box-shadow:0 14px 38px rgba(0,75,134,.22)}
+.cog-headline::before{content:'';position:absolute;top:-70px;right:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.10),transparent 70%);pointer-events:none}
+.cog-headline::after{content:'';position:absolute;bottom:-50px;left:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);pointer-events:none}
+.cog-headline-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:14px;position:relative;z-index:2}
+.cog-headline-quote{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:23px;font-weight:500;line-height:1.45;letter-spacing:.005em;color:rgba(255,255,255,.94);position:relative;z-index:2;max-width:920px}
+.cog-headline-quote .strong{font-weight:800;color:white}
+.text-lg .cog-headline-quote{font-size:27px}
+
+/* Cog hexagon visual + interactive quadrant buttons */
+.cog-svg-wrap{position:relative;width:100%;max-width:780px;margin:18px auto 6px;padding:8px 0 4px;display:flex;flex-direction:column;align-items:center}
+.cog-svg-wrap::before{content:'';position:absolute;inset:-10px 0 auto 0;height:60%;background:radial-gradient(ellipse 65% 100% at 50% 50%, rgba(0,97,173,.10), transparent 70%);pointer-events:none;z-index:0}
+.cog-svg-stage{position:relative;width:100%;display:block;z-index:1}
+.cog-svg-stage svg{width:100%;height:auto;display:block;filter:drop-shadow(0 14px 30px rgba(0,75,134,.20));animation:cogSvgFadeUp .7s .15s ease both}
+@keyframes cogSvgFadeUp{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.cog-svg-stage svg #CogArrows{transform-origin:center;animation:cogArrowsBreath 4.8s ease-in-out infinite}
+@keyframes cogArrowsBreath{0%,100%{opacity:.85}50%{opacity:1}}
+
+/* Pulsing quadrant buttons (one per quadrant) */
+.cog-q-btn{position:absolute;width:38px;height:38px;border-radius:50%;border:2px solid #0061AD;background:white;color:#0061AD;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;z-index:3;transform:translate(-50%,-50%);box-shadow:0 4px 14px rgba(0,75,134,.20),0 1px 3px rgba(0,0,0,.06);transition:transform .25s cubic-bezier(.4,1.4,.6,1),box-shadow .25s ease,background .25s ease,color .25s ease,border-color .25s ease;font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:800;font-size:24px;line-height:1;animation:cogQBtnEnter .7s .35s ease both}
+@keyframes cogQBtnEnter{from{opacity:0;transform:translate(-50%,calc(-50% + 14px)) scale(.94)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.cog-q-btn::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2.5px solid rgba(255,255,255,.95);box-shadow:0 0 6px rgba(255,255,255,.35);opacity:0;pointer-events:none;animation:cogQBtnPulse 2.6s ease-out infinite}
+@keyframes cogQBtnPulse{0%{opacity:.7;transform:scale(1)}90%,100%{opacity:0;transform:scale(1.85)}}
+.cog-q-btn:hover{transform:translate(-50%,-50%) scale(1.12);box-shadow:0 8px 22px rgba(0,75,134,.30),0 2px 4px rgba(0,0,0,.06)}
+.cog-q-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,255,255,.7),0 4px 14px rgba(0,75,134,.20)}
+.cog-q-btn.is-active{background:#003E70;color:white;border:2.5px solid white;transform:translate(-50%,-50%) scale(1.10);box-shadow:0 8px 22px rgba(0,40,75,.55),0 0 0 4px rgba(255,255,255,.18)}
+.cog-q-btn.is-active::after{animation:none;opacity:0}
+/* Centroid-based positions: dx and dy match in pixel terms so the four buttons form a true square pattern */
+.cog-q-btn-comfort   {top:31.37%;left:39.91%}
+.cog-q-btn-commitment{top:31.37%;left:60.03%}
+.cog-q-btn-apathy    {top:68.82%;left:39.91%}
+.cog-q-btn-stress    {top:68.82%;left:60.03%}
+/* Hide the placement marker circles in the SVG; HTML buttons sit on top */
+.cog-svg-stage svg #CogMarkers{display:none}
+
+/* Reveal card (one shared element, content swapped on click) */
+.cog-q-card{position:relative;width:100%;max-width:680px;margin:20px auto 6px;background:linear-gradient(180deg,#ffffff,#f6fbfe);border:1px solid #d8e7f1;border-radius:18px;padding:22px 56px 22px 26px;box-shadow:0 8px 28px rgba(0,75,134,.12);opacity:0;max-height:0;overflow:hidden;transform:translateY(-6px);pointer-events:none;transition:opacity .28s ease,transform .28s ease,max-height .35s ease,margin .28s ease,padding .28s ease,border-color .28s ease}
+.cog-q-card.is-open{opacity:1;max-height:600px;transform:translateY(0);pointer-events:auto}
+.cog-q-card-eyebrow{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#0061AD;margin-bottom:6px}
+.cog-q-card-title{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:26px;font-weight:800;color:#004B86;letter-spacing:-.005em;line-height:1.15;margin-bottom:12px}
+.cog-q-card-body{font-size:14.5px;line-height:1.7;color:#3a4858;margin:0}
+.cog-q-card-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:#f0f4f8;color:#5a6c7c;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;padding:0;transition:background .15s ease,color .15s ease,transform .25s ease}
+.cog-q-card-close:hover{background:#e2eaf2;color:#222;transform:rotate(90deg)}
+.cog-q-card-close:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(0,97,173,.32)}
+
+.text-lg .cog-q-card-title{font-size:30px}
+.text-lg .cog-q-card-body{font-size:16.5px}
+
+@media (max-width:720px){
+  .cog-q-btn{width:34px;height:34px;font-size:20px}
+  .cog-q-card{padding:20px 50px 20px 22px;margin-top:16px}
+  .cog-q-card-title{font-size:23px}
+}
+@media (prefers-reduced-motion: reduce){
+  .cog-svg-stage svg{animation:none}
+  .cog-svg-stage svg #CogArrows{animation:none;opacity:1}
+  .cog-q-btn::after{animation:none;opacity:0}
+  .cog-q-card{transition:opacity .15s ease}
+}
+
+/* Personal Exploration worksheet (lives on the Cog hub) */
+.cog-pe-intro{color:#52606e;font-size:14.5px;line-height:1.65;margin-bottom:22px;max-width:780px}
+.cog-pe-intro strong{color:#004B86;font-weight:700}
+.cog-pe-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0 0 22px}
+.cog-pe-quadrant{background:#f8fbfe;border:1px solid #e2eaf2;border-radius:14px;padding:18px 20px 16px;display:flex;flex-direction:column}
+.cog-pe-quad-header{margin-bottom:12px;padding-bottom:11px;border-bottom:1px solid #e2eaf2}
+.cog-pe-quad-header h3{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:22px;font-weight:800;color:#004B86;line-height:1;margin-bottom:5px}
+.cog-pe-quad-header .cog-pe-axis{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#0061AD;display:block}
+.cog-pe-field{margin-bottom:12px;display:flex;flex-direction:column}
+.cog-pe-field:last-child{margin-bottom:0}
+.cog-pe-field .ws-field-label{margin-bottom:5px;font-size:10.5px}
+.cog-pe-field textarea{width:100%;min-height:64px;padding:10px 12px;font-family:'Barlow',sans-serif;font-size:13.5px;color:#222;line-height:1.55;background:white;border:1.5px solid #d4e3f0;border-radius:9px;resize:vertical;transition:border-color .18s ease,background .18s ease}
+.cog-pe-field textarea:focus{outline:none;border-color:#0061AD;background:#fbfdff}
+.cog-pe-field textarea::placeholder{color:#9eaebc;font-style:italic}
+.cog-pe-final{background:linear-gradient(180deg,#ffffff,#f0f7fd);border:1px solid #d8e7f1;border-radius:14px;padding:18px 22px;margin-bottom:6px}
+.cog-pe-final h3{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:20px;font-weight:800;color:#004B86;margin-bottom:5px;line-height:1.1}
+.cog-pe-final-prompt{color:#52606e;font-size:13.5px;line-height:1.6;margin-bottom:10px}
+.cog-pe-final textarea{width:100%;min-height:90px;padding:12px 14px;font-family:'Barlow',sans-serif;font-size:14px;color:#222;line-height:1.6;background:white;border:1.5px solid #d4e3f0;border-radius:10px;resize:vertical;transition:border-color .18s ease,background .18s ease}
+.cog-pe-final textarea:focus{outline:none;border-color:#0061AD;background:#fbfdff}
+
+.text-lg .cog-pe-intro{font-size:16px}
+.text-lg .cog-pe-quad-header h3{font-size:24px}
+.text-lg .cog-pe-final h3{font-size:22px}
+.text-lg .cog-pe-final-prompt{font-size:15px}
+.text-lg .cog-pe-field textarea{font-size:15px}
+.text-lg .cog-pe-final textarea{font-size:16px}
+
+@media (max-width:680px){
+  .cog-pe-grid{grid-template-columns:1fr}
+  .cog-pe-quadrant{padding:16px 16px 12px}
+  .cog-pe-final{padding:16px 18px}
+}
+
+/* Foundations grid (links to the four sub-pages) */
+.foundations-section{margin-top:8px}
+.foundations-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:#0061AD;margin-bottom:6px}
+.foundations-title{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:30px;font-weight:800;color:#004B86;letter-spacing:-.005em;line-height:1.15;margin-bottom:18px}
+.foundations-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(218px,1fr));gap:18px}
+.foundation-card{background:linear-gradient(180deg,#ffffff 0%,#f6fbff 100%);border-radius:18px;padding:26px 22px 22px;box-shadow:0 6px 22px rgba(0,97,173,.08);position:relative;cursor:pointer;border:1px solid #e6f0f9;text-align:left;font-family:inherit;color:inherit;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease,border-color .25s ease;overflow:hidden;display:flex;flex-direction:column}
+.foundation-card::before{content:'';position:absolute;top:0;left:18px;right:18px;height:3px;background:linear-gradient(90deg,transparent,#0061AD 28%,#1683D0 72%,transparent);border-radius:0 0 4px 4px}
+.foundation-card::after{content:'';position:absolute;bottom:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(0,97,173,.06) 0%,transparent 70%);pointer-events:none;transition:transform .5s ease}
+.foundation-card:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(0,97,173,.18);border-color:#cfe1f1}
+.foundation-card:hover::after{transform:scale(1.6)}
+.foundation-card:hover .foundation-icon{transform:scale(1.06) rotate(-4deg);box-shadow:0 14px 26px rgba(0,97,173,.32)}
+.foundation-card:hover .foundation-icon::after{opacity:1}
+.foundation-card:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(0,97,173,.32),0 18px 36px rgba(0,97,173,.18)}
+.foundation-icon{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0061AD 0%,#1683D0 100%);display:flex;align-items:center;justify-content:center;color:white;margin-bottom:18px;flex-shrink:0;box-shadow:0 6px 14px rgba(0,97,173,.22);transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .35s ease;position:relative;z-index:1}
+.foundation-icon::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1.5px solid rgba(22,131,208,.30);opacity:0;transition:opacity .25s ease}
+.foundation-icon svg{width:28px;height:28px;display:block}
+.foundation-name{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:21px;font-weight:800;color:#004B86;line-height:1.2;margin-bottom:9px;padding-right:24px;position:relative;z-index:1}
+.foundation-blurb{font-size:13.5px;line-height:1.6;color:#52606e;margin-bottom:18px;flex:1;position:relative;z-index:1}
+.foundation-cta{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#0061AD;padding-top:12px;border-top:1px solid #e6f0f9;position:relative;z-index:1}
+.foundation-cta svg{transition:transform .25s ease}
+.foundation-card:hover .foundation-cta svg{transform:translateX(4px)}
+.foundation-status{position:absolute;top:14px;right:14px;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;background:#fff5d8;color:#86600a;padding:4px 8px;border-radius:10px;border:1px solid #f1d77d;z-index:2}
+.text-lg .foundation-name{font-size:23px}
+.text-lg .foundation-blurb{font-size:15px}
+
+/* Sub-page "in development" notice */
+.cog-sub-coming{background:white;border-radius:24px;padding:36px 36px 32px;box-shadow:0 8px 28px rgba(0,97,173,.10);margin-bottom:24px;position:relative;overflow:hidden}
+.cog-sub-coming::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:linear-gradient(180deg,#0061AD,#1683D0)}
+.cog-sub-coming-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:#0061AD;margin-bottom:8px}
+.cog-sub-coming-title{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:28px;font-weight:800;color:#004B86;line-height:1.15;margin-bottom:14px;letter-spacing:-.005em}
+.cog-sub-coming-body{font-size:15px;line-height:1.7;color:#445566;max-width:680px}
+.cog-sub-coming-pulse{display:inline-flex;align-items:center;gap:10px;margin-top:18px;background:#f0f7fd;color:#004B86;padding:9px 16px;border-radius:24px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.cog-sub-coming-pulse-dot{width:9px;height:9px;border-radius:50%;background:#0061AD;animation:cogSubPulse 1.8s ease-in-out infinite;flex-shrink:0}
+@keyframes cogSubPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,97,173,.5);transform:scale(1)}50%{box-shadow:0 0 0 7px rgba(0,97,173,0);transform:scale(1.18)}}
+.cog-sub-other-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#7a8693;margin-bottom:14px}
+.cog-sub-bookrow{margin-bottom:22px;max-width:420px}
+
+@media (max-width: 720px){
+  .cog-headline{padding:26px 22px}
+  .cog-headline-quote{font-size:18px}
+  .cog-sub-coming{padding:26px 22px 24px}
+  .cog-sub-coming-title{font-size:22px}
 }
 
 /* Vision steps activity (Set Clear Vision segment) */
@@ -4657,6 +4816,139 @@ function buildMagnifyButton(page) {
   return btn;
 }
 
+function buildReadAloudButton(page) {
+  // Graceful fallback: don't show the button if the browser doesn't support speech
+  if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return null;
+
+  const playIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Read aloud';
+  const stopIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg> Stop reading';
+
+  const btn = document.createElement('button');
+  btn.className = 'magnify-btn read-aloud-btn';
+  btn.title = 'Read this page aloud';
+  btn.innerHTML = playIcon;
+
+  let speaking = false;
+
+  function reset() {
+    speaking = false;
+    btn.classList.remove('active');
+    btn.innerHTML = playIcon;
+  }
+
+  function getPreferredVoice() {
+    try {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || !voices.length) return null;
+      let v = voices.find(x => x.lang === 'en-GB');
+      if (v) return v;
+      v = voices.find(x => x.lang && x.lang.toLowerCase().startsWith('en'));
+      return v || null;
+    } catch(e) { return null; }
+  }
+
+  function splitIntoChunks(text) {
+    const matches = text.match(/[^.!?]+[.!?]+(?:\s|$)/g);
+    if (!matches || !matches.length) return [text];
+    return matches.map(s => s.trim()).filter(s => s.length > 0);
+  }
+
+  function start() {
+    const text = collectReadableText(page);
+    if (!text) { reset(); return; }
+
+    try { window.speechSynthesis.cancel(); } catch(e) {}
+
+    const voice = getPreferredVoice();
+    const chunks = splitIntoChunks(text);
+
+    chunks.forEach((chunk, i) => {
+      const u = new SpeechSynthesisUtterance(chunk);
+      u.lang = 'en-GB';
+      u.rate = 1.0;
+      u.pitch = 1.0;
+      u.volume = 1.0;
+      if (voice) u.voice = voice;
+
+      if (i === chunks.length - 1) {
+        u.onend = () => { reset(); };
+        u.onerror = () => { reset(); };
+      }
+
+      window.speechSynthesis.speak(u);
+    });
+
+    speaking = true;
+    btn.classList.add('active');
+    btn.innerHTML = stopIcon;
+  }
+
+  function stop() {
+    try { window.speechSynthesis.cancel(); } catch(e) {}
+    reset();
+  }
+
+  btn.addEventListener('click', () => {
+    if (speaking) {
+      try { playReturn(); } catch(e) {}
+      stop();
+    } else {
+      try { playMIBegin(); } catch(e) {}
+      start();
+    }
+  });
+
+  return btn;
+}
+
+function collectReadableText(page) {
+  if (!page) return '';
+  const parts = [];
+
+  function addText(el) {
+    if (!el) return;
+    const text = (el.textContent || '').trim().replace(/\s+/g, ' ');
+    if (text) parts.push(text);
+  }
+
+  const hero = page.querySelector('.hero');
+  if (hero) {
+    addText(hero.querySelector('.hero-eyebrow'));
+    addText(hero.querySelector('h1'));
+    hero.querySelectorAll(':scope > p').forEach(p => {
+      if (!p.classList.contains('hero-eyebrow')) addText(p);
+    });
+  }
+
+  const modelCards = page.querySelectorAll('.model-card');
+  modelCards.forEach(mc => {
+    addText(mc.querySelector('h2'));
+    const desc = mc.querySelector(':scope > .desc, :scope > p.desc');
+    if (desc) addText(desc);
+  });
+
+  const narrative = page.querySelector('.narrative-section, .narrative-card');
+  if (narrative) {
+    narrative.querySelectorAll('h2, h3, p').forEach(addText);
+  }
+
+  const bulletsCards = page.querySelectorAll('.bullets-card');
+  bulletsCards.forEach(bc => {
+    addText(bc.querySelector('h2'));
+    bc.querySelectorAll('.bullet-item').forEach(addText);
+  });
+
+  const noteCards = page.querySelectorAll('.note-card');
+  noteCards.forEach(nc => {
+    addText(nc.querySelector('.note-eyebrow'));
+    nc.querySelectorAll('p').forEach(p => {
+      if (!p.classList.contains('note-eyebrow')) addText(p);
+    });
+  });
+
+  return parts.map(p => /[.!?]$/.test(p) ? p : p + '.').join(' ').replace(/\s+/g, ' ').trim();
+}
+
 function buildHeader(rightEl) {
   const header = document.createElement('div');
   header.className = 'header';
@@ -4802,9 +5094,9 @@ function buildWheelPage(onOpen) {
         hoverBar.className = 'hover-bar active';
         hoverBar.style.background = 'linear-gradient(135deg,#004B86,#0061AD)';
         hoverBarContent.innerHTML = `
-          <div class="quadrant-label" style="color:rgba(255,255,255,.6)">The Liberator Programme</div>
-          <div class="segment-label" style="color:white">High Challenge &amp; High Support</div>
-          <div class="click-hint" style="color:rgba(255,255,255,.5)">More coming soon</div>
+          <div class="quadrant-label" style="color:rgba(255,255,255,.6)">Central Underpinning Mindset</div>
+          <div class="segment-label" style="color:white">The Cog</div>
+          <div class="click-hint" style="color:rgba(255,255,255,.55)">Click to explore the foundation of the Liberator</div>
         `;
       } else {
         hoverBar.className = 'hover-bar idle';
@@ -4813,9 +5105,19 @@ function buildWheelPage(onOpen) {
       }
     },
     () => {
-      // Centre click — Coming Soon page
-      goComingSoon();
+      // Centre click: The Cog hub - with a "zoom into the cog" transition
       playChime();
+      const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const wrap = document.querySelector('.wheel-wrap');
+      if (reduced || !wrap) {
+        goCog();
+        return;
+      }
+      wrap.classList.add('zoom-into-cog');
+      // Tell the cog page to enter with a matching scale-up so the camera
+      // feels like it lands on the hub.
+      window.__cogZoomEntry = true;
+      setTimeout(() => goCog(), 440);
     }
   );
   container.appendChild(overlaySVG);
@@ -5430,6 +5732,8 @@ function buildDetailPage(seg, onBack) {
   headerBtnGroup.className = 'header-btn-group';
   headerBtnGroup.appendChild(backBtn);
   headerBtnGroup.appendChild(magnifyBtn);
+  const detailReadBtn = buildReadAloudButton(page);
+  if (detailReadBtn) headerBtnGroup.appendChild(detailReadBtn);
 
   const qColour = QUADRANT_COLOURS[seg.quadrant];
 
@@ -6111,6 +6415,8 @@ const app = document.getElementById('app');
 let currentPage = null;
 
 function showPage(el) {
+  // Cancel any ongoing read-aloud speech when navigating
+  try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch(e) {}
   if (currentPage) app.removeChild(currentPage);
   app.appendChild(el);
   currentPage = el;
@@ -6276,6 +6582,8 @@ function buildMaslowPage(parentSeg) {
   btnRow.appendChild(backBtn);
   btnRow.appendChild(wheelBtn);
   btnRow.appendChild(buildMagnifyButton(page));
+  const maslowReadBtn = buildReadAloudButton(page);
+  if (maslowReadBtn) btnRow.appendChild(maslowReadBtn);
 
   // Hero
   const hero = document.createElement('div');
@@ -6570,6 +6878,8 @@ function buildBuildingBlocksPage(parentSeg) {
   btnRow.appendChild(backBtn);
   btnRow.appendChild(wheelBtn);
   btnRow.appendChild(buildMagnifyButton(page));
+  const bbReadBtn = buildReadAloudButton(page);
+  if (bbReadBtn) btnRow.appendChild(bbReadBtn);
 
   // Hero
   const hero = document.createElement('div');
@@ -6942,10 +7252,813 @@ function goComingSoon() {
   showPage(buildComingSoonPage());
 }
 
+// ============================================================
+//  THE COG HUB & SUB-PAGES
+// ============================================================
+// SVG icon for each foundation, rendered inside a circular gradient badge
+// at the top of the foundation card. Each icon represents the underlying
+// shape of the model: paired circles for the two concepts, a 2x2 grid for
+// the OK Corral, reciprocal arrows for Rights & Responsibilities, and a
+// curve for the Change & Performance Loss Curve.
+const SUBPAGE_ICONS = {
+  'concepts-attitudes':
+    '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<circle cx="12.5" cy="16" r="7.5"/>' +
+      '<circle cx="19.5" cy="16" r="7.5"/>' +
+    '</svg>',
+  'ok-corral':
+    '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<rect x="6" y="6" width="9" height="9" rx="1.5"/>' +
+      '<rect x="17" y="6" width="9" height="9" rx="1.5"/>' +
+      '<rect x="6" y="17" width="9" height="9" rx="1.5"/>' +
+      '<rect x="17" y="17" width="9" height="9" rx="1.5"/>' +
+    '</svg>',
+  'rights-responsibilities':
+    '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<line x1="5" y1="11" x2="22" y2="11"/>' +
+      '<polyline points="18,7 22,11 18,15"/>' +
+      '<line x1="27" y1="21" x2="10" y2="21"/>' +
+      '<polyline points="14,17 10,21 14,25"/>' +
+    '</svg>',
+  'change-curve':
+    '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M4 12 C 8 12, 10 24, 16 22 S 24 12, 28 14"/>' +
+      '<circle cx="4" cy="12" r="1.6" fill="currentColor"/>' +
+      '<circle cx="28" cy="14" r="1.6" fill="currentColor"/>' +
+    '</svg>'
+};
+
+const COG_SUBPAGES = [
+  {
+    id:'concepts-attitudes',
+    label:'Two Concepts and Two Attitudes',
+    pages:'48-55',
+    blurb:'Expectations Theory and Reinforcement Theory, held together with Positive Regard and Genuineness. The mechanics behind High Challenge and High Support.'
+  },
+  {
+    id:'ok-corral',
+    label:'The OK Corral',
+    pages:'40-47',
+    blurb:'A four-position puzzle of how we view ourselves and others, and the I+U+ stance the Leader-Developer is consistently working towards.'
+  },
+  {
+    id:'rights-responsibilities',
+    label:'Rights and Responsibilities',
+    pages:'56-60',
+    blurb:'The reciprocal compact between Leader-Developer and Team Member: clear rights on each side, balanced by clear responsibilities.'
+  },
+  {
+    id:'change-curve',
+    label:'Change and Performance Loss Curve',
+    pages:'Chapter 6',
+    blurb:'The seven stages of human response to change, and what well-led leadership looks like at each stage. Includes the How I Deal With Change checklist.'
+  }
+];
+
+// The official Story Liberator Cog hexagon SVG, embedded inline.
+// Drawn by Story Contracting / Liberator design; preserved as supplied.
+const COG_HEXAGON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="175 38 1571 1004"> <g id="CogShape"> <polygon points="1178.4 161.7 741.6 161.7 523.1 540 741.6 918.3 1178.4 918.3 1396.9 540 1178.4 161.7" fill="#0061ad"/> </g> <g id="CogLines"> <line x1="960" y1="159.3" x2="960" y2="920.7" fill="none" stroke="#fff" stroke-miterlimit="10" stroke-width="18"/> <line x1="1397.1" y1="540" x2="517" y2="540" fill="none" stroke="#fff" stroke-miterlimit="10" stroke-width="18"/> </g> <g id="CogArrows"> <g><line x1="960" y1="161.7" x2="960" y2="123.2" fill="none" stroke="#fa6b02" stroke-miterlimit="10" stroke-width="6"/><polygon points="970.2 135.1 960 125 949.8 135.1 949.8 126.5 960 116.3 970.2 126.5 970.2 135.1" fill="#fa6b02"/></g> <g><line x1="528.3" y1="540" x2="489.9" y2="540" fill="none" stroke="#fa6b02" stroke-miterlimit="10" stroke-width="6"/><polygon points="501.8 529.8 491.6 540 501.8 550.2 493.2 550.2 483 540 493.2 529.8 501.8 529.8" fill="#fa6b02"/></g> <g><line x1="960" y1="919.3" x2="960" y2="957.8" fill="none" stroke="#fa6b02" stroke-miterlimit="10" stroke-width="6"/><polygon points="949.8 945.9 960 956 970.2 945.9 970.2 954.5 960 964.7 949.8 954.5 949.8 945.9" fill="#fa6b02"/></g> <g><line x1="1392.7" y1="540" x2="1431.1" y2="540" fill="none" stroke="#fa6b02" stroke-miterlimit="10" stroke-width="6"/><polygon points="1419.2 550.2 1429.4 540 1419.2 529.8 1427.8 529.8 1438 540 1427.8 550.2 1419.2 550.2" fill="#fa6b02"/></g> </g> <g id="CogBlocks"> <rect x="832.7" y="48" width="253.3" height="36" fill="#fa6b02"/> <rect x="184.7" y="520.3" width="253.3" height="36" fill="#fa6b02"/> <rect x="1482" y="520.3" width="253.3" height="36" fill="#fa6b02"/> <rect x="832.7" y="996" width="253.3" height="36" fill="#fa6b02"/> </g> <g id="CogBlockText" font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" fill="#fff" text-anchor="middle" letter-spacing="1.5"> <text x="959" y="76" font-size="24">HIGH SUPPORT</text> <text x="959" y="1024" font-size="24">LOW SUPPORT</text> <text x="1608" y="548" font-size="24">HIGH CHALLENGE</text> <text x="311" y="548" font-size="24">LOW CHALLENGE</text> </g> <g id="CogText" font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" fill="#fff" text-anchor="middle" letter-spacing="1"> <text x="802" y="491" font-size="34">COMFORT</text> <text x="1118" y="491" font-size="34">COMMITMENT</text> <text x="802" y="618" font-size="34">APATHY</text> <text x="1118" y="618" font-size="34">STRESS</text> </g> <g id="CogMarkers"> <circle cx="802" cy="353" r="38" fill="#fff"/> <circle cx="1118" cy="353" r="38" fill="#fff"/> <circle cx="802" cy="729" r="38" fill="#fff"/> <circle cx="1118" cy="729" r="38" fill="#fff"/> </g></svg>`;
+
+const COG_POSITIONS = [
+  { id:'comfort', label:'Comfort', axis:'Low Challenge / High Support', body:'Moderate achievement and development. People are well looked after, both materially and with courtesy and concern. At its heart sits a dependency view: people remain reliant on the manager\'s expertise rather than becoming self-directing. Achievement is moderate, but when change demands new ways of working, comfortable teams have the greatest difficulty breaking out and reaching for what is genuinely possible.' },
+  { id:'commitment', label:'Commitment', axis:'High Challenge / High Support', body:'Consistent high achievement and development. The Leader-Developer makes the difference here by holding both high expectations and actively enabling people to grow to meet them. Built on continuous improvement, step by step, until each team member adopts the approach as a way of life. This is the position consistently applied by the leaders of high-performance teams.' },
+  { id:'apathy', label:'Apathy', axis:'Low Challenge / Low Support', body:'Low achievement and development. Meaningless, nothing matters, no zest, no fun, inward-looking and riddled with ‘jobsworths’. Those led this way come to realise that energy and enthusiasm are misplaced: no one notices good work, and there is little comeback if quality is low. Why bother? Team members managed this way will lose their fitness to survive in today\'s competitive world.' },
+  { id:'stress', label:'Stress', axis:'High Challenge / Low Support', body:'The ‘sink or swim’ position. Inconsistent achievement and random development. A few thrive on Challenge alone, but most do not, particularly during change when new boundaries have to be crossed. Some never learn to swim; those who do often pick up faulty techniques. This is why attempts at empowerment without the supporting systems of reinforcement, encouragement and training so often fall short.' },
+];
+
+// Build the Cog Matrix visual. The hexagon is rendered from the official
+// Story Liberator SVG; the four quadrants each carry a pulsing button that
+// reveals a description card below the visual. The dedicated sub-page will
+// later layer richer interactivity over this same asset.
+function buildCogMatrixVisual(){
+  const wrap = document.createElement('div');
+  wrap.className = 'cog-svg-wrap';
+
+  // Stage holds the SVG plus the four overlay buttons
+  const stage = document.createElement('div');
+  stage.className = 'cog-svg-stage';
+  stage.innerHTML = COG_HEXAGON_SVG;
+  const svg = stage.querySelector('svg');
+  if (svg) {
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label',
+      'The Cog Matrix: a hexagon split into four quadrants. ' +
+      'Comfort sits at high support and low challenge. ' +
+      'Commitment sits at high support and high challenge. ' +
+      'Apathy sits at low support and low challenge. ' +
+      'Stress sits at low support and high challenge.'
+    );
+  }
+
+  // Single shared reveal card; content is swapped per click.
+  const card = document.createElement('div');
+  card.className = 'cog-q-card';
+  card.setAttribute('role', 'region');
+  card.setAttribute('aria-live', 'polite');
+  card.setAttribute('aria-hidden', 'true');
+  card.innerHTML =
+    '<p class="cog-q-card-eyebrow"></p>' +
+    '<h3 class="cog-q-card-title"></h3>' +
+    '<p class="cog-q-card-body"></p>' +
+    '<button class="cog-q-card-close" type="button" aria-label="Close">\u00D7</button>';
+
+  const eyebrow = card.querySelector('.cog-q-card-eyebrow');
+  const title   = card.querySelector('.cog-q-card-title');
+  const body    = card.querySelector('.cog-q-card-body');
+  const closeBtn= card.querySelector('.cog-q-card-close');
+
+  let activeId = null;
+
+  function setButtonStates(openId){
+    stage.querySelectorAll('.cog-q-btn').forEach(b => {
+      const isActive = b.dataset.posId === openId;
+      b.classList.toggle('is-active', isActive);
+      b.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+    });
+  }
+
+  function openCard(pos){
+    activeId = pos.id;
+    eyebrow.textContent = pos.axis;
+    title.textContent   = pos.label;
+    body.textContent    = pos.body;
+    card.classList.add('is-open');
+    card.setAttribute('aria-hidden', 'false');
+    setButtonStates(pos.id);
+    try { playChime(); } catch(e) {}
+  }
+
+  function closeCard(){
+    if (!activeId) return;
+    activeId = null;
+    card.classList.remove('is-open');
+    card.setAttribute('aria-hidden', 'true');
+    setButtonStates(null);
+    try { playReturn(); } catch(e) {}
+  }
+
+  closeBtn.addEventListener('click', closeCard);
+
+  // Allow Escape to close the open card
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCard();
+  });
+
+  // Build the four overlay buttons
+  COG_POSITIONS.forEach(pos => {
+    const btn = document.createElement('button');
+    btn.className = 'cog-q-btn cog-q-btn-' + pos.id;
+    btn.type = 'button';
+    btn.dataset.posId = pos.id;
+    btn.setAttribute('aria-label', 'Read about ' + pos.label + ': ' + pos.axis);
+    btn.setAttribute('aria-expanded', 'false');
+    btn.textContent = '+';
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      try { playShush(); } catch(err) {}
+      if (activeId === pos.id) closeCard();
+      else openCard(pos);
+    });
+    stage.appendChild(btn);
+  });
+
+  wrap.appendChild(stage);
+  wrap.appendChild(card);
+  return wrap;
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  Personal Exploration worksheet (the Cog Matrix worksheet,
+//  carried over from the planned sub-page so the hub holds the
+//  full Cog Matrix experience).
+// ─────────────────────────────────────────────────────────────────
+
+const COG_PE_QUADRANTS = [
+  { id:'comfort',    label:'Comfort',    axis:'Low Challenge / High Support' },
+  { id:'commitment', label:'Commitment', axis:'High Challenge / High Support' },
+  { id:'apathy',     label:'Apathy',     axis:'Low Challenge / Low Support' },
+  { id:'stress',     label:'Stress',     axis:'High Challenge / Low Support' }
+];
+
+const COG_PE_FIELDS = [
+  { id:'situation',    label:'Situation',                placeholder:'A time you experienced this position, as leader or follower...' },
+  { id:'impact',       label:'Impact on those involved', placeholder:'What was the outcome? How did it feel?' },
+  { id:'improvements', label:'Improvements',             placeholder:'What could have been done differently?' }
+];
+
+function buildCogPersonalExploration(){
+  // Section divider (matches the Change Sheet pattern)
+  const divider = document.createElement('div');
+  divider.className = 'ws-divider slide-up delay4';
+  divider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Personal Exploration</div><div class="ws-divider-line"></div>';
+
+  // Worksheet card
+  const card = document.createElement('div');
+  card.className = 'ws-card slide-up delay4';
+
+  let quadrantsHTML = '';
+  COG_PE_QUADRANTS.forEach(q => {
+    let fieldsHTML = '';
+    COG_PE_FIELDS.forEach(f => {
+      const fid = 'pe-' + q.id + '-' + f.id;
+      fieldsHTML +=
+        '<div class="cog-pe-field">' +
+          '<label class="ws-field-label" for="' + fid + '">' + f.label + '</label>' +
+          '<textarea id="' + fid + '" data-pe-quad="' + q.id + '" data-pe-field="' + f.id + '" rows="3" placeholder="' + f.placeholder + '"></textarea>' +
+        '</div>';
+    });
+    quadrantsHTML +=
+      '<section class="cog-pe-quadrant" aria-labelledby="pe-h-' + q.id + '">' +
+        '<header class="cog-pe-quad-header">' +
+          '<h3 id="pe-h-' + q.id + '">' + q.label + '</h3>' +
+          '<span class="cog-pe-axis">' + q.axis + '</span>' +
+        '</header>' +
+        fieldsHTML +
+      '</section>';
+  });
+
+  card.innerHTML =
+    '<h2>Personal Exploration</h2>' +
+    '<p class="cog-pe-intro">For each of the four positions, think of a time you have <strong>experienced it</strong>, either as a leader or as a team member. Capture what happened, the impact on those involved, and what could have been different. There are no right answers; the value is in the reflection itself.</p>' +
+    '<div class="cog-pe-grid">' + quadrantsHTML + '</div>' +
+    '<div class="cog-pe-final">' +
+      '<h3>Final reflection</h3>' +
+      '<p class="cog-pe-final-prompt">Looking across the four positions, what does this reveal about your own style as a leader, and where you would like to operate more often?</p>' +
+      '<textarea id="pe-final" rows="4" placeholder="Your reflection on what these experiences mean for you as a leader..."></textarea>' +
+    '</div>' +
+    '<div class="ws-actions">' +
+      '<button class="ws-reset-btn" id="pe-reset-btn" type="button">' +
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>' +
+        ' Reset form' +
+      '</button>' +
+      '<button class="ws-download-btn" id="pe-pdf-btn" type="button">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+        ' Download as PDF' +
+      '</button>' +
+    '</div>';
+
+  // Book reference
+  const book = document.createElement('div');
+  book.className = 'book-card slide-up delay4';
+  book.style.maxWidth = '800px';
+  book.style.margin = '20px auto 0';
+  book.innerHTML =
+    '<div class="book-icon">' +
+      '<div class="book-spine" style="background:#0061AD"></div>' +
+      '<div class="book-body" style="background:#0061AD"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>' +
+    '</div>' +
+    '<div class="book-info">' +
+      '<div class="book-label">Liberator Book</div>' +
+      '<div class="book-pages-text">Pages: 33&ndash;35 (Personal Exploration)</div>' +
+    '</div>';
+
+  // Wire up the PDF download once the elements are in the DOM.
+  setTimeout(() => {
+    const btn = card.querySelector('#pe-pdf-btn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      try { playChime(); } catch(e) {}
+      const state = { quadrants: {}, finalReflection: '' };
+      COG_PE_QUADRANTS.forEach(q => {
+        state.quadrants[q.id] = { label:q.label, axis:q.axis, fields:{} };
+        COG_PE_FIELDS.forEach(f => {
+          const el = card.querySelector('#pe-' + q.id + '-' + f.id);
+          state.quadrants[q.id].fields[f.id] = el ? (el.value || '') : '';
+        });
+      });
+      const finalEl = card.querySelector('#pe-final');
+      state.finalReflection = finalEl ? (finalEl.value || '') : '';
+      downloadCogExplorationPDF(state);
+    });
+
+    // Wire up the Reset button. Only ask for confirmation if any field has
+    // content; clearing an already-empty form just clears it silently.
+    const resetBtn = card.querySelector('#pe-reset-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        const textareas = Array.from(card.querySelectorAll('textarea'));
+        const hasContent = textareas.some(t => t.value.trim() !== '');
+        if (hasContent && !window.confirm('Clear all of your reflections? This cannot be undone.')) return;
+        try { playReturn(); } catch(e) {}
+        textareas.forEach(t => { t.value = ''; });
+        const first = textareas[0];
+        if (first) first.focus({ preventScroll: true });
+      });
+    }
+  }, 80);
+
+  return { divider, card, book };
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  PDF generator for the Personal Exploration worksheet.
+//  Layout: one A4 page per quadrant (4 pages) + a final reflection
+//  page. Follows the established escPDF / wrap / sanitize pattern.
+// ─────────────────────────────────────────────────────────────────
+function downloadCogExplorationPDF(state){
+  try {
+    const W = 595.28, H = 841.89; // A4 in points
+    const M = 50;
+    const blue   = '0 0.38 0.68';
+    const blueD  = '0 0.29 0.52';
+    const white  = '1 1 1';
+    const grey   = '0.42 0.46 0.52';
+    const dark   = '0.15 0.15 0.15';
+    const tint   = '0.96 0.98 1';
+    const tintB  = '0.85 0.91 0.95';
+
+    let objCount = 0;
+    const objects = [];
+    function addObj(data){ objCount++; objects.push({id:objCount, data}); return objCount; }
+    function escPDF(str){ return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str){
+      if (!str) return '';
+      return String(str)
+        .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[\u201C\u201D]/g, '"')
+        .replace(/\u2013|\u2014/g, '-')
+        .replace(/\u2026/g, '...')
+        .replace(/[^\x00-\x7F]/g, '');
+    }
+    function wrapText(text, maxChars){
+      const clean = sanitize(text);
+      if (!clean) return [];
+      const words = clean.split(/\s+/);
+      const lines = [];
+      let line = '';
+      words.forEach(w => {
+        if ((line + ' ' + w).trim().length > maxChars) {
+          if (line) lines.push(line.trim());
+          if (w.length > maxChars) {
+            // Hard-break a very long word
+            for (let i = 0; i < w.length; i += maxChars) {
+              lines.push(w.substring(i, i + maxChars));
+            }
+            line = '';
+          } else {
+            line = w;
+          }
+        } else {
+          line = (line + ' ' + w).trim();
+        }
+      });
+      if (line) lines.push(line.trim());
+      return lines;
+    }
+
+    // We render each page's content stream into a string, then wire
+    // them all into a single PDF at the end.
+    const pageStreams = [];
+
+    // Render order: APATHY, STRESS, COMFORT, COMMITMENT, then final.
+    // (Worst to best, matching the source narrative arc.)
+    const pageOrder = ['apathy','stress','comfort','commitment'];
+
+    pageOrder.forEach((qid, pageIdx) => {
+      const q = state.quadrants[qid];
+      if (!q) return;
+      let s = '';
+
+      // Header bar
+      s += `${blue} rg\n${M} ${H-M-44} ${W-2*M} 44 re f\n`;
+      s += `${blueD} rg\n${M} ${H-M-48} ${W-2*M} 4 re f\n`;
+      s += `${white} rg\n`;
+      s += `BT /F1 16 Tf ${M+14} ${H-M-28} Td (${escPDF('Story Liberator - Personal Exploration')}) Tj ET\n`;
+      s += `BT /F2 9 Tf ${W-M-150} ${H-M-28} Td (${escPDF('The Cog Matrix | p.33-35')}) Tj ET\n`;
+
+      let y = H - M - 70;
+
+      // Quadrant title
+      s += `${dark} rg\n`;
+      s += `BT /F1 22 Tf ${M} ${y} Td (${escPDF(q.label)}) Tj ET\n`;
+      y -= 20;
+      s += `${blue} rg\n`;
+      s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF(q.axis.toUpperCase())}) Tj ET\n`;
+      y -= 22;
+
+      // Page indicator
+      s += `${grey} rg\n`;
+      s += `BT /F2 9 Tf ${W-M-50} ${y+18} Td (${escPDF('Page ' + (pageIdx+1) + ' of 5')}) Tj ET\n`;
+
+      // Three field blocks, sized to fit on one page.
+      const fields = COG_PE_FIELDS.map(f => ({
+        label: f.label,
+        text:  q.fields[f.id] || ''
+      }));
+
+      const lh = 13;
+      const fieldGap = 14;
+      const labelHeight = 16;
+      const minBoxH = 110;
+      const charsPerLine = 78;
+
+      fields.forEach(f => {
+        // Label
+        s += `${blue} rg\n`;
+        s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF(f.label.toUpperCase())}) Tj ET\n`;
+        y -= labelHeight - 4;
+
+        // Wrap and size the box
+        const lines = wrapText(f.text, charsPerLine);
+        const contentH = Math.max(minBoxH, lines.length * lh + 22);
+
+        // Box background
+        s += `${tint} rg\n${M} ${y - contentH} ${W-2*M} ${contentH} re f\n`;
+        s += `${tintB} RG\n0.6 w\n${M} ${y - contentH} ${W-2*M} ${contentH} re S\n`;
+
+        // Content text
+        if (lines.length) {
+          s += `${dark} rg\n`;
+          let cy = y - 16;
+          const maxLines = Math.floor((contentH - 24) / lh);
+          for (let i = 0; i < Math.min(lines.length, maxLines); i++) {
+            s += `BT /F2 10 Tf ${M+12} ${cy} Td (${escPDF(lines[i])}) Tj ET\n`;
+            cy -= lh;
+          }
+          if (lines.length > maxLines) {
+            s += `${grey} rg\n`;
+            s += `BT /F3 9 Tf ${M+12} ${cy} Td (${escPDF('... continued in form (' + (lines.length - maxLines) + ' further lines)')}) Tj ET\n`;
+          }
+        } else {
+          s += `${grey} rg\n`;
+          s += `BT /F3 10 Tf ${M+12} ${y - 18} Td (${escPDF('(not completed)')}) Tj ET\n`;
+        }
+
+        y -= contentH + fieldGap;
+      });
+
+      // Footer
+      s += `${grey} rg\n`;
+      s += `BT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Personal Exploration - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+      pageStreams.push(s);
+    });
+
+    // Final reflection page
+    {
+      let s = '';
+      s += `${blue} rg\n${M} ${H-M-44} ${W-2*M} 44 re f\n`;
+      s += `${blueD} rg\n${M} ${H-M-48} ${W-2*M} 4 re f\n`;
+      s += `${white} rg\n`;
+      s += `BT /F1 16 Tf ${M+14} ${H-M-28} Td (${escPDF('Story Liberator - Personal Exploration')}) Tj ET\n`;
+      s += `BT /F2 9 Tf ${W-M-150} ${H-M-28} Td (${escPDF('The Cog Matrix | p.33-35')}) Tj ET\n`;
+
+      let y = H - M - 70;
+      s += `${dark} rg\n`;
+      s += `BT /F1 22 Tf ${M} ${y} Td (${escPDF('Final reflection')}) Tj ET\n`;
+      y -= 20;
+      s += `${blue} rg\n`;
+      s += `BT /F1 10 Tf ${M} ${y} Td (${escPDF('LOOKING ACROSS ALL FOUR POSITIONS')}) Tj ET\n`;
+      y -= 22;
+
+      s += `${grey} rg\n`;
+      s += `BT /F2 9 Tf ${W-M-50} ${y+18} Td (${escPDF('Page 5 of 5')}) Tj ET\n`;
+
+      // Prompt
+      s += `${dark} rg\n`;
+      const prompt = wrapText('What does this reveal about your own style as a leader, and where you would like to operate more often?', 78);
+      let py = y;
+      prompt.forEach(line => {
+        s += `BT /F3 11 Tf ${M} ${py} Td (${escPDF(line)}) Tj ET\n`;
+        py -= 14;
+      });
+      y = py - 12;
+
+      // Reflection box (large)
+      const lh = 13;
+      const lines = wrapText(state.finalReflection, 78);
+      const boxH = Math.max(420, lines.length * lh + 32);
+      s += `${tint} rg\n${M} ${y - boxH} ${W-2*M} ${boxH} re f\n`;
+      s += `${tintB} RG\n0.6 w\n${M} ${y - boxH} ${W-2*M} ${boxH} re S\n`;
+
+      if (lines.length) {
+        s += `${dark} rg\n`;
+        let cy = y - 18;
+        const maxLines = Math.floor((boxH - 30) / lh);
+        for (let i = 0; i < Math.min(lines.length, maxLines); i++) {
+          s += `BT /F2 10 Tf ${M+14} ${cy} Td (${escPDF(lines[i])}) Tj ET\n`;
+          cy -= lh;
+        }
+      } else {
+        s += `${grey} rg\n`;
+        s += `BT /F3 10 Tf ${M+14} ${y - 20} Td (${escPDF('(not completed)')}) Tj ET\n`;
+      }
+
+      // Footer
+      s += `${grey} rg\n`;
+      s += `BT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Personal Exploration - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+      pageStreams.push(s);
+    }
+
+    // Wire the PDF object structure
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId   = addObj(''); // placeholder, filled below
+    const font1Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const font3Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique >>');
+
+    const pageIds = [];
+    pageStreams.forEach(s => {
+      const streamBytes = new TextEncoder().encode(s);
+      const streamId = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${s}endstream`);
+      const pageId = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R /F3 ${font3Id} 0 R >> >> >>`);
+      pageIds.push(pageId);
+    });
+
+    objects[1].data = `<< /Type /Pages /Kids [${pageIds.map(id => id + ' 0 R').join(' ')}] /Count ${pageIds.length} >>`;
+
+    // Assemble
+    let pdf = '%PDF-1.4\n';
+    const offsets = [];
+    objects.forEach(obj => {
+      offsets.push(pdf.length);
+      pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`;
+    });
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objCount + 1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10, '0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount + 1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Cog-Personal-Exploration-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch(err) {
+    console.error('Cog Personal Exploration PDF generation failed', err);
+    alert('Sorry, there was a problem generating your PDF. Please try again.');
+  }
+}
+
+
+// Foundation cards: one per sub-page. Used on the hub and on every sub-page
+// (where the current sub-page is omitted from the cross-link grid).
+function buildFoundationCard(sp, num){
+  const card = document.createElement('button');
+  card.className = 'foundation-card';
+  card.setAttribute('aria-label', sp.label + '. In development. Open placeholder page.');
+  const icon = SUBPAGE_ICONS[sp.id] || '';
+  card.innerHTML = `
+    <div class="foundation-status">In development</div>
+    <div class="foundation-icon">${icon}</div>
+    <div class="foundation-name">${sp.label}</div>
+    <p class="foundation-blurb">${sp.blurb}</p>
+    <span class="foundation-cta">Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+  `;
+  card.addEventListener('click', () => { playChime(); goCogSub(sp.id); });
+  return card;
+}
+
+function buildCogHubPage(){
+  const page = document.createElement('div');
+  page.className = 'page';
+  page.style.background = '#EAF4FB';
+
+  const qColour = '#0061AD';
+
+  // Header buttons: Return to wheel, Magnify, Read aloud
+  const wheelBtn = document.createElement('button');
+  wheelBtn.className = 'back-btn';
+  wheelBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Return to wheel';
+  wheelBtn.addEventListener('click', () => { playReturn(); goHome(); });
+
+  const btnRow = document.createElement('div');
+  btnRow.className = 'ws-back-btns';
+  btnRow.appendChild(wheelBtn);
+  btnRow.appendChild(buildMagnifyButton(page));
+  const cogReadBtn = buildReadAloudButton(page);
+  if (cogReadBtn) btnRow.appendChild(cogReadBtn);
+
+  // Hero
+  const hero = document.createElement('div');
+  hero.className = 'hero slide-up delay1';
+  hero.style.background = qColour;
+  hero.innerHTML = `
+    <div class="hero-blob1"></div><div class="hero-blob2"></div>
+    <p class="hero-eyebrow">Central Underpinning Mindset</p>
+    <h1>The Cog</h1>
+    <p>At the centre of the Story Liberator wheel sits the Cog: the deeply held frame of reference from which everything else flows. Without it, the skills around the wheel become technique without substance.</p>
+    <div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> This page includes the Personal Exploration worksheet below. Reflect on each position and download your answers as a PDF.</div>
+  `;
+
+  // Thread banner
+  const threadBanner = document.createElement('div');
+  threadBanner.className = 'thread-banner slide-up delay3';
+  threadBanner.innerHTML = '<div class="thread-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="thread-text"><span class="thread-main">High Challenge &amp; High Support</span><span class="thread-sub">with Positive Regard &amp; Genuineness</span></div>';
+
+  // Hub headline statement
+  const headline = document.createElement('div');
+  headline.className = 'cog-headline slide-up delay2';
+  headline.innerHTML = `
+    <p class="cog-headline-eyebrow">The heart of the Liberator</p>
+    <p class="cog-headline-quote">The Cog is the central underpinning mindset of The Liberator. It is the deeply held frame of reference from which Leader-Developers act: <span class="strong">holding High Challenge and High Support in powerful and equal balance, with Positive Regard and Genuineness running through everything they do.</span> Without this mindset, the skills around the wheel become technique without substance. With it, even an imperfect interaction can land well.</p>
+  `;
+
+  // Model card with the Cog matrix as headline visual
+  const modelCard = document.createElement('div');
+  modelCard.className = 'model-card slide-up delay3';
+  modelCard.innerHTML = `
+    <p class="model-eyebrow">Headline visual</p>
+    <h2>The Cog Matrix</h2>
+    <p class="desc">If the emphasis placed on both Challenge and Support varies from low to high, then there are four possible mindsets a Leader-Developer can operate from at any given time. The matrix is the visual shorthand for this both/and choice. It is not a personality test, but a description of the position a leader operates from in the moment, and the consequences that follow.</p>
+  `;
+  modelCard.appendChild(buildCogMatrixVisual());
+
+  // Bullets / Note / Book reference (right column)
+  const bulletsCard = document.createElement('div');
+  bulletsCard.className = 'bullets-card slide-up delay3';
+  bulletsCard.innerHTML = '<h2>Key Takeaways</h2>';
+  const bullets = [
+    'High Challenge and High Support are held together, not traded off. The goal is balance, not a single dominant style.',
+    'Positive Regard and Genuineness are threaded through everything: respect for the person, even when challenging the behaviour.',
+    'The Cog is a position, not a personality. It is something you operate from in the moment, and you can return to it at any time.'
+  ];
+  bullets.forEach(b => {
+    const item = document.createElement('div');
+    item.className = 'bullet-item';
+    item.style.borderLeft = '3px solid ' + qColour;
+    item.textContent = b;
+    bulletsCard.appendChild(item);
+  });
+
+  const noteCard = document.createElement('div');
+  noteCard.className = 'note-card slide-up delay4';
+  noteCard.style.background = qColour;
+  noteCard.innerHTML = '<p class="note-eyebrow">Why this comes first</p><p>Every behaviour around the wheel rests on the Cog. When the matrix sits in the right position, with Positive Regard and Genuineness threaded through it, a leader can act imperfectly and still land well. Without it, even the best technique falls flat. This is why we treat the Cog as the foundation of the Liberator Programme.</p>';
+
+  const bookCard = document.createElement('div');
+  bookCard.className = 'book-card slide-up delay4';
+  bookCard.innerHTML = `<div class="book-icon"><div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div></div><div class="book-info"><div class="book-label">Liberator Book</div><div class="book-pages-text">Pages 28&ndash;60, plus Chapter 6</div></div>`;
+
+  const rightCol = document.createElement('div');
+  rightCol.className = 'right-col';
+  rightCol.appendChild(bulletsCard);
+  rightCol.appendChild(noteCard);
+  rightCol.appendChild(bookCard);
+
+  const detailGrid = document.createElement('div');
+  detailGrid.className = 'detail-grid';
+  detailGrid.appendChild(modelCard);
+  detailGrid.appendChild(rightCol);
+
+  // Foundations grid: five sub-page links
+  const foundations = document.createElement('div');
+  foundations.className = 'foundations-section slide-up delay4';
+  foundations.style.marginTop = '26px';
+  foundations.innerHTML = `
+    <p class="foundations-eyebrow">Foundations</p>
+    <h2 class="foundations-title">Four models that underpin the Cog</h2>
+  `;
+  const grid = document.createElement('div');
+  grid.className = 'foundations-grid';
+  COG_SUBPAGES.forEach((sp, i) => grid.appendChild(buildFoundationCard(sp, i + 1)));
+  foundations.appendChild(grid);
+
+  const cont = document.createElement('div');
+  cont.className = 'container';
+  cont.appendChild(hero);
+  cont.appendChild(threadBanner);
+  cont.appendChild(headline);
+  cont.appendChild(detailGrid);
+  // Personal Exploration worksheet (carried over from the planned Cog Matrix sub-page)
+  const exploration = buildCogPersonalExploration();
+  cont.appendChild(exploration.divider);
+  cont.appendChild(exploration.card);
+  cont.appendChild(exploration.book);
+  cont.appendChild(foundations);
+  cont.appendChild(buildBackToTopButton('Back to top'));
+
+  page.appendChild(buildHeader(btnRow));
+  page.appendChild(cont);
+  return page;
+}
+
+// Generic sub-page (placeholder) used by all five Cog sub-pages until they are built.
+function buildCogSubPage(spId){
+  const idx = COG_SUBPAGES.findIndex(s => s.id === spId);
+  if (idx < 0) return null;
+  const sp = COG_SUBPAGES[idx];
+
+  const page = document.createElement('div');
+  page.className = 'page';
+  page.style.background = '#EAF4FB';
+
+  const qColour = '#0061AD';
+
+  // Header buttons: Back to The Cog, Return to wheel, Magnify, Read aloud
+  const backToCogBtn = document.createElement('button');
+  backToCogBtn.className = 'back-btn';
+  backToCogBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back to The Cog';
+  backToCogBtn.addEventListener('click', () => { playReturn(); goCog(); });
+
+  const wheelBtn = document.createElement('button');
+  wheelBtn.className = 'back-btn';
+  wheelBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Return to wheel';
+  wheelBtn.addEventListener('click', () => { playReturn(); goHome(); });
+
+  const btnRow = document.createElement('div');
+  btnRow.className = 'ws-back-btns';
+  btnRow.appendChild(backToCogBtn);
+  btnRow.appendChild(wheelBtn);
+  btnRow.appendChild(buildMagnifyButton(page));
+  const subReadBtn = buildReadAloudButton(page);
+  if (subReadBtn) btnRow.appendChild(subReadBtn);
+
+  // Hero
+  const hero = document.createElement('div');
+  hero.className = 'hero slide-up delay1';
+  hero.style.background = qColour;
+  hero.innerHTML = `
+    <div class="hero-blob1"></div><div class="hero-blob2"></div>
+    <p class="hero-eyebrow">The Cog &middot; Foundation ${idx + 1} of ${COG_SUBPAGES.length}</p>
+    <h1>${sp.label}</h1>
+    <p>${sp.blurb}</p>
+  `;
+
+  // Thread banner
+  const threadBanner = document.createElement('div');
+  threadBanner.className = 'thread-banner slide-up delay3';
+  threadBanner.innerHTML = '<div class="thread-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="thread-text"><span class="thread-main">High Challenge &amp; High Support</span><span class="thread-sub">with Positive Regard &amp; Genuineness</span></div>';
+
+  // "In development" notice
+  const coming = document.createElement('div');
+  coming.className = 'cog-sub-coming slide-up delay2';
+  coming.innerHTML = `
+    <p class="cog-sub-coming-eyebrow">Currently in development</p>
+    <h2 class="cog-sub-coming-title">${sp.label} is being built</h2>
+    <p class="cog-sub-coming-body">This sub-page is being shaped from the source material in The Liberator (${sp.pages}). It will follow the same pattern as the rest of the tool: model card, key takeaways, note card, and the relevant interactive worksheet where one applies. Check back soon.</p>
+    <div class="cog-sub-coming-pulse"><span class="cog-sub-coming-pulse-dot"></span> In development</div>
+  `;
+
+  // Book reference for this sub-page's pages
+  const bookCard = document.createElement('div');
+  bookCard.className = 'book-card slide-up delay3 cog-sub-bookrow';
+  bookCard.innerHTML = `<div class="book-icon"><div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div></div><div class="book-info"><div class="book-label">Liberator Book</div><div class="book-pages-text">Pages: ${sp.pages}</div></div>`;
+
+  // Cross-link grid: the other foundations
+  const otherSection = document.createElement('div');
+  otherSection.className = 'foundations-section slide-up delay4';
+  otherSection.innerHTML = '<p class="cog-sub-other-title">The other foundations</p>';
+  const otherGrid = document.createElement('div');
+  otherGrid.className = 'foundations-grid';
+  COG_SUBPAGES.forEach((sp2, i) => {
+    if (sp2.id === spId) return;
+    otherGrid.appendChild(buildFoundationCard(sp2, i + 1));
+  });
+  otherSection.appendChild(otherGrid);
+
+  const cont = document.createElement('div');
+  cont.className = 'container';
+  cont.appendChild(hero);
+  cont.appendChild(threadBanner);
+  cont.appendChild(coming);
+  cont.appendChild(bookCard);
+  cont.appendChild(otherSection);
+  cont.appendChild(buildBackToTopButton('Back to top'));
+
+  page.appendChild(buildHeader(btnRow));
+  page.appendChild(cont);
+  return page;
+}
+
+function goCog(){
+  window.location.hash = '#/cog';
+  const page = buildCogHubPage();
+  // If the user arrived by clicking the centre of the wheel, attach a
+  // matching scale-up entrance so the navigation reads as one continuous
+  // zoom into the cog. The flag is consumed once.
+  if (window.__cogZoomEntry) {
+    page.classList.add('cog-page-zoom-in');
+    window.__cogZoomEntry = false;
+    setTimeout(() => page.classList.remove('cog-page-zoom-in'), 600);
+  }
+  showPage(page);
+}
+function goCogSub(spId){
+  const p = buildCogSubPage(spId);
+  if (!p) return goCog();
+  window.location.hash = '#/cog/' + spId;
+  showPage(p);
+}
+
 // Handle direct URL navigation
 function handleHash() {
   const hash = window.location.hash;
   if (hash === '#/coming-soon') { goComingSoon(); return; }
+  if (hash === '#/cog') { goCog(); return; }
+  if (hash.startsWith('#/cog/')) {
+    const subId = hash.slice('#/cog/'.length);
+    // The Cog Matrix sub-page has been consolidated into the hub itself.
+    if (subId === 'matrix') { goCog(); return; }
+    if (COG_SUBPAGES.some(s => s.id === subId)) { goCogSub(subId); return; }
+    goCog();
+    return;
+  }
   if (hash.startsWith('#/')) {
     const path = hash.slice(2);
     if (path === 'individual-needs/maslow') { goMaslow(); return; }
@@ -9647,6 +10760,8 @@ const welcomeBtn = document.getElementById('welcome-btn');
 welcomeBtn.addEventListener('click', function() {
   getCtx(); // unlock audio
   audioReady = true;
+  // Pre-warm speech synthesis voices so the first Read aloud click can pick a UK voice
+  try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch(e) {}
   welcomeOverlay.classList.add('dismissed');
   setTimeout(() => { welcomeOverlay.style.display = 'none'; }, 500);
 });
