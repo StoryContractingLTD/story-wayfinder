@@ -1413,7 +1413,8 @@ const SEGMENTS = [
       eyebrow:'Companion model',
       title:'The OK Corral',
       text:'A companion model that frames four different ways of approaching any interaction, and shows why genuine assertion is the most productive position to lead from.',
-      cta:'View the OK Corral on the wheel home page'
+      cta:'View the OK Corral',
+      cogSubId:'ok-corral'
     },
     hasAssertionRehearsal:true
   },
@@ -1478,24 +1479,33 @@ const SEGMENTS = [
     id:'adapt-style', label:'Flexibly adapt style',
     quadrant:'Developing', startAngle:210, endAngle:240,
     tagline:'Match your style to the person and the moment',
-    desc:'Great leaders do not rely on one approach. They read the situation, understand what the person needs, and adapt accordingly. Situational consistency means bringing the same values to every interaction while being genuinely flexible in how you lead.',
+    desc:'Great leaders do not rely on one approach. They read the situation, understand what the person needs, and adapt accordingly. Situational Consistency means bringing the same values to every interaction while being genuinely flexible in how you lead.',
     modelTitle:'Leadership Styles & Situational Consistency',
-    modelDesc:'Based on Blanchard, Zigarmi and Zigarmi (1985), this model identifies four leadership styles: Directing, Coaching, Mentoring, and Delegating. Effective leaders choose the right style to match the team member\'s confidence and competence for a given task, always within a framework of High Challenge and High Support.',
-    bullets:['Match the style to the person\'s capability and confidence for that specific task','Directing gives clarity early; mentoring and coaching increase involvement as readiness grows','Delegating is not withdrawal: support, feedback and recognition still matter'],
+    modelDesc:'Based on Blanchard, Zigarmi and Zigarmi (1985), this model identifies four leadership styles: Directing, Coaching, Mentoring, and Delegating. Situational Consistency combines two skills: Style Effectiveness (selecting the right style for the situation) and Style Flexibility (using a range of styles as the situation shifts). The result is the same values shown in every interaction, with genuinely adaptive behaviour to match what the person in front of you actually needs.',
+    bullets:['Style Effectiveness is choosing the right style for the moment; Style Flexibility is using the full range when each is needed','Maturity has two dimensions: Can Do (skill and experience) and Will Do (desire and willingness to take responsibility), and both shift across tasks and over time','Adapting your style is not lowering your standard. The challenge stays high; the support flexes to match what the person needs to succeed'],
     modelType:'leadership-styles',
-    bookPages:'245',
+    bookPages:'241-262',
+    hasStyleTools: true,
     noteTitle:'Flex the style, hold the standard',
     noteText:'The four styles are not fixed labels but flexible responses to the situation. A person may need different levels of direction and support depending on the task, even within the same role. The leader\'s job is to adjust how much guidance they provide without lowering expectations or support. Used well, this helps people build confidence, judgement and independence over time.'
   },
   {
     id:'continuous-improvement', label:'Generate continuous improvement',
     quadrant:'Developing', startAngle:240, endAngle:270,
-    tagline:'Making getting better a daily habit',
-    desc:'Continuous improvement is not about grand transformation projects. It is about building a culture where small, regular improvements are noticed, celebrated, and compounded over time.',
-    modelTitle:'After Action Review (AAR)',
-    modelDesc:'Originally developed by the US Army, the After Action Review is a structured debrief that asks four questions: What was supposed to happen? What actually happened? Why was there a difference? What can we learn? It turns every experience into a learning opportunity.',
-    bullets:['Run brief reviews after every significant activity','Focus on what happened, not who is to blame','Capture lessons and make them visible to the wider team'],
-    modelType:'aar'
+    tagline:'Making continuous improvement a way of life',
+    desc:'This skill is about establishing continuous improvement, with the individual, as a way of life so that it becomes a habit. The way you handle mistakes is the hinge point in the process. React with command and control, and people will quickly realise you do not really trust them. Treat the mistake as a learning opportunity, restoring confidence where needed, and you build the trust and support that drives further progress.',
+    modelTitle:'The Change and Performance Loss Curve',
+    modelDesc:'Continuous improvement always involves change, and change has a predictable effect on people and on their performance. The Change and Performance Loss Curve maps the seven stages people typically move through during a transition, alongside the dip in performance that often accompanies it. Recognising where someone sits on the curve helps you respond with the right balance of challenge and support, so the dip is shallower and the recovery faster.',
+    bullets:[
+      'Accept that mistakes will happen, and treat genuine ones as learning opportunities rather than as failures to apportion blame for',
+      'Stay situationally consistent: adjust your style if someone is not yet capable or willing, but never lower the standard',
+      'Do not stop once early wins arrive. The temptation to pause is real, but the best results come from keeping the improvement going to its full fruition'
+    ],
+    modelType:'loss-curve',
+    bookPages:'94, 188',
+    noteTitle:'Conditional and unconditional feedback',
+    noteText:'Feedback is either conditional (for what someone does) or unconditional (for who they are). At work, conditional feedback is what shifts behaviour and attitudes: positive when good performance is achieved, and negative when it is not. Positive unconditional feedback (\'I like you, you\'re a good bloke\') belongs more to home or social life, while negative unconditional feedback (\'you\'re a waste of space\') has limited or no value anywhere. Keep feedback specific to the doing, not the being, and you protect the relationship while still holding the standard. For the four feedback types in full and how to apply them in practice, see <button class="vs-pill" data-go="feedback">Give empowering feedback<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button> on the wheel.',
+    hasLossCurveReflection: true
   }
 ];
 
@@ -1736,6 +1746,7 @@ function buildModelVisual(seg) {
     'leadership-styles': buildLeadershipStylesVisual,
     'motivation-inventory': buildMotivationInventoryVisual,
     aar: buildAARVisual,
+    'loss-curve': buildLossCurveVisual,
     'flight-plan': buildFlightPlanVisual,
     'right-course': buildRightCourseVisual
   };
@@ -4877,6 +4888,202 @@ function buildAARVisual() {
   return svg;
 }
 
+// ============================================================
+//  CHANGE AND PERFORMANCE LOSS CURVE — placeholder
+//  This is a stand-in visual until Scott's polished Illustrator
+//  version is dropped in. It shows the seven stages of the
+//  curve with two indicative lines (Performance, Coping Cycle)
+//  and a small dashed badge marking it as a placeholder.
+// ============================================================
+function buildLossCurveVisual() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = createSVG(600, 320);
+  const LABEL = '#1A3A5C';
+  const id = 'lc' + Math.random().toString(36).slice(2, 7);
+
+  // ─── Inline animation styles (CSS so they fire each time the segment opens) ───
+  const styleEl = document.createElementNS(NS, 'style');
+  styleEl.textContent =
+    '.' + id + '-cope{stroke-dasharray:1500;stroke-dashoffset:1500;animation:' + id + 'draw 1.8s 0.3s ease-out forwards}' +
+    '.' + id + '-perf{stroke-dasharray:1600;stroke-dashoffset:1600;animation:' + id + 'draw 2.0s 0.5s ease-out forwards}' +
+    '@keyframes ' + id + 'draw{to{stroke-dashoffset:0}}' +
+    '.' + id + '-fade{opacity:0;animation:' + id + 'fade 0.5s ease forwards}' +
+    '.' + id + '-l1{animation-delay:2.4s}' +
+    '.' + id + '-l2{animation-delay:2.55s}' +
+    '.' + id + '-l3{animation-delay:2.7s}' +
+    '.' + id + '-l4{animation-delay:2.85s}' +
+    '.' + id + '-l5{animation-delay:3.0s}' +
+    '.' + id + '-l6{animation-delay:3.15s}' +
+    '.' + id + '-l7{animation-delay:3.3s}' +
+    '.' + id + '-cap{animation-delay:3.45s}' +
+    '@keyframes ' + id + 'fade{to{opacity:1}}';
+  svg.appendChild(styleEl);
+
+  // ─── Light background panel ───
+  const bg = document.createElementNS(NS, 'rect');
+  bg.setAttribute('x', 18);
+  bg.setAttribute('y', 22);
+  bg.setAttribute('width', 392);
+  bg.setAttribute('height', 296);
+  bg.setAttribute('rx', 14);
+  bg.setAttribute('ry', 14);
+  bg.setAttribute('fill', '#f4f8fc');
+  bg.setAttribute('stroke', '#e0e8f0');
+  bg.setAttribute('stroke-width', 1);
+  svg.appendChild(bg);
+
+  // ─── Chart group: clean SVG paths transformed to fit ───
+  // translate(40, 40) scale(0.5) maps Scott's 681.73×479.33 viewBox into a
+  // 340×239 area starting at (40, 40) inside our panel.
+  const chart = document.createElementNS(NS, 'g');
+  chart.setAttribute('transform', 'translate(40, 40) scale(0.5)');
+
+  // Coping Cycle (Story blue) — drawn first so Performance overlays at crossings
+  const cope = document.createElementNS(NS, 'path');
+  cope.setAttribute('d', 'M3.59,223.29c1.28,21.11,21.66,36.44,38.67,36.11,10.77-.21,21.06-7.04,29.86-21.15,14.43-23.14,16.63-36.66,37.22-57.26,6.5-6.5,16.26-13.12,27.99-13.06,19.99.1,34.79,21.31,43.54,34.21,19.59,28.87,75.97,112.89,103.88,151.15,19.57,26.83,35.49,45.36,61.58,54.74,7.34,2.64,26.95,9.4,49.76,3.73,27.92-6.94,43.8-28.31,59.71-50.38,5.59-7.75,17.2-24.73,41.05-82.11,23.78-57.21,24.47-69.77,42.92-96.41,9.42-13.61,20.48-29.58,39.81-43.54,38.09-27.52,80.93-27.46,100.15-26.12');
+  cope.setAttribute('fill', 'none');
+  cope.setAttribute('stroke', '#0061AD');
+  cope.setAttribute('stroke-linecap', 'round');
+  cope.setAttribute('stroke-linejoin', 'round');
+  cope.setAttribute('stroke-width', 4);
+  cope.setAttribute('vector-effect', 'non-scaling-stroke');
+  cope.setAttribute('class', id + '-cope');
+  chart.appendChild(cope);
+
+  // Performance Curve (Story orange)
+  const perf = document.createElementNS(NS, 'path');
+  perf.setAttribute('d', 'M2.97,151.14c2.78,9.21,9.05,24.84,23.64,37.94,7.94,7.13,17.77,15.96,29.86,14.93,12.75-1.09,22.63-11.67,32.35-27.37,13.11-21.19,16.04-27.41,25.5-36.7,2.72-2.67,14.54-10.56,29.24-9.95,15.27.63,26.58,10.56,32.97,16.79,37.77,36.86,92.57,128.93,139.33,189.09,9.2,11.83,33.46,42.22,72.78,68.42,17.71,11.8,37.54,22.14,62.82,24.88,11.33,1.23,26.71,2.9,41.68-4.35,17.68-8.57,27.49-26.06,37.32-55.36,16.27-48.49,14.18-74.42,28.61-158.62,1.74-10.14,6.08-34.54,18.66-63.45,12.44-28.56,23.5-39.88,27.99-44.16,5.63-5.37,19.63-18.39,42.3-24.26,13.13-3.4,24.45-3.18,31.72-2.49');
+  perf.setAttribute('fill', 'none');
+  perf.setAttribute('stroke', '#FA6B02');
+  perf.setAttribute('stroke-linecap', 'round');
+  perf.setAttribute('stroke-linejoin', 'round');
+  perf.setAttribute('stroke-width', 4.5);
+  perf.setAttribute('vector-effect', 'non-scaling-stroke');
+  perf.setAttribute('class', id + '-perf');
+  chart.appendChild(perf);
+
+  // Axis L-shape (no animation; stays still as curves draw across it)
+  const axis = document.createElementNS(NS, 'polyline');
+  axis.setAttribute('points', '2,0 2,477.33 679.33,477.33');
+  axis.setAttribute('fill', 'none');
+  axis.setAttribute('stroke', LABEL);
+  axis.setAttribute('stroke-width', 1.5);
+  axis.setAttribute('vector-effect', 'non-scaling-stroke');
+  chart.appendChild(axis);
+
+  svg.appendChild(chart);
+
+  // ─── Stage labels (fade in, staggered, after curves finish) ───
+  function addStageLabel(x, y, text, weight, labelClass, size) {
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', x);
+    t.setAttribute('y', y);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('fill', LABEL);
+    t.setAttribute('font-size', size || 14);
+    t.setAttribute('font-family', "'Barlow', sans-serif");
+    t.setAttribute('font-weight', weight || 700);
+    t.setAttribute('class', id + '-fade ' + id + '-' + labelClass);
+    t.textContent = text;
+    svg.appendChild(t);
+  }
+
+  // Layout follows your reference image: temporally ordered left-to-right,
+  // with vertical position matching where each stage sits on the curve.
+  addStageLabel(70,  190, '1. Shock',            700, 'l1');
+  addStageLabel(120, 75,  '2. Denial',           700, 'l2');
+  addStageLabel(180, 215, '3. Anger /',          700, 'l3');
+  addStageLabel(180, 229, 'Frustration',         600, 'l3');
+  addStageLabel(290, 270, '4. Letting Go',       700, 'l4');
+  addStageLabel(325, 210, '5. Testing /',        700, 'l5');
+  addStageLabel(325, 224, 'Acceptance',          600, 'l5');
+  addStageLabel(260, 105, '6. Searching for',    700, 'l6');
+  addStageLabel(260, 119, 'Understanding',       600, 'l6');
+  addStageLabel(375, 55,  '7. Integration',      700, 'l7');
+
+  // ─── X-axis caption ───
+  addStageLabel(75, 298, 'Beginning of', 700, 'cap', 12);
+  addStageLabel(75, 311, 'Transition',   700, 'cap', 12);
+
+  // Arrow line (animated in with caption)
+  const captionLine = document.createElementNS(NS, 'line');
+  captionLine.setAttribute('x1', 125);
+  captionLine.setAttribute('y1', 305);
+  captionLine.setAttribute('x2', 345);
+  captionLine.setAttribute('y2', 305);
+  captionLine.setAttribute('stroke', LABEL);
+  captionLine.setAttribute('stroke-width', 1.5);
+  captionLine.setAttribute('class', id + '-fade ' + id + '-cap');
+  svg.appendChild(captionLine);
+
+  // Arrow head
+  const xArrow = document.createElementNS(NS, 'path');
+  xArrow.setAttribute('d', 'M350,305 L342,301 L342,309 Z');
+  xArrow.setAttribute('fill', LABEL);
+  xArrow.setAttribute('class', id + '-fade ' + id + '-cap');
+  svg.appendChild(xArrow);
+
+  // "Time"
+  const timeT = document.createElementNS(NS, 'text');
+  timeT.setAttribute('x', 357);
+  timeT.setAttribute('y', 308);
+  timeT.setAttribute('text-anchor', 'start');
+  timeT.setAttribute('fill', LABEL);
+  timeT.setAttribute('font-size', 12);
+  timeT.setAttribute('font-family', "'Barlow', sans-serif");
+  timeT.setAttribute('font-weight', 700);
+  timeT.setAttribute('class', id + '-fade ' + id + '-cap');
+  timeT.textContent = 'Time';
+  svg.appendChild(timeT);
+
+  // ─── Legend (right of chart canvas, visible from the start) ───
+  // Performance Curve indicator
+  const legPerfLine = document.createElementNS(NS, 'line');
+  legPerfLine.setAttribute('x1', 440);
+  legPerfLine.setAttribute('y1', 130);
+  legPerfLine.setAttribute('x2', 480);
+  legPerfLine.setAttribute('y2', 130);
+  legPerfLine.setAttribute('stroke', '#FA6B02');
+  legPerfLine.setAttribute('stroke-width', 4);
+  legPerfLine.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(legPerfLine);
+
+  const legPerfText = document.createElementNS(NS, 'text');
+  legPerfText.setAttribute('x', 488);
+  legPerfText.setAttribute('y', 134);
+  legPerfText.setAttribute('text-anchor', 'start');
+  legPerfText.setAttribute('fill', LABEL);
+  legPerfText.setAttribute('font-size', 14);
+  legPerfText.setAttribute('font-family', "'Barlow', sans-serif");
+  legPerfText.setAttribute('font-weight', 600);
+  legPerfText.textContent = 'Performance Curve';
+  svg.appendChild(legPerfText);
+
+  // Coping Cycle indicator
+  const legCopeLine = document.createElementNS(NS, 'line');
+  legCopeLine.setAttribute('x1', 440);
+  legCopeLine.setAttribute('y1', 160);
+  legCopeLine.setAttribute('x2', 480);
+  legCopeLine.setAttribute('y2', 160);
+  legCopeLine.setAttribute('stroke', '#0061AD');
+  legCopeLine.setAttribute('stroke-width', 4);
+  legCopeLine.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(legCopeLine);
+
+  const legCopeText = document.createElementNS(NS, 'text');
+  legCopeText.setAttribute('x', 488);
+  legCopeText.setAttribute('y', 164);
+  legCopeText.setAttribute('text-anchor', 'start');
+  legCopeText.setAttribute('fill', LABEL);
+  legCopeText.setAttribute('font-size', 14);
+  legCopeText.setAttribute('font-family', "'Barlow', sans-serif");
+  legCopeText.setAttribute('font-weight', 600);
+  legCopeText.textContent = 'Coping Cycle';
+  svg.appendChild(legCopeText);
+
+  return svg;
+}
+
 function buildFlightPlanVisual() {
   const fp = 'fp' + Math.random().toString(36).slice(2,7);
   const wrap = document.createElement('div');
@@ -6219,12 +6426,14 @@ function buildDetailPage(seg, onBack) {
   const rehearsalCallout = seg.hasAssertionRehearsal ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> This section includes an Assertion Rehearsal below. Prepare and download a script for an upcoming conversation.</div>' : '';
   const checkinCallout = seg.hasMomentumCheckin ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> This section includes a Pause Point Check-in below. Work through four short reflection steps and download your check-in as a PDF.</div>' : '';
   const rightCourseCallout = seg.hasRightCourseTools ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7"/><path d="M2 12s4 7 10 7 10-7 10-7"/><circle cx="12" cy="12" r="2"/></svg> This section includes three interactive tools below: a Sensation and Intuition self-check, an Insights Decision Making reflection, and a Skill and Will Course of Action planner.</div>' : '';
+  const styleToolsCallout = seg.hasStyleTools ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg> This section includes a Maturity Matrix and a Situational Style Planner below. Diagnose a real situation, plan your style shift, and download your reflection.</div>' : '';
+  const lossReflectionCallout = seg.hasLossCurveReflection ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> This section includes a personal reflection deck below. Work through four prompts on how you lead people through change.</div>' : '';
   hero.innerHTML = `
     <div class="hero-blob1"></div><div class="hero-blob2"></div>
     <p class="hero-eyebrow">${seg.quadrant}</p>
     <h1>${seg.label}</h1>
     <p>${seg.desc}</p>
-    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}${rehearsalCallout}${checkinCallout}${rightCourseCallout}
+    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}${rehearsalCallout}${checkinCallout}${rightCourseCallout}${styleToolsCallout}${lossReflectionCallout}
   `;
 
   const modelCard = document.createElement('div');
@@ -6259,6 +6468,16 @@ function buildDetailPage(seg, onBack) {
   const noteEyebrow = seg.noteTitle || 'Placeholder';
   const noteBody = seg.noteText || `This content is a placeholder. The final version will include Story-specific examples, facilitator notes, and links to relevant programme materials for the ${seg.quadrant} quadrant.`;
   noteCard.innerHTML = `<p class="note-eyebrow">${noteEyebrow}</p><p>${noteBody}</p>`;
+  // Delegated handler so vs-pill cross-links inside noteText navigate properly
+  noteCard.addEventListener('click', function(e){
+    const pill = e.target.closest('.vs-pill');
+    if (!pill) return;
+    const target = pill.getAttribute('data-go');
+    if (target && typeof goDetail === 'function') {
+      try { playTooltipReveal(); } catch(err){}
+      goDetail(target);
+    }
+  });
 
   const rightCol = document.createElement('div');
   rightCol.className = 'right-col';
@@ -6331,7 +6550,12 @@ function buildDetailPage(seg, onBack) {
     if (ctaBtn) {
       ctaBtn.addEventListener('mouseenter', () => { ctaBtn.style.transform = 'translateY(-1px)'; ctaBtn.style.boxShadow = '0 6px 18px rgba(26,58,92,.32)'; });
       ctaBtn.addEventListener('mouseleave', () => { ctaBtn.style.transform = 'translateY(0)'; ctaBtn.style.boxShadow = '0 4px 14px rgba(26,58,92,.22)'; });
-      ctaBtn.addEventListener('click', () => { try { playMINext(); } catch(e) {} goHome(); });
+      ctaBtn.addEventListener('click', () => {
+        try { playMINext(); } catch(e) {}
+        if (cr.cogSubId) { goCogSub(cr.cogSubId); }
+        else if (cr.segmentId) { goDetail(cr.segmentId); }
+        else { goHome(); }
+      });
     }
     cont.appendChild(crCard);
   }
@@ -6511,6 +6735,112 @@ function buildDetailPage(seg, onBack) {
 
     cont.appendChild(rfDivider);
     cont.appendChild(rfOuter);
+  }
+
+  // Change leadership reflection deck (continuous-improvement segment)
+  if (seg.hasLossCurveReflection) {
+    const lcDivider = document.createElement('div');
+    lcDivider.className = 'ws-divider slide-up delay4';
+    lcDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Personal reflection</div><div class="ws-divider-line"></div>';
+
+    const lcOuter = document.createElement('div');
+    lcOuter.className = 'model-card slide-up delay4';
+    lcOuter.style.cssText = 'padding:28px';
+
+    const lcTitle = document.createElement('div');
+    lcTitle.style.cssText = 'font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:20px;font-weight:800;color:#004B86;margin-bottom:4px;text-align:center';
+    lcTitle.textContent = 'Reflect on your change leadership';
+
+    const lcSub = document.createElement('div');
+    lcSub.style.cssText = 'font-size:13px;color:#888;margin-bottom:24px;line-height:1.6;text-align:center;max-width:440px;margin-left:auto;margin-right:auto';
+    lcSub.textContent = 'Four prompts on how you guide people through change. Click the top card to deal it away and reveal the next.';
+
+    lcOuter.appendChild(lcTitle);
+    lcOuter.appendChild(lcSub);
+
+    const LC_STORY_SVG = '<svg viewBox="0 0 2081 472" style="height:24px;display:block" xmlns="http://www.w3.org/2000/svg"><path fill="#0061AD" d="M1392,473C928,473,464.6,473,1.1,473C1.1,315.7,1.1,158.5,1.1,1.1C694.7,1.1,1388.3,1.1,2082,1.1C2082,158.4,2082,315.7,2082,473C1852.1,473,1622.3,473,1392,473M1552.1,236.6C1558.3,230.1,1565.3,224.2,1570.5,217C1587.8,192.6,1593.4,164.9,1588.7,135.6C1585,112.6,1574.7,92.8,1555.2,78.8C1537.1,65.8,1516.2,62.3,1494.8,62.2C1430.1,61.9,1365.4,62.1,1300.8,62.1C1299,62.1,1297.2,62.1,1295.6,62.1C1271,177.8,1246.7,292.7,1222.2,408C1257.2,408,1291.8,408,1326.5,407.9C1327.6,407.9,1329.5,406,1329.8,404.8C1332.7,392,1335.3,379.2,1338,366.4C1344.7,334.3,1351.3,302.2,1358.2,270.2C1358.4,269,1360.2,267.3,1361.3,267.2C1374.9,266.4,1386.8,269.8,1394.3,282.2C1398.8,289.6,1403.4,297,1406.8,304.8C1420.9,337.5,1434.6,370.4,1448.2,403.2C1449.7,406.7,1451.2,408.1,1455.3,408.1C1489.5,407.9,1523.6,408,1557.8,408C1559.4,408,1561,408,1563.4,408C1555.7,389.3,1548.5,371.1,1540.8,353.3C1529.2,326.6,1516.8,300.3,1498.9,277.2C1495,272.1,1490.5,267.6,1486.1,262.5C1510,258.5,1532.4,252,1552.1,236.6M1064.4,404.9C1103,392.3,1134.2,369.2,1158.9,337.3C1180.5,309.4,1193.6,277.7,1200.1,243C1206.2,210.3,1206,177.8,1194.8,146.2C1179.7,103.6,1151,74.7,1106.8,62.9C1073.5,54.1,1039.6,54.6,1005.8,59.9C960.6,67,923.1,88.7,894.3,123.8C850.5,177.1,833.9,238.8,845.4,306.8C852.4,348.4,876,378.9,914.6,397.1C945.4,411.6,978.2,415,1011.7,413.6C1029.3,412.8,1046.7,410.6,1064.4,404.9M373.3,145.4C374.8,151.2,376.4,157.1,378,163.4C410.7,161.7,443.8,159.9,477.3,158.1C476.4,152.6,475.8,148,474.9,143.5C470.7,122.5,461.7,103.9,445.4,89.4C427.4,73.4,405.6,65.5,382.3,61.1C358.7,56.5,334.8,55.7,310.8,57C286.9,58.4,263.9,63.4,242.4,74.3C200.5,95.6,179.7,138,189.1,183.4C193.8,206.7,208.6,222.5,227.9,234.8C251,249.4,276.6,258.6,302.1,268C315.5,272.9,329.2,277.1,340.8,285.7C347.1,290.4,351.9,296.2,353,304.3C354.9,317.9,348,330.6,334.8,337.9C320.9,345.6,305.9,346.3,290.7,344.9C268.5,342.7,254.3,330.2,249.5,308.6C247.9,301.6,247.7,294.2,246.8,286.6C213.7,288.8,180.6,291,146.2,293.3C147.2,303.9,147.2,314.2,149.2,324.2C154.7,351.6,168.1,374.4,191.7,390.2C215.1,405.8,241.9,410.5,269.1,412.8C293.2,414.9,317.3,414.3,341.3,411.1C371,407.1,397.5,396.4,419.1,375.5C450.7,345,461.4,308.4,448.8,266C442,242.9,425.6,227,405.9,214.2C382.8,199.3,357.1,190,331.7,179.9C319.9,175.2,308.3,169.6,297.4,163.2C289.3,158.5,285.1,150.7,287.9,140.7C290.5,131.2,297.1,125.5,305.8,122C315.1,118.4,324.9,118.1,334.7,119C352.2,120.5,365.8,127.8,373.3,145.4M1696.5,408C1722.3,408,1748.2,408,1774,408.1C1777.1,408.1,1778.5,407.5,1779.2,403.9C1786.3,369.2,1793.5,334.6,1801.2,300C1803.4,289.6,1803.3,278.3,1811.6,270C1813.5,268.1,1815,265.8,1816.6,263.7C1864.7,201.5,1912.9,139.3,1961,77.1C1964.7,72.4,1968.3,67.5,1972.1,62.5C1971.2,62.2,1970.9,62.1,1970.6,62.1C1931.4,62.1,1892.3,62,1853.1,62.2C1851.4,62.2,1849.1,63.6,1848,65.1C1824.1,99.1,1800.4,133.1,1776.6,167.2C1771.4,174.7,1766.1,182.2,1760.5,190.1C1759.4,187.7,1758.6,186,1757.9,184.4C1741.6,144.9,1725.2,105.5,1709,66.1C1707.7,62.9,1706.1,62,1702.8,62C1668.3,62.1,1633.8,62.1,1599.3,62.1C1598.2,62.1,1597.1,62.2,1595.7,62.3C1596.2,63.6,1596.5,64.5,1596.9,65.4C1609.5,91.2,1622.2,117.1,1634.8,143C1655.6,185.5,1676.4,228.1,1697.1,270.7C1698.1,272.8,1699,275.5,1698.5,277.7C1690.9,313.8,1683.1,349.9,1675.3,386C1673.8,393.2,1672.4,400.4,1670.9,408C1679.5,408,1687.5,408,1696.5,408M829.5,62.1C810,62.1,790.5,62.1,771,62.1C693.4,62.1,615.7,62.1,538.1,62C534.5,62,532.6,62.3,531.8,66.7C529,81.8,525.5,96.8,522.3,111.9C519.9,123.5,517.5,135.1,515.1,147.1C551,147.1,586.4,147.1,622.3,147.1C612.9,191,603.4,234.3,594.1,277.7C584.8,321,575.6,364.3,566.3,408C601.3,408,636,408,670.6,407.8C671.8,407.8,673.6,405.7,673.9,404.3C681.3,371.2,688.6,338,695.7,304.9C704.9,262.7,713.9,220.4,723,178.2C725.2,167.8,727.6,157.5,730,147C767.4,147,804.5,147,842,147C848,118.6,853.9,90.5,859.9,62.1C849.8,62.1,840.2,62.1,829.5,62.1z"/><path fill="#FEFFFF" d="M1551.8,236.8C1532.4,252,1510,258.5,1486.1,262.5C1490.5,267.6,1495,272.1,1498.9,277.2C1516.8,300.3,1529.2,326.6,1540.8,353.3C1548.5,371.1,1555.7,389.3,1563.4,408C1561,408,1559.4,408,1557.8,408C1523.6,408,1489.5,407.9,1455.3,408.1C1451.2,408.1,1449.7,406.7,1448.2,403.2C1434.6,370.4,1420.9,337.5,1406.8,304.8C1403.4,297,1398.8,289.6,1394.3,282.2C1386.8,269.8,1374.9,266.4,1361.3,267.2C1360.2,267.3,1358.4,269,1358.2,270.2C1351.3,302.2,1344.7,334.3,1338,366.4C1335.3,379.2,1332.7,392,1329.8,404.8C1329.5,406,1327.6,407.9,1326.5,407.9C1291.8,408,1257.2,408,1222.2,408C1246.7,292.7,1271,177.8,1295.6,62.1C1297.2,62.1,1299,62.1,1300.8,62.1C1365.4,62.1,1430.1,61.9,1494.8,62.2C1516.2,62.3,1537.1,65.8,1555.2,78.8C1574.7,92.8,1585,112.6,1588.7,135.6C1593.4,164.9,1587.8,192.6,1570.5,217C1565.3,224.2,1558.3,230.1,1551.8,236.8M1402.5,202.9C1417.4,202.2,1432.4,202.2,1447.3,200.8C1461.3,199.5,1473.4,193.2,1481.9,181.6C1493.4,165.6,1493.9,136.1,1463,133.4C1438.2,131.3,1413.1,132,1387.9,131.5C1382.8,155.6,1377.8,179,1372.7,202.9C1382.6,202.9,1392.1,202.9,1402.5,202.9z"/><path fill="#FEFFFF" d="M1064,405C1046.7,410.6,1029.3,412.8,1011.7,413.6C978.2,415,945.4,411.6,914.6,397.1C876,378.9,852.4,348.4,845.4,306.8C833.9,238.8,850.5,177.1,894.3,123.8C923.1,88.7,960.6,67,1005.8,59.9C1039.6,54.6,1073.5,54.1,1106.8,62.9C1151,74.7,1179.7,103.6,1194.8,146.2C1206,177.8,1206.2,210.3,1200.1,243C1193.6,277.7,1180.5,309.4,1158.9,337.3C1134.2,369.2,1103,392.3,1064,405M978.7,330C1007.1,341.4,1038.2,334,1058.6,311.4C1075.1,293.2,1084.6,271.5,1091,248.3C1096.6,227.8,1101.2,207.1,1098.1,185.5C1093.8,155.3,1071,135.2,1040.5,135C1014,134.8,993.9,146.9,979.2,167.9C956.5,200.4,947.1,237.3,946.8,276.3C946.6,299.5,956.3,318.5,978.7,330z"/><path fill="#FEFEFF" d="M373.2,145C365.8,127.8,352.2,120.5,334.7,119C324.9,118.1,315.1,118.4,305.8,122C297.1,125.5,290.5,131.2,287.9,140.7C285.1,150.7,289.3,158.5,297.4,163.2C308.3,169.6,319.9,175.2,331.7,179.9C357.1,190,382.8,199.3,405.9,214.2C425.6,227,442,242.9,448.8,266C461.4,308.4,450.7,345,419.1,375.5C397.5,396.4,371,407.1,341.3,411.1C317.3,414.3,293.2,414.9,269.1,412.8C241.9,410.5,215.1,405.8,191.7,390.2C168.1,374.4,154.7,351.6,149.2,324.2C147.2,314.2,147.2,303.9,146.2,293.3C180.6,291,213.7,288.8,246.8,286.6C247.7,294.2,247.9,301.6,249.5,308.6C254.3,330.2,268.5,342.7,290.7,344.9C305.9,346.3,320.9,345.6,334.8,337.9C348,330.6,354.9,317.9,353,304.3C351.9,296.2,347.1,290.4,340.8,285.7C329.2,277.1,315.5,272.9,302.1,268C276.6,258.6,251,249.4,227.9,234.8C208.6,222.5,193.8,206.7,189.1,183.4C179.7,138,200.5,95.6,242.4,74.3C263.9,63.4,286.9,58.4,310.8,57C334.8,55.7,358.7,56.5,382.3,61.1C405.6,65.5,427.4,73.4,445.4,89.4C461.7,103.9,470.7,122.5,474.9,143.5C475.8,148,476.4,152.6,477.3,158.1C443.8,159.9,410.7,161.7,378,163.4C376.4,157.1,374.8,151.2,373.2,145z"/><path fill="#FEFEFF" d="M1696,408C1687.5,408,1679.5,408,1670.9,408C1672.4,400.4,1673.8,393.2,1675.3,386C1683.1,349.9,1690.9,313.8,1698.5,277.7C1699,275.5,1698.1,272.8,1697.1,270.7C1676.4,228.1,1655.6,185.5,1634.8,143C1622.2,117.1,1609.5,91.2,1596.9,65.4C1596.5,64.5,1596.2,63.6,1595.7,62.3C1597.1,62.2,1598.2,62.1,1599.3,62.1C1633.8,62.1,1668.3,62.1,1702.8,62C1706.1,62,1707.7,62.9,1709,66.1C1725.2,105.5,1741.6,144.9,1757.9,184.4C1758.6,186,1759.4,187.7,1760.5,190.1C1766.1,182.2,1771.4,174.7,1776.6,167.2C1800.4,133.1,1824.1,99.1,1848,65.1C1849.1,63.6,1851.4,62.2,1853.1,62.2C1892.3,62,1931.4,62.1,1970.6,62.1C1970.9,62.1,1971.2,62.2,1972.1,62.5C1968.3,67.5,1964.7,72.4,1961,77.1C1912.9,139.3,1864.7,201.5,1816.6,263.7C1815,265.8,1813.5,268.1,1811.6,270C1803.3,278.3,1803.4,289.6,1801.2,300C1793.5,334.6,1786.3,369.2,1779.2,403.9C1778.5,407.5,1777.1,408.1,1774,408.1C1748.2,408,1722.3,408,1696,408z"/><path fill="#FFF" d="M829.5,62.1C840.2,62.1,849.8,62.1,859.9,62.1C853.9,90.5,848,118.6,842,147C804.5,147,767.4,147,730,147C727.6,157.5,725.2,167.8,723,178.2C713.9,220.4,704.9,262.7,695.7,304.9C688.6,338,681.3,371.2,673.9,404.3C673.6,405.7,671.8,407.8,670.6,407.8C636,408,601.3,408,566.3,408C575.6,364.3,584.8,321,594.1,277.7C603.4,234.3,612.9,191,622.3,147.1C586.4,147.1,551,147.1,515.1,147.1C517.5,135.1,519.9,123.5,522.3,111.9C525.5,96.8,529,81.8,531.8,66.7C532.6,62.3,534.5,62,538.1,62C615.7,62.1,693.4,62.1,771,62.1C790.5,62.1,810,62.1,829.5,62.1z"/><path fill="#0161AD" d="M1402,202.9C1392.1,202.9,1382.6,202.9,1372.7,202.9C1377.8,179,1382.8,155.6,1387.9,131.5C1413.1,132,1438.2,131.3,1463,133.4C1493.9,136.1,1493.4,165.6,1481.9,181.6C1473.4,193.2,1461.3,199.5,1447.3,200.8C1432.4,202.2,1417.4,202.2,1402,202.9z"/><path fill="#0161AD" d="M978.4,329.8C956.3,318.5,946.6,299.5,946.8,276.3C947.1,237.3,956.5,200.4,979.2,167.9C993.9,146.9,1014,134.8,1040.5,135C1071,135.2,1093.8,155.3,1098.1,185.5C1101.2,207.1,1096.6,227.8,1091,248.3C1084.6,271.5,1075.1,293.2,1058.6,311.4C1038.2,334,1007.1,341.4,978.4,329.8z"/></svg>';
+
+    const lcPrompts = [
+      { q: 'Think of a recent change you have led or supported. Where on the curve did your team get stuck longest?',
+        hint: 'The stage where progress slowed is often the one that needed the most patient leadership. Was it Shock, Denial, the long descent into Anger, the deep dip of Letting Go, or somewhere in the recovery?' },
+      { q: 'What did people need from you at that stuck stage that you did not see at the time?',
+        hint: 'Different stages call for different responses. Acknowledgement at Shock. Honest information at Denial. Presence and patience at Letting Go. Encouragement at Testing. What was missing in the moment?' },
+      { q: 'Where on the curve are you yourself, right now, with the change you are currently leading?',
+        hint: 'Leaders are not exempt from the curve. Naming where you are honestly stops you projecting your own dip onto the team. Be candid: nobody else is reading this.' },
+      { q: 'What is one stage where you tend to push too hard, too soon?',
+        hint: 'Many leaders try to drag people from Anger straight to Integration, skipping the messier middle. Which stage do you sometimes hurry past, and what does the team lose when you do?' }
+    ];
+
+    const lcDeck = document.createElement('div');
+    lcDeck.className = 'rf-deck-wrap';
+
+    let lcDealtCount = 0;
+
+    function lcBuildCard(idx) {
+      const p = lcPrompts[idx];
+      const card = document.createElement('div');
+      card.className = 'rf-card';
+      card.setAttribute('data-pos', idx);
+      card.setAttribute('data-idx', idx);
+      card.innerHTML =
+        '<div class="rf-card-logo">' + LC_STORY_SVG + '</div>' +
+        '<div class="rf-card-counter">Prompt ' + (idx+1) + ' of ' + lcPrompts.length + '</div>' +
+        '<div class="rf-card-question">' + p.q + '</div>' +
+        '<div class="rf-card-hint">' + p.hint + '</div>' +
+        '<div class="rf-card-cta"><span>Click to deal</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>';
+      return card;
+    }
+
+    const lcDoneBanner = document.createElement('div');
+    lcDoneBanner.className = 'rf-done';
+    lcDoneBanner.innerHTML = '<div class="rf-done-title">Thank you for reflecting</div><div class="rf-done-sub">The change curve repeats every time the world shifts under your team. Come back to these prompts after the next change you lead.</div><button class="rf-done-restart">&#8635; Deal again</button>';
+
+    function lcRenderDeck() {
+      lcDeck.innerHTML = '';
+      for (let i = lcPrompts.length - 1; i >= 0; i--) {
+        lcDeck.appendChild(lcBuildCard(i));
+      }
+      lcDeck.appendChild(lcDoneBanner);
+      lcAttachClick();
+    }
+
+    function lcAttachClick() {
+      const front = lcDeck.querySelector('.rf-card[data-pos="0"]');
+      if (!front) return;
+      front.addEventListener('click', function onClick() {
+        try { playCardFlip(); } catch(err){}
+        front.classList.add('dealt');
+        front.removeEventListener('click', onClick);
+
+        lcDeck.querySelectorAll('.rf-card:not(.dealt)').forEach(c => {
+          const pos = parseInt(c.getAttribute('data-pos'), 10);
+          c.setAttribute('data-pos', Math.max(0, pos - 1));
+        });
+
+        lcDealtCount++;
+
+        front.addEventListener('animationend', () => {
+          front.style.display = 'none';
+          if (lcDealtCount >= lcPrompts.length) {
+            lcDoneBanner.style.display = 'block';
+          } else {
+            lcAttachClick();
+          }
+        }, { once: true });
+      });
+    }
+
+    lcDoneBanner.querySelector('.rf-done-restart').addEventListener('click', () => {
+      lcDealtCount = 0;
+      lcDoneBanner.style.display = 'none';
+      lcRenderDeck();
+    });
+
+    lcRenderDeck();
+    lcOuter.appendChild(lcDeck);
+
+    cont.appendChild(lcDivider);
+    cont.appendChild(lcOuter);
   }
 
   // Vision steps activity (clear-vision segment) - 4-step process from page 79
@@ -6821,6 +7151,49 @@ function buildDetailPage(seg, onBack) {
     cont.appendChild(fpDiv);
     cont.appendChild(fpCard);
     cont.appendChild(fpBook);
+  }
+
+  // Inline Style Tools (D2: Flexibly adapt style)
+  if (seg.hasStyleTools) {
+    // Tool 1: Maturity Matrix (teaching visual)
+    const mmDiv = document.createElement('div');
+    mmDiv.className = 'ws-divider slide-up delay4';
+    mmDiv.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01A4AB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg> Maturity Matrix</div><div class="ws-divider-line"></div>';
+    const mmCard = document.createElement('div');
+    mmCard.className = 'ws-card slide-up delay4';
+    mmCard.innerHTML = '<h2>Maturity Matrix</h2><p class="ws-subtitle">The four leadership styles above are not equally suited to every person. Which style fits depends on where the person sits on the maturity journey for the specific task. Maturity has two dimensions: Can Do (skill and experience) and Will Do (desire and willingness). As a person grows in both, the style that serves them best shifts. Click each stage below to see what good leadership looks like at that point. Based on page 262 of the Liberator book.</p>';
+    const mmWrap = document.createElement('div');
+    mmWrap.style.marginTop = '18px';
+    mmWrap.appendChild(buildMaturityMatrix());
+    mmCard.appendChild(mmWrap);
+    cont.appendChild(mmDiv);
+    cont.appendChild(mmCard);
+
+    // Tool 2: Situational Style Planner (reflective worksheet)
+    const sspDiv = document.createElement('div');
+    sspDiv.className = 'ws-divider slide-up delay4';
+    sspDiv.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01A4AB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M16 8l-4 4"/></svg> Situational Style Planner</div><div class="ws-divider-line"></div>';
+    const sspCard = document.createElement('div');
+    sspCard.className = 'ws-card slide-up delay4';
+    sspCard.innerHTML = '<h2>Situational Style Planner</h2><p class="ws-subtitle">Pick a real person and a real task. Diagnose their Can Do and Will Do for that task, see the recommended style emerge, then reflect on the gap between the style you would naturally use and the style they actually need. Build a specific, time-bound shift you can take into the week ahead and download it as a PDF.</p>';
+    const sspWrap = document.createElement('div');
+    sspWrap.style.marginTop = '18px';
+    sspWrap.appendChild(buildStyleDiagnostic());
+    sspCard.appendChild(sspWrap);
+    const sspBook = document.createElement('div');
+    sspBook.className = 'book-card slide-up delay4';
+    sspBook.style.cssText = 'max-width:800px;margin:20px auto 0';
+    const sspBookIcon = document.createElement('div');
+    sspBookIcon.className = 'book-icon';
+    sspBookIcon.innerHTML = `<div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+    const sspBookInfo = document.createElement('div');
+    sspBookInfo.className = 'book-info';
+    sspBookInfo.innerHTML = '<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 241-262</div>';
+    sspBook.appendChild(sspBookIcon);
+    sspBook.appendChild(sspBookInfo);
+    cont.appendChild(sspDiv);
+    cont.appendChild(sspCard);
+    cont.appendChild(sspBook);
   }
 
   // Inline Assertion Rehearsal
@@ -10877,6 +11250,18 @@ function buildActionPlanner() {
     return el;
   }
 
+  function mkRestartBtn() {
+    const b = document.createElement('button');
+    b.className = uid + '-btn ' + uid + '-ghost';
+    b.innerHTML = '\u21BA Start again';
+    b.addEventListener('click', () => {
+      playMIBack();
+      Object.assign(state, { name:'', behaviour:'', diagnosisType:null, recommendedAction:'', fromNavigator:false, specificPlan:'', when:'', successLooks:'', reviewDate:'' });
+      step = 1; render();
+    });
+    return b;
+  }
+
   function s1(c) {
     c.appendChild(mkHd(1, 'Who and what?', 'Define the person and the specific behaviour you are seeing.'));
     if (state.fromNavigator && state.diagnosisType) {
@@ -10893,7 +11278,11 @@ function buildActionPlanner() {
     const iBeh = mkInp('e.g. Over the past three weeks I have noticed...', state.behaviour, 3, e => { state.behaviour = e.target.value; nxt.disabled = !state.name.trim() || !state.behaviour.trim(); });
     c.appendChild(iBeh);
     const navRow = document.createElement('div'); navRow.className = uid + '-nav';
-    navRow.appendChild(document.createElement('span'));
+    const leftBtns1 = document.createElement('div'); leftBtns1.className = uid + '-navl';
+    if (state.name.trim() || state.behaviour.trim() || state.fromNavigator) {
+      leftBtns1.appendChild(mkRestartBtn());
+    }
+    navRow.appendChild(leftBtns1);
     const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
     nxt.textContent = 'Next: Diagnosis \u2192'; nxt.disabled = !state.name.trim() || !state.behaviour.trim();
     nxt.addEventListener('click', () => { playMINext(); step = 2; render(); });
@@ -10933,8 +11322,11 @@ function buildActionPlanner() {
     const iW = mkInp('e.g. This week, before our 1:1 on Thursday...', state.when, 0, e => { state.when = e.target.value; });
     c.appendChild(iW);
     const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const leftBtns2 = document.createElement('div'); leftBtns2.className = uid + '-navl';
     const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost'; back.innerHTML = '\u2190 Back';
-    back.addEventListener('click', () => { playMIBack(); step = 1; render(); }); navRow.appendChild(back);
+    back.addEventListener('click', () => { playMIBack(); step = 1; render(); });
+    leftBtns2.appendChild(back); leftBtns2.appendChild(mkRestartBtn());
+    navRow.appendChild(leftBtns2);
     const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
     nxt.textContent = 'Next: Follow-through \u2192'; nxt.disabled = !state.specificPlan.trim();
     nxt.addEventListener('click', () => { playMINext(); step = 3; render(); });
@@ -10951,13 +11343,7 @@ function buildActionPlanner() {
     const leftBtns = document.createElement('div'); leftBtns.className = uid + '-navl';
     const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost'; back.innerHTML = '\u2190 Back';
     back.addEventListener('click', () => { playMIBack(); step = 2; render(); });
-    const restart = document.createElement('button'); restart.className = uid + '-btn ' + uid + '-ghost'; restart.innerHTML = '\u21BA Start again';
-    restart.addEventListener('click', () => {
-      playMIBack();
-      Object.assign(state, { name:'', behaviour:'', diagnosisType:null, recommendedAction:'', fromNavigator:false, specificPlan:'', when:'', successLooks:'', reviewDate:'' });
-      step = 1; render();
-    });
-    leftBtns.appendChild(back); leftBtns.appendChild(restart);
+    leftBtns.appendChild(back); leftBtns.appendChild(mkRestartBtn());
     const dlBtn = document.createElement('button'); dlBtn.className = uid + '-btn ' + uid + '-dl';
     dlBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download Action Plan';
     dlBtn.addEventListener('click', () => { playMIDownload(); downloadActionPlannerPDF(state); });
@@ -12253,6 +12639,966 @@ function downloadSkillWillPlanPDF(state, QUAD){
     a.download = 'Skill-Will-Course-of-Action-' + new Date().toISOString().slice(0,10) + '.pdf';
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   } catch(e) { console.error('Skill/Will PDF error', e); alert('Sorry, there was a problem generating your PDF. Please try again.'); }
+}
+
+// ── Maturity Matrix & Situational Style Planner (D2: Flexibly adapt style) ──
+// Two complementary tools for the "Flexibly adapt style" segment.
+// 1) Maturity Matrix, an interactive teaching visual showing the developmental
+//    journey from LOW to HIGH maturity and the leadership style that fits each.
+// 2) Situational Style Planner, a reflective worksheet that takes the leader
+//    through a real person + task, diagnoses Can Do / Will Do, surfaces the
+//    fitting style, and asks for a specific behavioural shift.
+// Based on pages 241 to 262 of The Liberator.
+
+const MATURITY_STAGES = [
+  {
+    key: 'low', level: 'LOW', stageNum: 1, journeyLabel: 'Developing',
+    canDoLevel: 1, willDoLevel: 1,
+    canDoLabel: 'Low Can Do', canDoDesc: 'New to the task, or finding it tough',
+    willDoLabel: 'Low Will Do', willDoDesc: 'Hesitant, uncertain, or pulling back',
+    style: 'Directing', colour: '#fa6b02', colourD: '#c04e00',
+    summary: 'New to the task or shaken in confidence. The person needs structure and a clear sense of what good looks like.',
+    behaviour: 'You give an explicit briefing for the task, set clear expectations, and monitor performance closely. You make the decisions for now and check in often.',
+    watchout: 'Do not mistake high direction for harshness. Directing well is warm, clear, and supportive. The risk is sounding cold, or staying directing when the person is ready to grow into something more.'
+  },
+  {
+    key: 'moderate', level: 'MODERATE', stageNum: 2, journeyLabel: 'Building',
+    canDoLevel: 2, willDoLevel: 3,
+    canDoLabel: 'Moderate Can Do', canDoDesc: 'Growing in skill, getting there',
+    willDoLabel: 'Moderate to High Will Do', willDoDesc: 'Engaged, willing, learning fast',
+    style: 'Mentoring', colour: '#0061AD', colourD: '#004B86',
+    summary: 'Growing in skill, willing and engaged. Ready to be involved in decisions while still wanting steer.',
+    behaviour: 'You brief them on what is required, but you also genuinely seek their opinions and judgement. You share the thinking, not just the conclusion.',
+    watchout: 'The trap here is going too quiet too soon. They still need your input. Stay close enough to share the reasoning, not just hand off the task.'
+  },
+  {
+    key: 'good', level: 'GOOD', stageNum: 3, journeyLabel: 'Capable',
+    canDoLevel: 3, willDoLevel: 4,
+    canDoLabel: 'Good Can Do', canDoDesc: 'Capable, sharpening their judgement',
+    willDoLabel: 'High Will Do', willDoDesc: 'Committed, taking ownership',
+    style: 'Coaching', colour: '#009FA0', colourD: '#017A80',
+    summary: 'They can do the work. They are committed. Now you are sharpening their judgement and building their confidence.',
+    behaviour: 'You facilitate, ask questions that help them reach their own conclusions, encourage and support. You provide advice when asked, but you resist providing answers.',
+    watchout: 'Coaching is hard for leaders who like to fix things. Catch yourself when you are about to solve. Ask the question instead.'
+  },
+  {
+    key: 'high', level: 'HIGH', stageNum: 4, journeyLabel: 'Developed',
+    canDoLevel: 4, willDoLevel: 4,
+    canDoLabel: 'High Can Do', canDoDesc: 'Mastery and judgement',
+    willDoLabel: 'High Will Do', willDoDesc: 'Self-directing, fully owning it',
+    style: 'Delegating', colour: '#1A3A5C', colourD: '#0d2238',
+    summary: 'Capable, motivated, and self-directing. Ready to own the task end to end.',
+    behaviour: 'You hand over complete discretion. They manage it, they make the decisions. You agree the standard and the touch points, then you stay available.',
+    watchout: 'Delegating is not disappearance. Recognition, feedback and visibility still matter. Without them you erode the very motivation you are relying on.'
+  }
+];
+
+function buildMaturityMatrix() {
+  const uid = 'mm' + Math.random().toString(36).slice(2,7);
+  let activeKey = null;
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    /* Effectiveness + Flexibility = Situational Consistency formula */
+    .${uid}-formula{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;
+      background:linear-gradient(135deg,#f0fafa 0%,#e3f4f5 100%);
+      border-radius:14px;padding:18px 20px;margin-bottom:26px;
+      border:1px solid rgba(1,164,171,.18)}
+    .${uid}-formula-piece{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:100px}
+    .${uid}-formula-eyebrow{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+      color:#017A80;margin-bottom:4px}
+    .${uid}-formula-word{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:800;
+      color:#1A3A5C;letter-spacing:.01em;line-height:1.1}
+    .${uid}-formula-op{font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:800;
+      color:#01A4AB;line-height:1}
+    .${uid}-formula-result .${uid}-formula-word{color:#017A80}
+
+    /* Top header arc: Developing, Maturity, Developed */
+    .${uid}-arc{display:flex;align-items:center;gap:14px;
+      padding:0 6px;margin-bottom:8px;
+      font-family:"Barlow Condensed",sans-serif;font-weight:800;
+      text-transform:uppercase}
+    .${uid}-arc-end{flex:0 0 auto;color:#1A3A5C;font-size:11px;letter-spacing:.14em}
+    .${uid}-arc-mid{flex:0 0 auto;color:#01A4AB;font-size:13px;letter-spacing:.18em}
+    .${uid}-arc-line{flex:1;height:1px;background:#cdd9e2;border-radius:1px}
+
+    /* Sub-label: APPROPRIATE STYLE */
+    .${uid}-sublbl{text-align:center;font-family:"Barlow Condensed",sans-serif;
+      font-weight:800;letter-spacing:.22em;text-transform:uppercase;font-size:10px;
+      color:#8fa0b0;margin-bottom:14px}
+
+    /* The matrix grid */
+    .${uid}-matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+      border:2px solid #1A3A5C;border-radius:14px;overflow:hidden;
+      background:white;
+      box-shadow:0 6px 22px rgba(26,58,92,.10);
+      position:relative}
+    @media (max-width:680px){.${uid}-matrix{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:380px){.${uid}-matrix{grid-template-columns:1fr}}
+
+    /* All cells */
+    .${uid}-cell{padding:14px 12px;cursor:pointer;position:relative;
+      transition:background .25s ease, transform .2s ease;
+      border-right:1px solid #d6dde4;border-bottom:1px solid #d6dde4;
+      box-sizing:border-box}
+    .${uid}-cell:hover{background:rgba(1,164,171,.05)}
+
+    /* Remove right border on last column at each desktop breakpoint */
+    .${uid}-matrix .${uid}-cell-h:nth-child(4),
+    .${uid}-matrix .${uid}-cell-c:nth-child(4),
+    .${uid}-matrix .${uid}-cell-s:nth-child(4){border-right:none}
+    @media (max-width:680px) and (min-width:381px){
+      .${uid}-matrix .${uid}-cell-h:nth-child(2n),
+      .${uid}-matrix .${uid}-cell-c:nth-child(2n),
+      .${uid}-matrix .${uid}-cell-s:nth-child(2n){border-right:none}
+    }
+    @media (max-width:380px){
+      .${uid}-cell{border-right:none !important}
+    }
+
+    /* Row 1: maturity level headers */
+    .${uid}-cell-h{background:#f4f7fa;text-align:center;
+      font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:22px;
+      color:#1A3A5C;letter-spacing:.04em;padding:18px 10px;
+      border-bottom:2px solid #1A3A5C}
+
+    /* Row 2: composition (Can Do top, Will Do bottom) */
+    .${uid}-cell-c{display:flex;flex-direction:column;justify-content:space-between;
+      min-height:170px;padding:18px 14px;text-align:center}
+    .${uid}-comp-top, .${uid}-comp-bottom{font-family:"Barlow Condensed",sans-serif;
+      font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+      color:#1A3A5C;line-height:1.25}
+    .${uid}-comp-top{color:#1A3A5C}
+    .${uid}-comp-bottom{color:#1A3A5C}
+    .${uid}-comp-arrow{flex:1;display:flex;align-items:center;justify-content:center;
+      padding:8px 0;color:#cdd9e2}
+    .${uid}-comp-arrow svg{display:block}
+
+    /* Row 3: styles (in their own colour) */
+    .${uid}-cell-s{text-align:center;color:white;
+      font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:18px;
+      letter-spacing:.06em;text-transform:uppercase;padding:16px 10px;
+      border-bottom:none;
+      transition:filter .25s ease, transform .2s ease}
+
+    /* Column highlight on hover (any cell in column) */
+    .${uid}-matrix[data-hover="low"]    .${uid}-cell[data-stage="low"],
+    .${uid}-matrix[data-hover="moderate"] .${uid}-cell[data-stage="moderate"],
+    .${uid}-matrix[data-hover="good"]   .${uid}-cell[data-stage="good"],
+    .${uid}-matrix[data-hover="high"]   .${uid}-cell[data-stage="high"]{
+      background:rgba(1,164,171,.10)
+    }
+    .${uid}-matrix[data-hover="low"]    .${uid}-cell-s[data-stage="low"],
+    .${uid}-matrix[data-hover="moderate"] .${uid}-cell-s[data-stage="moderate"],
+    .${uid}-matrix[data-hover="good"]   .${uid}-cell-s[data-stage="good"],
+    .${uid}-matrix[data-hover="high"]   .${uid}-cell-s[data-stage="high"]{
+      background:initial;filter:brightness(1.08)
+    }
+
+    /* Column highlight when active */
+    .${uid}-matrix[data-active="low"]    .${uid}-cell[data-stage="low"],
+    .${uid}-matrix[data-active="moderate"] .${uid}-cell[data-stage="moderate"],
+    .${uid}-matrix[data-active="good"]   .${uid}-cell[data-stage="good"],
+    .${uid}-matrix[data-active="high"]   .${uid}-cell[data-stage="high"]{
+      background:rgba(1,164,171,.16)
+    }
+    .${uid}-matrix[data-active="low"]    .${uid}-cell-s[data-stage="low"],
+    .${uid}-matrix[data-active="moderate"] .${uid}-cell-s[data-stage="moderate"],
+    .${uid}-matrix[data-active="good"]   .${uid}-cell-s[data-stage="good"],
+    .${uid}-matrix[data-active="high"]   .${uid}-cell-s[data-stage="high"]{
+      background:initial;filter:brightness(1.12);transform:translateY(-1px)
+    }
+
+    /* Tap hint */
+    .${uid}-tap-hint{text-align:center;font-size:10px;font-weight:600;color:#8fa0b0;
+      letter-spacing:.12em;text-transform:uppercase;margin-top:10px;
+      transition:color .2s ease}
+
+    /* Detail panel */
+    .${uid}-detail{margin-top:18px;border-radius:16px;overflow:hidden;
+      transition:max-height .4s ease, opacity .3s ease, margin-top .3s ease;
+      max-height:0;opacity:0;
+      box-shadow:0 8px 24px rgba(26,58,92,.10)}
+    .${uid}-detail.open{max-height:900px;opacity:1}
+    .${uid}-detail-hd{padding:18px 22px 16px;color:white;position:relative;overflow:hidden}
+    .${uid}-detail-hd-shimmer{position:absolute;top:-50%;left:-75%;width:50%;height:200%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+      transform:skewX(-20deg);pointer-events:none}
+    .${uid}-detail-hd.shimmer .${uid}-detail-hd-shimmer{animation:${uid}MShim .85s ease forwards}
+    @keyframes ${uid}MShim{from{left:-75%}to{left:150%}}
+    .${uid}-detail-eye{font-size:10px;font-weight:700;letter-spacing:.18em;
+      text-transform:uppercase;opacity:.78;margin-bottom:6px}
+    .${uid}-detail-title{font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:800;
+      line-height:1.15}
+    .${uid}-detail-summary{font-size:13px;line-height:1.6;opacity:.92;margin-top:8px;max-width:680px}
+    .${uid}-detail-body{background:white;padding:18px 22px 22px;display:grid;
+      grid-template-columns:1fr 1fr;gap:18px}
+    @media (max-width:600px){.${uid}-detail-body{grid-template-columns:1fr}}
+    .${uid}-detail-block-eye{font-size:10px;font-weight:700;letter-spacing:.16em;
+      text-transform:uppercase;color:#8fa0b0;margin-bottom:6px}
+    .${uid}-detail-block-text{font-size:13px;line-height:1.6;color:#3a4a5a}
+    .${uid}-detail-block.behaviour{border-left:3px solid currentColor;padding-left:14px}
+    .${uid}-detail-block.watchout{border-left:3px solid #c04e00;padding-left:14px}
+  `;
+  wrap.appendChild(styleEl);
+
+  // Formula header: Effectiveness + Flexibility = Situational Consistency
+  const formula = document.createElement('div');
+  formula.className = `${uid}-formula`;
+  formula.innerHTML = `
+    <div class="${uid}-formula-piece">
+      <div class="${uid}-formula-eyebrow">Effectiveness</div>
+      <div class="${uid}-formula-word">The right style</div>
+    </div>
+    <div class="${uid}-formula-op">+</div>
+    <div class="${uid}-formula-piece">
+      <div class="${uid}-formula-eyebrow">Flexibility</div>
+      <div class="${uid}-formula-word">A range of styles</div>
+    </div>
+    <div class="${uid}-formula-op">=</div>
+    <div class="${uid}-formula-piece ${uid}-formula-result">
+      <div class="${uid}-formula-eyebrow">Result</div>
+      <div class="${uid}-formula-word">Situational Consistency</div>
+    </div>
+  `;
+  wrap.appendChild(formula);
+
+  // Top arc: DEVELOPING, MATURITY, DEVELOPED
+  const arc = document.createElement('div');
+  arc.className = `${uid}-arc`;
+  arc.innerHTML = `
+    <span class="${uid}-arc-end">Developing</span>
+    <div class="${uid}-arc-line"></div>
+    <span class="${uid}-arc-mid">Maturity</span>
+    <div class="${uid}-arc-line"></div>
+    <span class="${uid}-arc-end">Developed</span>
+  `;
+  wrap.appendChild(arc);
+
+  // Sub-label: APPROPRIATE STYLE
+  const sublbl = document.createElement('div');
+  sublbl.className = `${uid}-sublbl`;
+  sublbl.textContent = 'Appropriate Style';
+  wrap.appendChild(sublbl);
+
+  // The matrix table
+  const matrix = document.createElement('div');
+  matrix.className = `${uid}-matrix`;
+
+  // Hover and click handlers (delegated below per cell)
+  function setHover(key){
+    if (key) matrix.dataset.hover = key; else delete matrix.dataset.hover;
+  }
+  function setActive(key){
+    if (key) matrix.dataset.active = key; else delete matrix.dataset.active;
+  }
+
+  // Row 1: maturity headers
+  MATURITY_STAGES.forEach(stage => {
+    const c = document.createElement('div');
+    c.className = `${uid}-cell ${uid}-cell-h`;
+    c.dataset.stage = stage.key;
+    c.textContent = stage.level;
+    attachHandlers(c, stage);
+    matrix.appendChild(c);
+  });
+
+  // Row 2: composition (Can Do top, arrow, Will Do bottom)
+  MATURITY_STAGES.forEach(stage => {
+    const c = document.createElement('div');
+    c.className = `${uid}-cell ${uid}-cell-c`;
+    c.dataset.stage = stage.key;
+    c.innerHTML = `
+      <div class="${uid}-comp-top">${stage.canDoLabel}</div>
+      <div class="${uid}-comp-arrow">
+        <svg width="14" height="44" viewBox="0 0 14 44" fill="none">
+          <line x1="7" y1="2" x2="7" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 4"/>
+          <polyline points="3,36 7,42 11,36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="${uid}-comp-bottom">${stage.willDoLabel}</div>
+    `;
+    attachHandlers(c, stage);
+    matrix.appendChild(c);
+  });
+
+  // Row 3: styles in their colours
+  MATURITY_STAGES.forEach(stage => {
+    const c = document.createElement('div');
+    c.className = `${uid}-cell ${uid}-cell-s`;
+    c.dataset.stage = stage.key;
+    c.style.background = stage.colour;
+    c.textContent = stage.style;
+    attachHandlers(c, stage);
+    matrix.appendChild(c);
+  });
+
+  function attachHandlers(cell, stage){
+    cell.addEventListener('mouseenter', () => { setHover(stage.key); });
+    cell.addEventListener('mouseleave', () => { setHover(null); });
+    cell.addEventListener('click', () => {
+      if (activeKey === stage.key){
+        activeKey = null;
+        setActive(null);
+        detail.classList.remove('open');
+        return;
+      }
+      activeKey = stage.key;
+      setActive(stage.key);
+      // Update detail
+      detailHd.style.background = `linear-gradient(135deg,${stage.colour} 0%,${stage.colourD} 100%)`;
+      detailHd.classList.remove('shimmer');
+      void detailHd.offsetWidth;
+      detailHd.classList.add('shimmer');
+      detailEye.textContent = `Stage ${stage.stageNum} · ${stage.journeyLabel} · ${stage.level} Maturity`;
+      detailTitle.textContent = `${stage.style} fits here`;
+      detailSummary.textContent = stage.summary;
+      behaviourBlock.style.color = stage.colour;
+      behaviourText.textContent = stage.behaviour;
+      watchoutText.textContent = stage.watchout;
+      detail.classList.add('open');
+      // Smooth scroll so the detail panel sits centred in view.
+      // Small delay lets the open transition start so we have something to centre on.
+      setTimeout(() => {
+        try {
+          detail.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        } catch(e) {
+          try { detail.scrollIntoView(); } catch(e2) {}
+        }
+      }, 180);
+      // Sound
+      try {
+        const ctx = getCtx(), now = ctx.currentTime;
+        [392, 523].forEach((freq, i) => {
+          const osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.value = freq;
+          const t = now + i * 0.05;
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(0.018 - i * 0.004, t + 0.015);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 0.5);
+        });
+      } catch(e) {}
+    });
+  }
+
+  wrap.appendChild(matrix);
+
+  // Tap hint below
+  const tapHint = document.createElement('div');
+  tapHint.className = `${uid}-tap-hint`;
+  tapHint.textContent = 'Tap any column to see what good leadership looks like at that stage';
+  wrap.appendChild(tapHint);
+
+  // Detail panel
+  const detail = document.createElement('div');
+  detail.className = `${uid}-detail`;
+  const detailHd = document.createElement('div');
+  detailHd.className = `${uid}-detail-hd`;
+  detailHd.style.background = '#1A3A5C';
+  const detailHdShimmer = document.createElement('div');
+  detailHdShimmer.className = `${uid}-detail-hd-shimmer`;
+  detailHd.appendChild(detailHdShimmer);
+  const detailEye = document.createElement('div');
+  detailEye.className = `${uid}-detail-eye`;
+  detailHd.appendChild(detailEye);
+  const detailTitle = document.createElement('div');
+  detailTitle.className = `${uid}-detail-title`;
+  detailHd.appendChild(detailTitle);
+  const detailSummary = document.createElement('div');
+  detailSummary.className = `${uid}-detail-summary`;
+  detailHd.appendChild(detailSummary);
+  detail.appendChild(detailHd);
+
+  const detailBody = document.createElement('div');
+  detailBody.className = `${uid}-detail-body`;
+  const behaviourBlock = document.createElement('div');
+  behaviourBlock.className = `${uid}-detail-block behaviour`;
+  behaviourBlock.innerHTML = `<div class="${uid}-detail-block-eye">What good leadership looks like</div>`;
+  const behaviourText = document.createElement('div');
+  behaviourText.className = `${uid}-detail-block-text`;
+  behaviourBlock.appendChild(behaviourText);
+  detailBody.appendChild(behaviourBlock);
+
+  const watchoutBlock = document.createElement('div');
+  watchoutBlock.className = `${uid}-detail-block watchout`;
+  watchoutBlock.innerHTML = `<div class="${uid}-detail-block-eye">Watch out for</div>`;
+  const watchoutText = document.createElement('div');
+  watchoutText.className = `${uid}-detail-block-text`;
+  watchoutBlock.appendChild(watchoutText);
+  detailBody.appendChild(watchoutBlock);
+
+  detail.appendChild(detailBody);
+  wrap.appendChild(detail);
+
+  return wrap;
+}
+
+// ── Situational Style Planner ──
+function buildStyleDiagnostic() {
+  const uid = 'ssp' + Math.random().toString(36).slice(2,7);
+  let step = 1;
+  const TOTAL = 4;
+  const state = {
+    name: '', task: '',
+    canDo: null, willDo: null,
+    diagnosis: null,
+    defaultStyle: '', shift: '', when: ''
+  };
+
+  // Diagnose function: given canDo (1-4) and willDo (1-4), return matching stage + mismatch info
+  function diagnose(canDo, willDo){
+    const avg = (canDo + willDo) / 2;
+    let stage;
+    if (avg <= 1.5) stage = MATURITY_STAGES[0];
+    else if (avg <= 2.5) stage = MATURITY_STAGES[1];
+    else if (avg <= 3.5) stage = MATURITY_STAGES[2];
+    else stage = MATURITY_STAGES[3];
+    const diff = Math.abs(canDo - willDo);
+    const mismatch = diff >= 2;
+    let mismatchNote = '';
+    if (mismatch){
+      if (canDo > willDo){
+        mismatchNote = 'Skill is well ahead of motivation. Before you settle on this style, get curious about why the will is lower than the can. The conversation needed may be diagnostic, not developmental.';
+      } else {
+        mismatchNote = 'Motivation is well ahead of skill. Their willingness is a gift. Make sure your style builds skill quickly without crushing the keenness.';
+      }
+    }
+    return { stage, mismatch, mismatchNote, canDo, willDo };
+  }
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
+    .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#dbeff0;transition:background .35s}
+    .${uid}-pseg.done{background:#017A80}
+    .${uid}-pseg.active{background:#01A4AB}
+    .${uid}-pgap{width:6px;flex:0 0 6px}
+
+    .${uid}-card{animation:${uid}fi .35s ease both}
+    .${uid}-hd{margin-bottom:18px}
+    .${uid}-hnum{font-size:11px;font-weight:700;color:#017A80;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#1A3A5C;line-height:1.2}
+    .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
+
+    .${uid}-lbl{font-size:12px;font-weight:600;color:#445566;margin-bottom:6px;margin-top:14px;letter-spacing:.04em;display:block}
+    .${uid}-inp{width:100%;border:2px solid #cfe7e8;border-radius:10px;padding:10px 14px;font-family:"Barlow",sans-serif;font-size:14px;color:#222;resize:vertical;transition:border-color .2s;outline:none;background:white;box-sizing:border-box}
+    .${uid}-inp:focus{border-color:#01A4AB}
+    .${uid}-ta{min-height:74px;line-height:1.6}
+    .${uid}-hint{font-size:11.5px;color:#99aabb;margin-top:4px;font-style:italic;line-height:1.5}
+
+    .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+    .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
+    .${uid}-ghost{background:#e3f4f5;color:#017A80}
+    .${uid}-ghost:hover{background:#cfe7e8}
+    .${uid}-primary{background:#01A4AB;color:white;box-shadow:0 4px 16px rgba(1,164,171,.30)}
+    .${uid}-primary:hover{background:#017A80;transform:translateY(-1px)}
+    .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+    .${uid}-dl{background:#01A4AB;color:white;box-shadow:0 6px 20px rgba(1,164,171,.32);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{background:#017A80;transform:translateY(-2px);box-shadow:0 8px 24px rgba(1,164,171,.42)}
+
+    /* Level pickers (Can Do / Will Do) */
+    .${uid}-levels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+    @media (max-width:560px){.${uid}-levels{grid-template-columns:repeat(2,1fr)}}
+    .${uid}-lev{background:white;border:2px solid #cfe7e8;border-radius:12px;padding:12px 12px 10px;cursor:pointer;
+      transition:all .18s ease;text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center}
+    .${uid}-lev:hover{border-color:#01A4AB;transform:translateY(-2px);box-shadow:0 8px 20px rgba(1,164,171,.16)}
+    .${uid}-lev.sel{background:#01A4AB;border-color:#01A4AB;color:white;box-shadow:0 8px 22px rgba(1,164,171,.30);transform:translateY(-2px)}
+    .${uid}-lev-num{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:13px;color:#01A4AB;letter-spacing:.04em;line-height:1}
+    .${uid}-lev.sel .${uid}-lev-num{color:rgba(255,255,255,.85)}
+    .${uid}-lev-label{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:18px;color:#1A3A5C;letter-spacing:.02em;line-height:1.05}
+    .${uid}-lev.sel .${uid}-lev-label{color:white}
+    .${uid}-lev-desc{font-size:11px;color:#667788;line-height:1.45}
+    .${uid}-lev.sel .${uid}-lev-desc{color:rgba(255,255,255,.92)}
+
+    /* Diagnosis result */
+    .${uid}-result{margin-top:8px;border-radius:14px;overflow:hidden;animation:${uid}fi .35s ease both;
+      box-shadow:0 10px 30px rgba(26,58,92,.14)}
+    .${uid}-rhd{padding:18px 22px;color:white;position:relative;overflow:hidden}
+    .${uid}-rhd-shim{position:absolute;top:-50%;left:-75%;width:50%;height:200%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+      transform:skewX(-20deg);animation:${uid}rsh .8s ease forwards;pointer-events:none}
+    @keyframes ${uid}rsh{from{left:-75%}to{left:150%}}
+    .${uid}-rey{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.78;margin-bottom:5px}
+    .${uid}-rt{font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:800;line-height:1.15;margin-bottom:6px}
+    .${uid}-rstrap{font-size:13px;line-height:1.55;opacity:0.92}
+    .${uid}-rtags{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    .${uid}-rtag{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;
+      letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,0.18);color:white}
+    .${uid}-rbody{background:white;padding:18px 22px}
+    .${uid}-guide{font-size:13.5px;color:#445566;line-height:1.65;border-left:3px solid currentColor;padding-left:14px;margin-bottom:14px}
+    .${uid}-mismatch{font-size:12.5px;color:#7a4500;line-height:1.6;background:#fff4e6;border-left:3px solid #fa6b02;
+      padding:10px 14px;border-radius:0 8px 8px 0;margin-top:10px}
+
+    /* Preview */
+    .${uid}-preview{margin-top:22px;border-radius:14px;overflow:hidden;animation:${uid}fi .35s ease both;
+      box-shadow:0 8px 24px rgba(26,58,92,.10)}
+    .${uid}-prevhd{padding:14px 18px}
+    .${uid}-prevey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px}
+    .${uid}-prevname{font-family:"Barlow Condensed",sans-serif;font-size:21px;font-weight:800;color:white;line-height:1.1}
+    .${uid}-prevbody{background:white;padding:14px 18px 12px}
+    .${uid}-prevrow{margin-bottom:10px}
+    .${uid}-prevrlbl{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#99aabb;margin-bottom:3px}
+    .${uid}-prevrval{font-size:13px;color:#222;line-height:1.6}
+
+    @keyframes ${uid}fi { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+  `;
+  wrap.appendChild(styleEl);
+
+  function buildProg(){
+    const p = document.createElement('div'); p.className = uid + '-prog';
+    for (let i=0;i<TOTAL;i++){
+      const seg = document.createElement('div');
+      seg.className = uid + '-pseg' + (i+1<step?' done':'') + (i+1===step?' active':'');
+      p.appendChild(seg);
+      if (i<TOTAL-1){ const g = document.createElement('div'); g.className = uid+'-pgap'; p.appendChild(g); }
+    }
+    return p;
+  }
+
+  function buildHeader(num, title, sub){
+    const h = document.createElement('div'); h.className = uid+'-hd';
+    h.innerHTML = `<div class="${uid}-hnum">Step ${num} of ${TOTAL}</div>
+      <div class="${uid}-htitle">${title}</div>
+      <div class="${uid}-hsub">${sub}</div>`;
+    return h;
+  }
+
+  function makeNav(opts){
+    const n = document.createElement('div'); n.className = uid+'-nav';
+    const left = document.createElement('div'); left.className = uid+'-navl';
+    if (opts.back){
+      const b = document.createElement('button'); b.className = uid+'-btn '+uid+'-ghost';
+      b.textContent = '← Back';
+      b.addEventListener('click', () => { step--; render(); });
+      left.appendChild(b);
+    }
+    if (opts.restart){
+      const r = document.createElement('button'); r.className = uid+'-btn '+uid+'-ghost';
+      r.textContent = '↺ Start again';
+      r.addEventListener('click', () => {
+        step = 1;
+        state.name = ''; state.task = '';
+        state.canDo = null; state.willDo = null;
+        state.diagnosis = null;
+        state.defaultStyle = ''; state.shift = ''; state.when = '';
+        render();
+      });
+      left.appendChild(r);
+    }
+    n.appendChild(left);
+    if (opts.next){
+      const nb = document.createElement('button'); nb.className = uid+'-btn '+uid+'-primary';
+      nb.textContent = opts.nextLabel || 'Next →';
+      if (opts.nextDisabled) nb.disabled = true;
+      nb.addEventListener('click', () => {
+        // Subtle advance tone marking the transition
+        try {
+          const ctx = getCtx(), now = ctx.currentTime;
+          const osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.value = 587;
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(0.018, now + 0.008);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.32);
+        } catch(e) {}
+        opts.next();
+      });
+      n.appendChild(nb);
+    }
+    if (opts.download){
+      const d = document.createElement('button'); d.className = uid+'-btn '+uid+'-dl';
+      d.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download as PDF`;
+      d.addEventListener('click', () => downloadStyleDiagnosticPDF(state));
+      n.appendChild(d);
+    }
+    return n;
+  }
+
+  function buildPreview(){
+    if (!state.name && !state.task && !state.diagnosis) return null;
+    const prev = document.createElement('div'); prev.className = uid+'-preview';
+    const stage = state.diagnosis ? state.diagnosis.stage : null;
+    const headColour = stage ? `linear-gradient(135deg,${stage.colour} 0%,${stage.colourD} 100%)` : 'linear-gradient(135deg,#01A4AB 0%,#017A80 100%)';
+    const hd = document.createElement('div'); hd.className = uid+'-prevhd';
+    hd.style.background = headColour;
+    hd.innerHTML = `<div class="${uid}-prevey">Your reflection so far</div>
+      <div class="${uid}-prevname">${state.name ? escapeHtml(state.name) : 'Person not yet named'}</div>`;
+    const body = document.createElement('div'); body.className = uid+'-prevbody';
+    if (state.task){
+      const r = document.createElement('div'); r.className = uid+'-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Task</div><div class="${uid}-prevrval">${escapeHtml(state.task)}</div>`;
+      body.appendChild(r);
+    }
+    if (state.diagnosis){
+      const d = state.diagnosis;
+      const r = document.createElement('div'); r.className = uid+'-prevrow';
+      r.innerHTML = `<div class="${uid}-prevrlbl">Diagnosis</div>
+        <div class="${uid}-prevrval"><strong>${d.stage.level} maturity</strong> · Recommended style: <strong>${d.stage.style}</strong></div>`;
+      body.appendChild(r);
+    }
+    prev.appendChild(hd); prev.appendChild(body);
+    return prev;
+  }
+
+  function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+  // Step renderers
+  function renderStep1(cont){
+    cont.appendChild(buildHeader(1, 'Pick a real person and a real task',
+      'This works best with a specific situation, not a generic one. Bring one person to mind, and the particular task or piece of work where you have been wondering how best to lead them.'));
+
+    const nameLbl = document.createElement('label'); nameLbl.className = uid+'-lbl'; nameLbl.textContent = 'First name or initials';
+    const nameInput = document.createElement('input'); nameInput.type = 'text';
+    nameInput.className = uid+'-inp'; nameInput.value = state.name;
+    nameInput.placeholder = 'e.g. Sam, or S.M.';
+    cont.appendChild(nameLbl); cont.appendChild(nameInput);
+
+    const taskLbl = document.createElement('label'); taskLbl.className = uid+'-lbl'; taskLbl.textContent = 'The specific task or piece of work';
+    const taskInput = document.createElement('textarea');
+    taskInput.className = uid+'-inp '+uid+'-ta'; taskInput.value = state.task; taskInput.rows = 3;
+    taskInput.placeholder = 'Be specific. Not "their job overall" but "leading the Tuesday safety briefing" or "writing the bid response for X".';
+    cont.appendChild(taskLbl); cont.appendChild(taskInput);
+    const taskHint = document.createElement('div'); taskHint.className = uid+'-hint';
+    taskHint.textContent = 'The same person may need a different style for different tasks. Pick one specific piece of work.';
+    cont.appendChild(taskHint);
+
+    const nav = makeNav({ next: () => { step = 2; render(); }, nextDisabled: !state.name.trim() || !state.task.trim() });
+    cont.appendChild(nav);
+
+    // Reactive: enable/disable Next as the user types
+    function refreshNav(){
+      const btn = nav.querySelector('.'+uid+'-primary');
+      if (btn) btn.disabled = !state.name.trim() || !state.task.trim();
+    }
+    nameInput.addEventListener('input', e => { state.name = e.target.value; refreshNav(); });
+    taskInput.addEventListener('input', e => { state.task = e.target.value; refreshNav(); });
+  }
+
+  function renderLevelPicker(targetKey, levels){
+    const grid = document.createElement('div'); grid.className = uid+'-levels';
+    levels.forEach(l => {
+      const lev = document.createElement('div'); lev.className = uid+'-lev';
+      if (state[targetKey] === l.value) lev.classList.add('sel');
+      lev.innerHTML = `
+        <div class="${uid}-lev-num">Level ${l.value}</div>
+        <div class="${uid}-lev-label">${l.label}</div>
+        <div class="${uid}-lev-desc">${l.desc}</div>
+      `;
+      lev.addEventListener('click', () => {
+        state[targetKey] = l.value;
+        grid.querySelectorAll(`.${uid}-lev`).forEach(el => el.classList.remove('sel'));
+        lev.classList.add('sel');
+        // Light tone
+        try {
+          const ctx = getCtx(), now = ctx.currentTime;
+          const osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.value = 392 + l.value * 80;
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(0.018, now + 0.012);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.45);
+        } catch(e) {}
+        // Re-render to update primary button enabled state
+        const navOld = cont.querySelector(`.${uid}-nav`);
+        if (navOld) navOld.replaceWith(makeNav(navOpts()));
+      });
+      grid.appendChild(lev);
+    });
+    return grid;
+  }
+
+  let navOpts = () => ({});
+  let cont = null;
+
+  function renderStep2(c){
+    c.appendChild(buildHeader(2, 'How would you rate their CAN DO for this task?',
+      'Can Do is about task-related ability and experience. Have they done this before? Do they have the skill, the knowledge, the judgement to do it well right now?'));
+    const grid = renderLevelPicker('canDo', [
+      { value: 1, label: 'Low', desc: 'New to this. Lacks the skill, experience, or confidence to do it yet.' },
+      { value: 2, label: 'Moderate', desc: 'Building. Some skill and experience, still developing.' },
+      { value: 3, label: 'Good', desc: 'Capable. Knows what they are doing, judgement is sharpening.' },
+      { value: 4, label: 'High', desc: 'Mastery. Skilled, experienced, trusted to handle complexity.' }
+    ]);
+    c.appendChild(grid);
+    navOpts = () => ({ back: true, next: () => { step = 3; render(); }, nextDisabled: state.canDo === null });
+    c.appendChild(makeNav(navOpts()));
+    const prev = buildPreview(); if (prev) c.appendChild(prev);
+  }
+
+  function renderStep3(c){
+    c.appendChild(buildHeader(3, 'How would you rate their WILL DO for this task?',
+      'Will Do is about desire and willingness to take responsibility. Are they motivated to do this? Do they want to take it on, or are they avoiding it?'));
+    const grid = renderLevelPicker('willDo', [
+      { value: 1, label: 'Low', desc: 'Reluctant or resistant. Avoiding it, going through the motions.' },
+      { value: 2, label: 'Moderate', desc: 'Mixed. Will do it, but not driving it.' },
+      { value: 3, label: 'Good', desc: 'Engaged and willing. Taking it seriously.' },
+      { value: 4, label: 'High', desc: 'Self-driving. Fully owning it, taking responsibility.' }
+    ]);
+    c.appendChild(grid);
+    navOpts = () => ({
+      back: true,
+      next: () => {
+        state.diagnosis = diagnose(state.canDo, state.willDo);
+        step = 4; render();
+      },
+      nextLabel: 'See diagnosis →',
+      nextDisabled: state.willDo === null
+    });
+    c.appendChild(makeNav(navOpts()));
+    const prev = buildPreview(); if (prev) c.appendChild(prev);
+  }
+
+  function renderStep4(c){
+    const d = state.diagnosis;
+    if (!d){ c.appendChild(buildHeader(4, 'Diagnosis missing', 'Please go back and complete the previous steps.')); c.appendChild(makeNav({ back:true })); return; }
+    const stage = d.stage;
+
+    c.appendChild(buildHeader(4, 'The style that fits, and the shift you might need',
+      'Here is the recommended style for ' + escapeHtml(state.name) + ' on this task. Read it carefully, then reflect on the gap between this and the style you would naturally use. Plan one specific shift.'));
+
+    // Result block
+    const result = document.createElement('div'); result.className = uid+'-result';
+    const rhd = document.createElement('div'); rhd.className = uid+'-rhd';
+    rhd.style.background = `linear-gradient(135deg,${stage.colour} 0%,${stage.colourD} 100%)`;
+    const shim = document.createElement('div'); shim.className = uid+'-rhd-shim'; rhd.appendChild(shim);
+    const rey = document.createElement('div'); rey.className = uid+'-rey';
+    rey.textContent = 'Diagnosis · ' + stage.level + ' maturity';
+    rhd.appendChild(rey);
+    const rt = document.createElement('div'); rt.className = uid+'-rt';
+    rt.textContent = 'Lead with ' + stage.style;
+    rhd.appendChild(rt);
+    const rstrap = document.createElement('div'); rstrap.className = uid+'-rstrap';
+    rstrap.textContent = stage.summary;
+    rhd.appendChild(rstrap);
+    const rtags = document.createElement('div'); rtags.className = uid+'-rtags';
+    rtags.innerHTML = `<span class="${uid}-rtag">Can Do · ${['Low','Moderate','Good','High'][d.canDo-1]}</span>
+      <span class="${uid}-rtag">Will Do · ${['Low','Moderate','Good','High'][d.willDo-1]}</span>`;
+    rhd.appendChild(rtags);
+    result.appendChild(rhd);
+
+    const rbody = document.createElement('div'); rbody.className = uid+'-rbody';
+    const guide = document.createElement('div'); guide.className = uid+'-guide';
+    guide.style.color = stage.colour;
+    guide.style.borderLeftColor = stage.colour;
+    guide.innerHTML = '<div style="color:#445566"><strong style="color:'+stage.colour+'">What good leadership looks like here:</strong> ' + escapeHtml(stage.behaviour) + '</div>';
+    rbody.appendChild(guide);
+    if (d.mismatch){
+      const mm = document.createElement('div'); mm.className = uid+'-mismatch';
+      mm.innerHTML = '<strong>One thing to flag:</strong> ' + escapeHtml(d.mismatchNote);
+      rbody.appendChild(mm);
+    }
+    result.appendChild(rbody);
+    c.appendChild(result);
+
+    // Reflection inputs
+    const dsLbl = document.createElement('label'); dsLbl.className = uid+'-lbl';
+    dsLbl.textContent = 'What style do you tend to default to with ' + (state.name || 'this person') + '?';
+    const dsInput = document.createElement('textarea');
+    dsInput.className = uid+'-inp '+uid+'-ta'; dsInput.value = state.defaultStyle; dsInput.rows = 2;
+    dsInput.placeholder = 'Be honest. Where do you naturally land with them, and is it the same as what they need now?';
+    dsInput.addEventListener('input', e => { state.defaultStyle = e.target.value; });
+    c.appendChild(dsLbl); c.appendChild(dsInput);
+
+    const shLbl = document.createElement('label'); shLbl.className = uid+'-lbl';
+    shLbl.textContent = 'What is one specific behavioural shift you will try?';
+    const shInput = document.createElement('textarea');
+    shInput.className = uid+'-inp '+uid+'-ta'; shInput.value = state.shift; shInput.rows = 3;
+    shInput.placeholder = 'Specific, observable, doable. e.g. "Stop solving for them in our 1:1 on Wednesday. Ask three open questions before offering an answer."';
+    shInput.addEventListener('input', e => { state.shift = e.target.value; });
+    c.appendChild(shLbl); c.appendChild(shInput);
+
+    const wnLbl = document.createElement('label'); wnLbl.className = uid+'-lbl';
+    wnLbl.textContent = 'When and how will you check whether it is landing?';
+    const wnInput = document.createElement('textarea');
+    wnInput.className = uid+'-inp '+uid+'-ta'; wnInput.value = state.when; wnInput.rows = 2;
+    wnInput.placeholder = 'A specific date, time, or signal. e.g. "Review at our 1:1 on the 22nd. Look for whether they brought their own answer first."';
+    wnInput.addEventListener('input', e => { state.when = e.target.value; });
+    c.appendChild(wnLbl); c.appendChild(wnInput);
+
+    c.appendChild(makeNav({ back: true, restart: true, download: true }));
+  }
+
+  function render(){
+    wrap.querySelectorAll('.'+uid+'-prog, .'+uid+'-card').forEach(el => el.remove());
+    wrap.appendChild(buildProg());
+    cont = document.createElement('div'); cont.className = uid+'-card';
+    if (step === 1) renderStep1(cont);
+    else if (step === 2) renderStep2(cont);
+    else if (step === 3) renderStep3(cont);
+    else if (step === 4) renderStep4(cont);
+    wrap.appendChild(cont);
+  }
+
+  render();
+  return wrap;
+}
+
+function downloadStyleDiagnosticPDF(state){
+  try {
+    const W = 595.28, H = 841.89, M = 50;
+    let objCount = 0; const objects = [];
+    function addObj(data){ objCount++; objects.push({ id: objCount, data }); return objCount; }
+    function escPDF(str){ return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str){
+      if (!str) return '';
+      return String(str).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2013|\u2014/g,'-').replace(/\u2026/g,'...').replace(/[^\x00-\x7F]/g,'');
+    }
+    function wrapText(text, maxChars){
+      if (!text) return [''];
+      const words = sanitize(text).split(/\s+/); const lines = []; let line = '';
+      words.forEach(w => {
+        if ((line + ' ' + w).trim().length > maxChars){
+          if (line) lines.push(line.trim());
+          if (w.length > maxChars){ for (let i=0;i<w.length;i+=maxChars) lines.push(w.substring(i, i+maxChars)); line = ''; }
+          else { line = w; }
+        } else { line = (line + ' ' + w).trim(); }
+      });
+      if (line) lines.push(line.trim());
+      return lines.length ? lines : [''];
+    }
+    function hexRGB(hex){
+      if (!hex || hex[0] !== '#') return '0.10 0.23 0.36';
+      return (parseInt(hex.slice(1,3),16)/255).toFixed(2)+' '+(parseInt(hex.slice(3,5),16)/255).toFixed(2)+' '+(parseInt(hex.slice(5,7),16)/255).toFixed(2);
+    }
+
+    const stage = state.diagnosis ? state.diagnosis.stage : null;
+    const sColour = stage ? hexRGB(stage.colour) : '0.00 0.64 0.65';
+    const sColourD = stage ? hexRGB(stage.colourD) : '0.01 0.48 0.50';
+    const teal = '0.00 0.64 0.65';
+    const tealD = '0.01 0.48 0.50';
+    const navy = '0.10 0.23 0.36';
+    const white = '1 1 1';
+    const grey  = '0.45 0.49 0.55';
+    const dark  = '0.20 0.20 0.20';
+    const tint  = '0.92 0.97 0.97';
+    const orange = '0.98 0.42 0.01';
+    const lh = 14;
+
+    let s = '';
+
+    // Header band
+    s += `${sColour} rg\n${M} ${H-M-48} ${W-2*M} 48 re f\n`;
+    s += `${sColourD} rg\n${M} ${H-M-52} ${W-2*M} 4 re f\n`;
+    s += `${white} rg\n`;
+    s += `BT /F1 15 Tf ${M+12} ${H-M-30} Td (${escPDF('Story Liberator - Situational Style Planner')}) Tj ET\n`;
+    s += `BT /F2 8 Tf ${W-M-178} ${H-M-30} Td (${escPDF('D2 Flexibly adapt style | p.241-262')}) Tj ET\n`;
+
+    let y = H - M - 76;
+
+    // Person
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('STYLE REFLECTION FOR')}) Tj ET\n`; y -= 7;
+    s += `${tint} rg\n${M} ${y-36} ${W-2*M} 36 re f\n${sColourD} rg\n`;
+    s += `BT /F1 15 Tf ${M+10} ${y-23} Td (${escPDF(sanitize(state.name) || '(No name given)')}) Tj ET\n`;
+    y -= 50;
+
+    // Task
+    s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('TASK OR RESPONSIBILITY')}) Tj ET\n`; y -= 7;
+    const tLines = wrapText(state.task || '(Not recorded)', 80);
+    const tH = Math.max(40, tLines.length * lh + 16);
+    s += `${tint} rg\n${M} ${y-tH} ${W-2*M} ${tH} re f\n${dark} rg\n`;
+    let ty = y - 14;
+    tLines.forEach(l => { s += `BT /F2 10 Tf ${M+12} ${ty} Td (${escPDF(l)}) Tj ET\n`; ty -= lh; });
+    y -= tH + 16;
+
+    // Diagnosis
+    if (stage){
+      const d = state.diagnosis;
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('DIAGNOSIS')}) Tj ET\n`; y -= 7;
+      s += `${sColour} rg\n${M} ${y-50} ${W-2*M} 50 re f\n`;
+      s += `${white} rg\n`;
+      s += `BT /F1 14 Tf ${M+12} ${y-22} Td (${escPDF(stage.level + ' Maturity - Lead with ' + stage.style)}) Tj ET\n`;
+      const lvLabels = ['Low','Moderate','Good','High'];
+      s += `BT /F2 9 Tf ${M+12} ${y-38} Td (${escPDF('Can Do: ' + lvLabels[d.canDo-1] + '  |  Will Do: ' + lvLabels[d.willDo-1])}) Tj ET\n`;
+      y -= 64;
+
+      // Style guidance
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('WHAT GOOD LEADERSHIP LOOKS LIKE HERE')}) Tj ET\n`; y -= 7;
+      const gLines = wrapText(stage.behaviour, 86);
+      const gH = Math.max(40, gLines.length * lh + 16);
+      s += `${tint} rg\n${M} ${y-gH} ${W-2*M} ${gH} re f\n${sColour} rg\n${M} ${y-gH} 4 ${gH} re f\n${dark} rg\n`;
+      let gy = y - 14;
+      gLines.forEach(l => { s += `BT /F2 10 Tf ${M+12} ${gy} Td (${escPDF(l)}) Tj ET\n`; gy -= lh; });
+      y -= gH + 14;
+
+      // Mismatch note (if any)
+      if (d.mismatch){
+        s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('ONE THING TO FLAG')}) Tj ET\n`; y -= 7;
+        const mLines = wrapText(d.mismatchNote, 86);
+        const mH = Math.max(36, mLines.length * lh + 14);
+        s += `1 0.96 0.90 rg\n${M} ${y-mH} ${W-2*M} ${mH} re f\n${orange} rg\n${M} ${y-mH} 4 ${mH} re f\n${dark} rg\n`;
+        let my = y - 13;
+        mLines.forEach(l => { s += `BT /F2 9 Tf ${M+12} ${my} Td (${escPDF(l)}) Tj ET\n`; my -= 12; });
+        y -= mH + 14;
+      }
+    }
+
+    // Default style reflection
+    if (state.defaultStyle){
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('YOUR DEFAULT STYLE WITH THIS PERSON')}) Tj ET\n`; y -= 7;
+      const dsLines = wrapText(state.defaultStyle, 86);
+      const dsH = Math.max(36, dsLines.length * lh + 14);
+      s += `${tint} rg\n${M} ${y-dsH} ${W-2*M} ${dsH} re f\n${navy} rg\n${M} ${y-dsH} 4 ${dsH} re f\n${dark} rg\n`;
+      let dsy = y - 13;
+      dsLines.forEach(l => { s += `BT /F2 10 Tf ${M+12} ${dsy} Td (${escPDF(l)}) Tj ET\n`; dsy -= lh; });
+      y -= dsH + 14;
+    }
+
+    // Shift
+    if (state.shift){
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('THE SHIFT YOU WILL TRY')}) Tj ET\n`; y -= 7;
+      const shLines = wrapText(state.shift, 86);
+      const shH = Math.max(40, shLines.length * lh + 16);
+      s += `${tint} rg\n${M} ${y-shH} ${W-2*M} ${shH} re f\n${sColour} rg\n${M} ${y-shH} 4 ${shH} re f\n${dark} rg\n`;
+      let shy = y - 14;
+      shLines.forEach(l => { s += `BT /F2 10 Tf ${M+12} ${shy} Td (${escPDF(l)}) Tj ET\n`; shy -= lh; });
+      y -= shH + 14;
+    }
+
+    // When
+    if (state.when){
+      s += `${grey} rg\nBT /F1 10 Tf ${M} ${y} Td (${escPDF('WHEN AND HOW YOU WILL CHECK')}) Tj ET\n`; y -= 7;
+      const wnLines = wrapText(state.when, 86);
+      const wnH = Math.max(28, wnLines.length * lh + 14);
+      s += `${tint} rg\n${M} ${y-wnH} ${W-2*M} ${wnH} re f\n${dark} rg\n`;
+      let wny = y - 13;
+      wnLines.forEach(l => { s += `BT /F2 10 Tf ${M+12} ${wny} Td (${escPDF(l)}) Tj ET\n`; wny -= lh; });
+    }
+
+    s += `${grey} rg\nBT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Situational Style Planner - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId   = addObj('');
+    const font1Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const streamBytes = new TextEncoder().encode(s);
+    const streamId  = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${s}endstream`);
+    const pageId    = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R >> >> >>`);
+    objects[1].data = `<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>`;
+
+    let pdf = '%PDF-1.4\n'; const offsets = [];
+    objects.forEach(obj => { offsets.push(pdf.length); pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`; });
+    const xo = pdf.length;
+    pdf += `xref\n0 ${objCount+1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10,'0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount+1} /Root ${catalogId} 0 R >>\nstartxref\n${xo}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type:'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = 'Situational-Style-Planner-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) { console.error('Style Diagnostic PDF error', e); alert('Sorry, there was a problem generating your PDF. Please try again.'); }
 }
 
 // ── Flight Plan Sheet ──
