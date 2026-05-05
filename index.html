@@ -1168,6 +1168,82 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
   .cc-detail-panel{transition:opacity .15s ease}
 }
 
+/* ── Sapped or Zapped (Provide continued support, Byham 1999) ─────── */
+.sz-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:18px;overflow:hidden;box-shadow:0 6px 22px rgba(0,75,134,.10);margin:8px 0 14px;border:1px solid #e3e9ef}
+.sz-col{padding:24px 26px 26px;display:flex;flex-direction:column}
+.sz-col-header{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:800;font-size:22px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 16px;padding-bottom:12px;border-bottom:1.5px solid currentColor;opacity:.92}
+.sz-col-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px;flex:1}
+.sz-col-list li{font-size:14.5px;line-height:1.55;font-family:'Barlow',sans-serif;padding:9px 0;min-height:46px;display:flex;align-items:flex-start}
+/* The "Sapped" column: drained, low-energy slate */
+.sz-sapped{background:linear-gradient(180deg,#eef2f5 0%,#dde4ea 100%);color:#4a5560}
+.sz-sapped .sz-col-header{color:#3e4a55}
+.sz-sapped .sz-col-list li{color:#52606b;border-bottom:1px solid rgba(110,125,140,.18)}
+.sz-sapped .sz-col-list li:last-child{border-bottom:none}
+/* The "Zapped" column: lit-up Story blue, charged */
+.sz-zapped{background:linear-gradient(180deg,#0061AD 0%,#004B86 100%);color:#ffffff;position:relative}
+.sz-zapped .sz-col-header{color:#ffffff;border-bottom-color:rgba(255,255,255,.55)}
+.sz-zapped .sz-col-list li{color:rgba(255,255,255,.96);border-bottom:1px solid rgba(255,255,255,.18)}
+.sz-zapped .sz-col-list li:last-child{border-bottom:none}
+.sz-zapped::after{content:'';position:absolute;top:-2px;right:-2px;width:120px;height:120px;background:radial-gradient(circle at top right,rgba(250,107,2,.20),transparent 70%);pointer-events:none}
+.sz-zapped .sz-bolt-icon{animation:szBoltGlow 4.2s ease-in-out infinite;transform-origin:center}
+@keyframes szBoltGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(250,107,2,0))}50%{filter:drop-shadow(0 0 4px rgba(250,107,2,.65))}}
+.sz-attribution{font-size:12px;color:#7c8b99;font-style:italic;text-align:right;margin:8px 4px 0 0;font-family:'Barlow',sans-serif}
+@media (max-width:640px){
+  .sz-grid{grid-template-columns:1fr}
+}
+
+/* Printable resource download cards (PDFs from /resources/ folder).
+   Orange-accented to distinguish "downloadable resource" from navigation
+   cards. Used across home, segment pages and Cog sub-pages. */
+.rsc-card{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#fff7ee 0%,#ffefdc 100%);border:1.5px solid #fcd5b3;border-radius:14px;padding:18px 22px;text-decoration:none;color:inherit;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;font-family:'Barlow',sans-serif;max-width:800px;margin:18px auto 0;cursor:pointer;position:relative}
+.rsc-card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(250,107,2,.18);border-color:#fa6b02}
+.rsc-card:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(250,107,2,.28),0 10px 26px rgba(250,107,2,.18)}
+.rsc-icon{flex:0 0 50px;height:62px;border-radius:4px;background:linear-gradient(180deg,#fff 0%,#fff5ea 100%);border:1.5px solid #fa6b02;color:#fa6b02;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:.08em;box-shadow:0 2px 6px rgba(250,107,2,.14);overflow:hidden}
+.rsc-icon svg{width:20px;height:20px;margin-bottom:2px}
+.rsc-icon::before{content:'';position:absolute;top:0;right:0;width:10px;height:10px;background:#fa6b02;clip-path:polygon(0 0,100% 100%,0 100%)}
+.rsc-body{flex:1;min-width:0}
+.rsc-eyebrow{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#fa6b02;margin-bottom:3px}
+.rsc-title{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:19px;font-weight:800;color:#1A3A5C;line-height:1.2;margin-bottom:4px}
+.rsc-desc{font-size:13px;color:#6e7c8a;line-height:1.5;margin:0}
+.rsc-arrow{flex:0 0 38px;height:38px;border-radius:50%;background:white;border:1.5px solid #fcd5b3;color:#fa6b02;display:flex;align-items:center;justify-content:center;transition:all .22s ease;margin-left:6px}
+.rsc-card:hover .rsc-arrow{background:#fa6b02;color:white;border-color:#fa6b02;transform:translateY(2px)}
+.rsc-arrow svg{width:16px;height:16px}
+@media (max-width:640px){
+  .rsc-card{flex-wrap:wrap}
+  .rsc-arrow{margin-left:auto}
+}
+
+/* Cog cross-link cards: pair of "Wider Connections" navigators */
+.cs-conn-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px auto 0;max-width:820px}
+.cs-conn-card{background:linear-gradient(135deg,#f7faff 0%,#eef4fb 100%);border:1px solid #d8e4ee;border-radius:16px;padding:20px 44px 20px 22px;cursor:pointer;display:flex;gap:14px;align-items:flex-start;text-align:left;font-family:'Barlow',sans-serif;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;position:relative;overflow:hidden;width:100%;animation:csConnBeckonGlow 3.6s ease-in-out infinite;animation-delay:.6s}
+.cs-conn-card:nth-child(2){animation-delay:2.4s}
+@keyframes csConnBeckonGlow{
+  0%,100%{box-shadow:0 1px 3px rgba(0,75,134,.05)}
+  50%{box-shadow:0 6px 20px rgba(0,97,173,.16),0 0 0 3px rgba(0,97,173,.05)}
+}
+.cs-conn-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,75,134,.16);border-color:#0061AD;animation:none}
+.cs-conn-card:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(0,97,173,.28),0 10px 26px rgba(0,75,134,.16);animation:none}
+.cs-conn-icon{flex:0 0 44px;height:44px;border-radius:12px;background:#0061AD;color:white;display:flex;align-items:center;justify-content:center}
+.cs-conn-icon svg{width:22px;height:22px}
+.cs-conn-body{flex:1;min-width:0}
+.cs-conn-eyebrow{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#0061AD;margin-bottom:4px}
+.cs-conn-title{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:20px;font-weight:800;color:#1A3A5C;line-height:1.2;margin-bottom:6px}
+.cs-conn-desc{font-size:13px;color:#566a7a;line-height:1.55;margin:0}
+.cs-conn-arrow{position:absolute;top:18px;right:18px;width:24px;height:24px;border-radius:50%;background:white;color:#0061AD;display:flex;align-items:center;justify-content:center;opacity:.55;transition:opacity .22s ease,transform .22s ease;box-shadow:0 1px 3px rgba(0,75,134,.10);animation:csConnArrowBeckon 3.6s ease-in-out infinite;animation-delay:.6s}
+.cs-conn-card:nth-child(2) .cs-conn-arrow{animation-delay:2.4s}
+@keyframes csConnArrowBeckon{
+  0%,100%{opacity:.55;transform:translateX(0)}
+  50%{opacity:.92;transform:translateX(3px)}
+}
+.cs-conn-card:hover .cs-conn-arrow{opacity:1;transform:translateX(2px);animation:none}
+.cs-conn-arrow svg{width:14px;height:14px}
+@media (max-width:640px){
+  .cs-conn-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){
+  .cs-conn-card,.cs-conn-arrow{animation:none}
+}
+
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -1202,22 +1278,50 @@ const SEGMENTS = [
   {
     id:'empower-team', label:'Empower team members',
     quadrant:'Enabling', startAngle:270, endAngle:300,
-    tagline:'Building capability through trust and autonomy',
-    desc:'Empowering your team means creating the conditions where people can take ownership, make decisions, and grow. It requires letting go of control while staying connected and supportive.',
-    modelTitle:'Situational Leadership (Hersey & Blanchard)',
-    modelDesc:'This model suggests that effective leaders adapt their style based on the competence and commitment of the individual. There is no single best leadership style. Instead, the leader must assess the readiness of the person and flex between directing, coaching, supporting, and delegating.',
-    bullets:['Assess readiness before choosing your approach','Move from directing to delegating as confidence grows','Match your leadership response to the individual, not the task alone'],
-    modelType:'situational'
+    tagline:'Building capability, will, and confidence',
+    desc:'Empowering team members is not leaving people exposed to failure by leaving them to their own devices. It is the patient work of building each person\'s capability, will, and confidence, then reinforcing achievement at every stage. Done well, it shifts the leader\'s style gradually from \'tell\' towards \'partnership\', until the person is genuinely ready to fly solo and the leader has the generosity to let go.',
+    modelTitle:'The Comfort Zone Model: Firm Ground and Swampy Ground',
+    modelDesc:'Every leader and team member sits somewhere on a map of two zones. The Comfort Zone, or firm ground, is where authority is clear, expertise is proven, and confidence is high. Around it lies the swampy ground of role uncertainty, where demands shift, skills are not yet built, and responsibilities are not yet owned. The work of empowerment happens at the boundary between the two: not so far inside that nothing grows, not so far out that someone is set up to sink.',
+    bullets:[
+      'Empowerment is not abandonment: prepare, reinforce, and stay alongside before you let go of the controls',
+      'The boundary between firm ground and swampy ground is where growth happens, neither pure comfort nor pure chaos',
+      'The leader\'s style shifts as confidence builds, from \'tell\' towards \'partnership\', loosening control as judgement grows'
+    ],
+    modelType:'comfort-zone',
+    bookPages:'99',
+    noteTitle:'Empowerment is a process, not a moment',
+    noteText:'Empowering someone is rarely a single decision: it is a sequence of small handovers. Skills and knowledge come first, then the will to use them, then increasing participation and involvement, then trust as judgement and confidence grow. The leader\'s job is to read where each person sits on that arc and adjust accordingly, becoming less directive as confidence builds, until the person is ready to stand on their own and the leader can genuinely take their hands off the controls.',
+    extraModels: [{
+      modelTitle:'Dependency to Interdependency',
+      modelDesc:'How people develop at work parallels how they develop as people, from being directed and sustained by others, through self-reliance, to genuine partnership with the team. Where command and control or paternalistic management has been the norm, people can become habituated to the earlier stages. The leader\'s role is to recognise where each team member sits and help them move forward, rather than expecting interdependency from someone who is still being directed and sustained.',
+      modelType:'dependency-interdependency',
+      bullets:[
+        'People can become habituated to dependency or counter-dependency when the management style has been heavily directive',
+        'Independency is genuine self-reliance: thinking your own thoughts, making your own decisions, on solid ground',
+        'Interdependency is the destination: self-reliant and proactive, but able to join with others and share resources productively'
+      ],
+      bookPages:'97',
+      noteTitle:'Reading where each person sits',
+      noteText:'Different team members will sit at different points on this developmental arc, and the same person may sit at different points for different parts of their role. The skill is to recognise the stage honestly, work with it, and gently move people on, rather than mistaking compliance for self-direction or rebellion for genuine maturity.'
+    }],
+    hasEmpowermentMap: true
   },
   {
     id:'delegate-ownership', label:'Delegate task ownership',
     quadrant:'Enabling', startAngle:300, endAngle:330,
-    tagline:'Giving genuine responsibility, not just tasks',
-    desc:'True delegation is about transferring ownership of outcomes, not just distributing workload. It means trusting people to find their own route while remaining available for support.',
-    modelTitle:'Delegation Levels (Jurgen Appelo)',
-    modelDesc:'This framework identifies seven levels of delegation, from "Tell" (the leader decides) all the way to "Delegate" (the team decides with no involvement). Understanding where a task sits on this spectrum helps leaders be intentional about how much control they retain.',
-    bullets:['Clarify which level of delegation you are using','Make the boundaries of autonomy explicit','Increase delegation levels as trust develops'],
-    modelType:'delegation'
+    tagline:'The barriers are usually inside us, not the team',
+    desc:'Delegation is a state of mind as much as an action. Many leaders intend to delegate, then quietly trip over their own objections: I can do it better myself, my people are not ready, it takes too long to explain. The first move is not a technique. It is a moment of honesty about what is genuinely holding us back.',
+    modelTitle:'Barriers to Delegation',
+    modelDesc:'The book lists eight stated reasons leaders give for not delegating, and three deeper ones that sit beneath them. The stated reasons sound reasonable on the surface; they are usually rationalisations. The real reasons live in our own discomfort with letting go. Honest self-examination is the start of moving past them.',
+    bullets:[
+      'Delegation is a state of mind, not just an act of distribution',
+      'The reasons we give ourselves for not delegating are usually rationalisations of something deeper',
+      'Most barriers to delegation live in the leader, not in the team'
+    ],
+    modelType:'barriers',
+    bookPages:'100-105',
+    noteTitle:'An honest first step',
+    noteText:'Pick one of the eight barriers above that you genuinely recognise in yourself. Then look at the three deeper reasons and pick the one closest to the truth. That moment of honesty is the work. The technique of delegation comes more easily once the real answer is on the table.'
   },
   {
     id:'provide-support', label:'Provide continued support',
@@ -1235,7 +1339,8 @@ const SEGMENTS = [
     bookPages:'192-194',
     noteTitle:'Feedback as a habit, not an event',
     noteText:'The most powerful shift a leader can make is treating feedback as a continuous habit rather than a scheduled event. Catching someone doing something right, at the time, immediately, is far more effective than waiting for a formal review. The beacons matter, but it is the GPS signal between them that keeps people on course.',
-    hasFlightPlanSheet: true
+    hasFlightPlanSheet: true,
+    hasContinuedSupportExtras: true
   },
 
   // ── Visioning (top-right, 0° to 90°, 4 segments) ──
@@ -1728,6 +1833,8 @@ function buildModelVisual(seg) {
     matrix: buildMatrixVisual,
     vision: buildVisionVisual,
     situational: buildSituationalVisual,
+    'comfort-zone': buildComfortZoneVisual,
+    'dependency-interdependency': buildDependencyInterdependencyVisual,
     delegation: buildDelegationVisual,
     spectrum: buildSpectrumVisual,
     candor: buildCandorVisual,
@@ -1748,10 +1855,286 @@ function buildModelVisual(seg) {
     aar: buildAARVisual,
     'loss-curve': buildLossCurveVisual,
     'flight-plan': buildFlightPlanVisual,
-    'right-course': buildRightCourseVisual
+    'right-course': buildRightCourseVisual,
+    barriers: buildBarriersVisual
   };
   const builder = builders[seg.modelType];
   if (builder) wrap.appendChild(builder());
+  return wrap;
+}
+
+function buildBarriersVisual() {
+  const uid = 'br' + Math.random().toString(36).slice(2,7);
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;font-family:"Barlow",sans-serif;user-select:none;opacity:0;transition:opacity .5s ease';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-stage {
+      background: #1A3A5C;
+      background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 20px 20px;
+      border-radius: 14px;
+      padding: 30px 28px 26px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 6px 22px rgba(26,58,92,.18);
+    }
+    .${uid}-corner-tr, .${uid}-corner-bl {
+      position: absolute;
+      pointer-events: none;
+      opacity: .55;
+    }
+    .${uid}-corner-tr {
+      top: -34px; right: -34px;
+      width: 110px; height: 110px;
+      background: #0061AD;
+      transform: rotate(45deg);
+      border-radius: 6px;
+    }
+    .${uid}-corner-bl {
+      bottom: -28px; left: -28px;
+      width: 84px; height: 84px;
+      background: #6A2850;
+      transform: rotate(45deg);
+      border-radius: 4px;
+      opacity: .42;
+    }
+    .${uid}-row {
+      display: flex; gap: 28px; align-items: center;
+      position: relative; z-index: 1;
+    }
+    .${uid}-barrow {
+      flex: 0 0 36%;
+      max-width: 300px;
+    }
+    .${uid}-barrow svg { width: 100%; height: auto; display: block; }
+    .${uid}-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 16px;
+    }
+    @media (max-width: 720px) {
+      .${uid}-row { flex-direction: column; gap: 18px; }
+      .${uid}-barrow { max-width: 220px; flex: 0 0 auto; }
+      .${uid}-grid { width: 100%; gap: 10px; }
+    }
+    .${uid}-hex {
+      perspective: 800px;
+      cursor: pointer;
+      height: 72px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .${uid}-hex-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform .6s cubic-bezier(.4,.05,.2,1);
+    }
+    .${uid}-hex.flipped .${uid}-hex-inner { transform: rotateY(180deg); }
+    .${uid}-hex-front, .${uid}-hex-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      line-height: 1.3;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+    .${uid}-hex-front {
+      background: #6A2850;
+      transition: filter .25s ease;
+    }
+    .${uid}-hex:hover .${uid}-hex-front { filter: brightness(1.18); }
+    .${uid}-hex-back {
+      background: #0061AD;
+      transform: rotateY(180deg);
+      font-style: italic;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+    .${uid}-prompt {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 11.5px;
+      color: rgba(255,255,255,.55);
+      letter-spacing: .04em;
+      position: relative;
+      z-index: 1;
+      font-style: italic;
+    }
+    .${uid}-deeper {
+      margin-top: 22px;
+      padding: 22px 24px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e2e8ee;
+      box-shadow: 0 4px 14px rgba(26,58,92,.06);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .${uid}-deeper-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: .02em;
+      color: #1A3A5C;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .${uid}-deeper-intro {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #555;
+      margin-bottom: 14px;
+    }
+    .${uid}-reasons { display: grid; gap: 10px; }
+    .${uid}-reason {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: #f5f8fb;
+      border-left: 3px solid #0061AD;
+      border-radius: 6px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: #1A3A5C;
+    }
+    .${uid}-reason-num {
+      flex: 0 0 auto;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #0061AD;
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 11px;
+      margin-top: 1px;
+    }
+    .${uid}-stage.in-view .${uid}-hex { opacity: 1; transform: translateY(0); }
+    .${uid}-stage.in-view .${uid}-hex:nth-child(1) { transition-delay: .25s; }
+    .${uid}-stage.in-view .${uid}-hex:nth-child(2) { transition-delay: .32s; }
+    .${uid}-stage.in-view .${uid}-hex:nth-child(3) { transition-delay: .39s; }
+    .${uid}-stage.in-view .${uid}-hex:nth-child(4) { transition-delay: .46s; }
+    .${uid}-stage.in-view .${uid}-hex:nth-child(5) { transition-delay: .53s; }
+    .${uid}-stage.in-view .${uid}-hex:nth-child(6) { transition-delay: .60s; }
+    .${uid}-stage.in-view .${uid}-hex:nth-child(7) { transition-delay: .67s; }
+    .${uid}-stage.in-view .${uid}-hex:nth-child(8) { transition-delay: .74s; }
+    .${uid}-deeper.revealed { opacity: 1; transform: translateY(0); }
+  `;
+  wrap.appendChild(styleEl);
+
+  const barriers = [
+    { front:'I can do it better myself', back:'And what does that cost the team\'s growth?' },
+    { front:'My people just aren\'t capable enough', back:'Have you given them the chance to prove you wrong?' },
+    { front:'It takes too much time to explain what I want done', back:'How much time will you keep paying if you never invest it once?' },
+    { front:'If it goes wrong, I\'ll still be accountable', back:'Accountable, yes. Are you also responsible for doing every task yourself?' },
+    { front:'Delegation reduces my own authority', back:'Or does it actually demonstrate the strength of it?' },
+    { front:'I\'ll be shown up if they do too good a job', back:'What does it say about your leadership if your people do not shine?' },
+    { front:'My people prefer that I make the decisions', back:'Have you ever asked them, or just assumed?' },
+    { front:'Team members want to avoid responsibility', back:'Or have they learned not to take it because it has never been offered?' }
+  ];
+
+  const realReasons = [
+    'I am insufficiently organised or too inflexible to delegate efficiently',
+    'I do not want to lose control',
+    'I like being the expert and the one people come to'
+  ];
+
+  const stage = document.createElement('div');
+  stage.className = `${uid}-stage`;
+
+  const cornerTR = document.createElement('div');
+  cornerTR.className = `${uid}-corner-tr`;
+  stage.appendChild(cornerTR);
+  const cornerBL = document.createElement('div');
+  cornerBL.className = `${uid}-corner-bl`;
+  stage.appendChild(cornerBL);
+
+  const row = document.createElement('div');
+  row.className = `${uid}-row`;
+
+  const barrow = document.createElement('div');
+  barrow.className = `${uid}-barrow`;
+  barrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 686.5 346.39"><g style="opacity:.55"><path d="M587.8,127.86c9.54-13.32,8.98-35.58-1.82-46.14-1.54-1.5-4.69-3.05-10.93-6.07-26.76-12.98-30.82-9.48-42.5-18.21-4.63-3.47-7.24-6.45-12.14-6.68-6.23-.3-10.82,4.2-14.57,7.29-6.01,4.95-15.49,11.02-30.36,15.18-2.23-1.21-4.45-2.43-6.68-3.64-5.57-5.41-14.02-11.79-25.5-15.18-5.41-1.6-11.17-3.3-18.21-1.82-5.78,1.21-8.73,3.79-19.43,11.54-10.53,7.62-15.79,11.43-18.21,12.75-18.11,9.88-28.48,2.63-35.21,10.93-3.88,4.78-1.11,8-1.21,29.75-.11,22.87-3.22,27.69,1.21,34.61,3.43,5.36,9.31,8.72,24.28,12.14,16.66,3.8,27.03,3.66,55.25,4.25,32.83.68,60.02,1.73,69.21-.61.72-.18,3.3-.89,6.68-.61,5.63.47,8.56,3.27,10.93,4.25,8.78,3.62,19.92-13.69,40.68-27.32,17.5-11.49,22.09-7.4,28.53-16.39Z" fill="#fa6b02"/></g><g><path d="M1.5,25.86c3.45-2.48,9.11-5.65,16.05-5.46,2.22.06,10.02.61,24.25,14.69,15.26,15.09,14.79,22.85,25.61,28.69,5.43,2.93,11.55,3.24,23.56,3.76,30.79,1.31,40.72-5.45,65.91-1.71,5.4.8,11.65,1.77,19.47,4.78,14.24,5.49,23.2,14.22,34.15,24.93,13.73,13.42,23.91,25.61,23.91,25.61,7.15,8.56,10.14,13.07,16.39,15.03,8.17,2.56,17.28-1.45,24.25-5.46,19.65-11.32,37.51-27.39,46.45-35.86,1.51-2.32,3.59-6.29,3.07-10.93-.67-6.09-5.43-10.08-7.17-11.61-6.82-6-17.34-18.23-34.49-42.01-3.04-1.61-7.58-3.81-13.32-5.81-12.48-4.34-23.92-5.38-26-5.56-12.09-1.03-19.87.37-21.13-2.98-.68-1.83.67-4.79,1.78-7.22.06-.13,1.35-2.93,2.66-4.39,3.13-3.49,10.29-3.67,17.74-1.1,9.46-.03,23.58,1.5,36.57,10.32,4.34,2.95,7.17,5.74,8.88,7.51,15.54,16.15,33.09,36.94,42.69,48.5,1.71,2.87,4.42,8.41,4.44,15.71.03,8.74-3.83,14.98-5.81,18.1-2.89,4.55-6.12,7.47-8.2,9.22-14.75,12.41-53.99,34.54-56.35,35.86-2.93.84-5.13,2.54-5.12,4.1.01,1.87,3.24,4.23,8.2,4.1,17.6,2.54,36.29,4.66,56.01,6.15,29.59,2.23,57.26,2.7,82.65,2.05,1.96-.18,5.33-.81,7.51-3.42,2.28-2.73,2.11-6.26,2.05-7.85-.28-7.05-.18-18.36,0-33.13.06-1.73-.12-4.41-1.71-6.83-3.31-5.03-10.59-5.58-12.64-5.81-7.06-.77-20.04-4.99-46.11-20.83-3-2.28-5-4.64-4.44-5.81.75-1.58,5.93-.53,6.83-.34,5.13,1.04,8.61,3.57,8.88,3.76,4.1,2.95,16.75,9.11,48.15,21.86,2.64,1.32,4.74,1.46,6.15,1.37,8.89-.62,11.55-12.53,21.52-13.66,1.21-.14,3.53-.37,5.12,1.02,2.98,2.61,1.23,9.02.68,11.27-1.58,6.49-2.67,17.1-.34,35.18,1.04,1.85,3.09,5.12,4.78,4.78,1.82-.37,2.43-4.74,2.73-8.54,1.03-12.99-.25-36.24-1.37-52.25,1.82-.11,3.64-.23,5.46-.34,11.61,6.94,23.22,13.89,34.83,20.83.91,15.94,1.82,31.88,2.73,47.81-.57,1.02-1.14,2.05-1.71,3.07-3.3.11-6.6.23-9.9.34-25.5.23-51,.46-76.5.68-20.38-2.16-40.75-4.33-61.13-6.49-.43-2.22-.99-5.53-1.37-9.56-1.44-15.45,2.09-17.03,1.02-28.35-.68-7.21-4.06-27.15-4.44-29.37-.1-.61-.37-2.15.34-3.76,1.88-4.28,9.05-4.88,11.27-5.12,12.86-1.43,25.85-9.15,35.18-14.69,8.27-4.91,16.94-12.02,28.35-17.76,1.56-.79,5.31-2.61,9.9-2.05,3.88.48,6.15,2.38,9.56,4.78,13.14,9.23,14.61,5.61,25.96,14,2.31,1.71,4.7,3.67,8.2,3.76,3.75.1,6.51-2.02,8.88-3.76,0,0,8.95-6.55,27.66-16.39,5.83-3.07,7.26-3.34,8.54-3.42,8.72-.52,15.63,7.84,18.1,10.59,6.8,7.55,19.92,16.86,47.81,23.56.46,2.39.91,4.78,1.37,7.17-3.07.57-6.15,1.14-9.22,1.71-13.23,5.04-24.2,8.22-32.1,10.25,0,0-23.28,5.97-33.13,15.03-.72.66-2.37,2.22-3.42,4.78-1.36,3.36-.84,6.47-.68,7.51.79,5.31,1.42,19.32,2.05,39.27,3.19,1.14,6.38,2.28,9.56,3.42,2.75-.9,6.75-2.38,11.27-4.78,11.48-6.09,13.44-11.22,22.2-18.1,16.71-13.13,33.79-13.48,39.62-25.27.69-1.41,1.3-2.63,1.71-4.44,1.94-8.57-3.91-14.77-1.02-18.44.59-.75,1.42-1.07,3.07-1.71,6.1-2.35,16.06-2.06,19.47,3.76,1.89,3.23,1.05,6.95.68,8.54-1.79,7.87-8.7,12.54-10.25,13.66-14.15,10.2-23.14,42.3-37.23,92.55-6.12,21.83-7.54,30.41-3.42,39.62.4.89,9.07,19.55,24.25,18.44,8.47-.62,16.77-7.24,18.78-15.71,2.58-10.86-6.37-19.73-10.93-24.25-2.69-2.67-9.81-9.72-20.49-10.93-16.33-1.84-32.34,10.97-38.25,26.3-.51,1.32-7.84,21.32,4.78,38.25,1.09,1.47,12.28,16,29.03,15.37,12.55-.48,24.78-9.34,30.4-19.13,2.45-4.26,3.11-7.78,7.17-10.25,6.83-4.14,12.61,1.18,17.76-1.71,8.25-4.62,7.32-26.09.34-41.67-6.25-13.94-16.58-21.47-20.49-24.25-18.54-13.16-38.25-12.31-44.4-11.95-8.02.46-22.07,1.28-33.81,10.93-8.21,6.74-13.01,15.94-18.78,26.98-6.73,12.87-7.75,19.51-15.03,23.56-6.67,3.72-13.88,2.63-17.42,2.05-44.88-7.39-67.32-11.09-85.04-16.73-35.4-11.29-68.5-9.7-86.75-10.59-9.86-.48-18.1-.64-23.91-.68-1.71,2.16-3.42,4.33-5.12,6.49,4.54,40.3,1.56,60.09-2.39,70.69-.71,1.91-3.46,8.9-1.37,16.73,1.9,7.1,8.05,15.96,16.39,16.39,8.17.42,14.13-7.47,16.73-10.93,2.02-2.68,5.23-7.68,8.88-29.03,2.11-12.35,5.01-24.55,7.17-36.88.63-3.6,1.29-7.48,4.44-10.25,6.34-5.56,17.63-2.14,21.52-1.02,26.47,7.58,54.73,6.2,81.96,10.25,42.84,6.36,64.26,9.54,67.62,8.88,3.24-.64,12.91-2.82,19.13,2.39,4.64,3.89,4.09,9.17,6.15,16.05,3.94,13.2,15.13,24.53,26.98,29.71,12.66,5.53,28.9,5.28,40.64-1.71,17.66-10.51,24.59-25.27,24.59-25.27.88-1.88,2.52-5.77,6.49-7.85,3.7-1.95,7.28-1.19,14.69.34,19.32,3.99,22.88,4.54,26.98,2.73.76-.33,6.87-3.13,7.51-8.2.55-4.4-3.24-8.76-6.83-10.93-8.75-5.28-17.92,1.48-22.88-3.42-1.43-1.41-2.97-4.24-2.05-10.59,4.22-.15,10.13-.06,17.08,1.02,12.01,1.87,18.63,2.91,23.22,8.54,4.96,6.08,6.06,15.66,2.39,23.22-4.14,8.52-12.81,11.33-15.03,11.95-7.63,2.16-11.54-.88-27.32-2.05-5.65-.42-10.3-.41-13.32-.34-1.48,2.15-3.65,5.15-6.49,8.54-6.25,7.47-15.22,18.2-28.69,24.59-3.65,1.73-22.25,10.55-43.37,3.42-5.11-1.73-20.31-6.87-27.32-20.49-5.36-10.41-3.64-21.31-12.29-26.3-2.86-1.65-5.54-1.89-7.51-2.05-25.87-2.08-38.81-3.12-48.84-3.42-18.93-.55-12.9-5.68-44.74-10.93-23.49-3.87-45.97-4.24-58.06-4.44-6.96-.11-12.74-.07-16.73,0,.14,4.96.1,12.47-1.02,21.52-1.77,14.24-4.16,33.34-17.76,49.18-5.38,6.26-14.2,16.54-25.96,15.71-12.62-.89-20.35-14-21.86-16.73-2.77-5.01-3.87-9.78-2.39-41.67.7-15.03-2.12-30.63,2.05-45.08,1.17-4.06,4.17-13.26,0-17.42-2.05-2.04-4.18-1.22-8.88-3.76-3.86-2.09-7.46-5.37-9.22-8.54-3.38-6.06-.41-12.38,1.02-19.47,3.44-17.06-3.36-32.15-5.81-37.57-2.02-4.48-9.8-12.15-25.27-27.32-31.76-31.14-24.96-21.83-32.79-30.74-6.25-7.11-10.53-12.97-19.13-15.71-7.29-2.32-13.49-1.05-17.76-.34-10.12,1.68-25.03,2.81-45.42,0" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6"/></g></svg>`;
+
+  const grid = document.createElement('div');
+  grid.className = `${uid}-grid`;
+
+  barriers.forEach(b => {
+    const hex = document.createElement('div');
+    hex.className = `${uid}-hex`;
+    hex.innerHTML = `<div class="${uid}-hex-inner"><div class="${uid}-hex-front">${b.front}</div><div class="${uid}-hex-back">${b.back}</div></div>`;
+    hex.addEventListener('click', () => {
+      const wasFlipped = hex.classList.contains('flipped');
+      hex.classList.toggle('flipped');
+      try {
+        const ctx = getCtx(), now = ctx.currentTime;
+        const osc = ctx.createOscillator(), g = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = wasFlipped ? 494 : 622;
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(.016, now + .012);
+        g.gain.exponentialRampToValueAtTime(.0001, now + .32);
+        osc.connect(g); g.connect(ctx.destination);
+        osc.start(now); osc.stop(now + .35);
+      } catch(e) {}
+    });
+    grid.appendChild(hex);
+  });
+
+  row.appendChild(barrow);
+  row.appendChild(grid);
+  stage.appendChild(row);
+
+  const prompt = document.createElement('div');
+  prompt.className = `${uid}-prompt`;
+  prompt.textContent = 'Tap any barrier to read a question worth sitting with';
+  stage.appendChild(prompt);
+
+  const deeper = document.createElement('div');
+  deeper.className = `${uid}-deeper`;
+  deeper.innerHTML = `
+    <div class="${uid}-deeper-title">Beneath the surface</div>
+    <div class="${uid}-deeper-intro">The book offers three deeper reasons that often sit beneath the stated ones. Honest self-examination usually shows that one of these is closer to the truth.</div>
+    <div class="${uid}-reasons">
+      ${realReasons.map((r,i) => `<div class="${uid}-reason"><div class="${uid}-reason-num">${i+1}</div><div>${r}</div></div>`).join('')}
+    </div>
+  `;
+
+  wrap.appendChild(stage);
+  wrap.appendChild(deeper);
+
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          wrap.style.opacity = '1';
+          stage.classList.add('in-view');
+          setTimeout(() => deeper.classList.add('revealed'), 950);
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.12 });
+    requestAnimationFrame(() => obs.observe(wrap));
+  } else {
+    wrap.style.opacity = '1';
+    stage.classList.add('in-view');
+    deeper.classList.add('revealed');
+  }
+
   return wrap;
 }
 
@@ -2433,6 +2816,300 @@ function buildDelegationVisual() {
   addLine(svg, 10, 182, 390, 182, '#ddd', 1);
   addText(svg, 200, 200, 'Leader control ← → Team autonomy', '#999', 10, 500);
   return svg;
+}
+
+function buildComfortZoneVisual() {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;opacity:0;transition:opacity .5s ease;position:relative';
+
+  const ZONES = [
+    { id:'firm', label:'Firm Ground', color:'#0061AD',
+      desc:'The Comfort Zone. Where authority is clear, expertise is proven, core competencies are sharp, and confidence is high. Calm and certain, but limited if a leader stays only here.' },
+    { id:'swamp', label:'Swampy Ground', color:'#346CA0',
+      desc:'The area of role uncertainty. Less familiar, less defined, less confident. Yet it is also where the work of growth begins, both for the leader and the people they are developing.' },
+    { id:'changing', label:'Changing demands and requirements', color:'#346CA0',
+      desc:'Pressures and expectations shift as the role and the organisation evolve. The old ways stop fitting before the new ones become clear, and that gap is one of the swamp\'s most common entry points.' },
+    { id:'newAreas', label:'New and lesser-known areas of skills and knowledge', color:'#346CA0',
+      desc:'Skills and knowledge that are not yet built. The first attempt is rarely smooth, but each attempt narrows the unknown and adds a little more firm ground underfoot.' },
+    { id:'undefined', label:'Undefined areas of responsibility', color:'#346CA0',
+      desc:'Pieces of the role that nobody has yet owned, written down, or claimed. Stepping in feels exposed at first, but it is how ambiguity quietly turns into ownership.' },
+    { id:'opportunity', label:'Area of greatest opportunity and choice', color:'#fa6b02',
+      desc:'The boundary between firm ground and swampy ground. Not so safe that nothing grows, not so lost that someone is set up to sink. This is where empowerment lives, and where the leader does their most valuable work alongside the people they are building up.' }
+  ];
+
+  wrap.innerHTML = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" style="width:100%;height:auto;max-width:640px;display:block;margin:0 auto">
+    <defs>
+      <radialGradient id="czInner" cx="50%" cy="40%">
+        <stop offset="0%" stop-color="#1F4F87"/>
+        <stop offset="100%" stop-color="#0061AD"/>
+      </radialGradient>
+      <radialGradient id="czOuter" cx="50%" cy="50%">
+        <stop offset="0%" stop-color="rgba(0,97,173,0.13)"/>
+        <stop offset="100%" stop-color="rgba(0,97,173,0.05)"/>
+      </radialGradient>
+      <marker id="czArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#fa6b02"/>
+      </marker>
+    </defs>
+    <style>
+      .cz-outer{opacity:0;transform-origin:340px 250px;animation:czScaleIn .9s .35s cubic-bezier(.34,.7,.4,1) forwards}
+      .cz-inner{opacity:0;transform-origin:340px 250px;animation:czScaleIn .8s .85s cubic-bezier(.34,.7,.4,1) forwards}
+      .cz-label{opacity:0;animation:czFadeIn .6s 1.3s ease forwards}
+      .cz-arrow{opacity:0;animation:czFadeIn .8s 1.7s ease forwards}
+      .cz-pulse{animation:czPulse 3.4s 2.4s ease-in-out infinite;transform-origin:540px 130px}
+      .cz-hit{cursor:pointer;transition:opacity .15s ease}
+      @keyframes czFadeIn{to{opacity:1}}
+      @keyframes czScaleIn{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+      @keyframes czPulse{0%,100%{opacity:.85}50%{opacity:1}}
+    </style>
+
+    <!-- Outer circle: Swampy Ground -->
+    <circle class="cz-outer" cx="340" cy="250" r="170" fill="url(#czOuter)" stroke="#0061AD" stroke-opacity=".32" stroke-width="1.6" stroke-dasharray="5 4"/>
+
+    <!-- Inner circle: Firm Ground -->
+    <circle class="cz-inner" cx="340" cy="250" r="78" fill="url(#czInner)"/>
+
+    <!-- Inner labels (Firm Ground) -->
+    <g class="cz-label" style="font-family:'Barlow Condensed','Arial Narrow',sans-serif" text-anchor="middle">
+      <text x="340" y="240" font-size="17" font-weight="800" fill="#fff">Comfort Zone</text>
+      <text x="340" y="260" font-size="13" font-weight="700" fill="#cfe1f2" font-style="italic">'Firm Ground'</text>
+      <text x="340" y="278" font-size="9" font-weight="600" fill="#9bbfdf" letter-spacing=".05em">CLEAR EXPERTISE &amp; CONFIDENCE</text>
+    </g>
+
+    <!-- Outer label: Swampy Ground -->
+    <g class="cz-label" style="font-family:'Barlow Condensed','Arial Narrow',sans-serif" text-anchor="middle">
+      <text x="340" y="116" font-size="13" font-weight="800" fill="#0061AD" letter-spacing=".06em">AREA OF ROLE UNCERTAINTY</text>
+      <text x="340" y="135" font-size="13" font-weight="700" fill="#0061AD" font-style="italic">'Swampy Ground'</text>
+    </g>
+
+    <!-- Surrounding labels -->
+    <g class="cz-label" style="font-family:'Barlow','Arial',sans-serif">
+      <text x="40" y="240" font-size="11" font-weight="700" fill="#0061AD" letter-spacing=".04em">CHANGING</text>
+      <text x="40" y="256" font-size="11" font-weight="700" fill="#0061AD" letter-spacing=".04em">DEMANDS &amp;</text>
+      <text x="40" y="272" font-size="11" font-weight="700" fill="#0061AD" letter-spacing=".04em">REQUIREMENTS</text>
+
+      <text x="540" y="232" font-size="11" font-weight="700" fill="#0061AD" letter-spacing=".04em">NEW &amp; LESSER-</text>
+      <text x="540" y="248" font-size="11" font-weight="700" fill="#0061AD" letter-spacing=".04em">KNOWN AREAS OF</text>
+      <text x="540" y="264" font-size="11" font-weight="700" fill="#0061AD" letter-spacing=".04em">SKILLS &amp; KNOWLEDGE</text>
+
+      <text x="340" y="446" font-size="11" font-weight="700" fill="#0061AD" letter-spacing=".04em" text-anchor="middle">UNDEFINED AREAS OF</text>
+      <text x="340" y="462" font-size="11" font-weight="700" fill="#0061AD" letter-spacing=".04em" text-anchor="middle">RESPONSIBILITY</text>
+    </g>
+
+    <!-- Area of Greatest Opportunity arrow -->
+    <g class="cz-arrow">
+      <text x="690" y="56" font-size="11" font-weight="800" fill="#fa6b02" text-anchor="end" style="font-family:'Barlow','Arial',sans-serif" letter-spacing=".05em">AREA OF GREATEST</text>
+      <text x="690" y="72" font-size="11" font-weight="800" fill="#fa6b02" text-anchor="end" style="font-family:'Barlow','Arial',sans-serif" letter-spacing=".05em">OPPORTUNITY &amp; CHOICE</text>
+      <g class="cz-pulse">
+        <path d="M620,90 Q565,108 478,170" fill="none" stroke="#fa6b02" stroke-width="2" stroke-linecap="round" marker-end="url(#czArrow)"/>
+      </g>
+    </g>
+
+    <!-- Hit zones (added after dom mount) -->
+    <g id="cz-hits"></g>
+  </svg>`;
+
+  // Caption strip below SVG
+  const caption = document.createElement('div');
+  caption.style.cssText = 'min-height:54px;margin:14px auto 0;padding:11px 18px;border-radius:12px;background:#f0f6fc;font-size:13px;color:#7a8a99;line-height:1.6;text-align:center;transition:opacity .2s ease, color .2s ease;opacity:.6;font-style:normal;max-width:600px;border-left:3px solid transparent';
+  caption.textContent = 'Hover or tap each area to explore the model.';
+  wrap.appendChild(caption);
+
+  setTimeout(() => {
+    wrap.style.opacity = '1';
+
+    const NS = 'http://www.w3.org/2000/svg';
+    const hits = wrap.querySelector('#cz-hits');
+    if (!hits) return;
+
+    function attachHover(el, zone) {
+      el.setAttribute('fill', 'transparent');
+      el.classList.add('cz-hit');
+      el.addEventListener('mouseenter', () => {
+        caption.style.opacity = '1';
+        caption.style.fontStyle = 'italic';
+        caption.style.borderLeftColor = zone.color;
+        caption.style.color = zone.color;
+        caption.innerHTML = '<strong style="font-style:normal">' + zone.label + ':</strong> ' + zone.desc;
+        try { playTooltipReveal(); } catch(e) {}
+      });
+      el.addEventListener('mouseleave', () => {
+        caption.style.opacity = '.6';
+        caption.style.fontStyle = 'normal';
+        caption.style.color = '#7a8a99';
+        caption.style.borderLeftColor = 'transparent';
+        caption.textContent = 'Hover or tap each area to explore the model.';
+      });
+      hits.appendChild(el);
+    }
+
+    // Outer ring hit (donut shape via path with two subpaths and evenodd fill rule)
+    const ring = document.createElementNS(NS, 'path');
+    ring.setAttribute('d',
+      'M 340,80 a 170,170 0 1,1 0,340 a 170,170 0 1,1 0,-340 Z ' +
+      'M 340,172 a 78,78 0 1,1 0,156 a 78,78 0 1,1 0,-156 Z'
+    );
+    ring.setAttribute('fill-rule', 'evenodd');
+    attachHover(ring, ZONES[1]);
+
+    // Inner circle hit (drawn after ring, sits on top)
+    const inner = document.createElementNS(NS, 'circle');
+    inner.setAttribute('cx', '340'); inner.setAttribute('cy', '250'); inner.setAttribute('r', '78');
+    attachHover(inner, ZONES[0]);
+
+    // Surrounding label hit zones
+    [
+      { x: 30,  y: 224, w: 130, h: 60, zone: ZONES[2] },
+      { x: 530, y: 218, w: 178, h: 60, zone: ZONES[3] },
+      { x: 230, y: 432, w: 220, h: 38, zone: ZONES[4] },
+      { x: 470, y: 30,  w: 240, h: 60, zone: ZONES[5] }
+    ].forEach(b => {
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', b.x); r.setAttribute('y', b.y);
+      r.setAttribute('width', b.w); r.setAttribute('height', b.h);
+      r.setAttribute('rx', '8');
+      attachHover(r, b.zone);
+    });
+
+    // Boundary opportunity hit zone (a thin ring around the inner circle border)
+    const boundary = document.createElementNS(NS, 'circle');
+    boundary.setAttribute('cx', '340'); boundary.setAttribute('cy', '250'); boundary.setAttribute('r', '88');
+    boundary.setAttribute('fill', 'none');
+    boundary.setAttribute('stroke', 'transparent');
+    boundary.setAttribute('stroke-width', '20');
+    boundary.setAttribute('pointer-events', 'stroke');
+    boundary.classList.add('cz-hit');
+    boundary.addEventListener('mouseenter', () => {
+      caption.style.opacity = '1';
+      caption.style.fontStyle = 'italic';
+      caption.style.borderLeftColor = ZONES[5].color;
+      caption.style.color = ZONES[5].color;
+      caption.innerHTML = '<strong style="font-style:normal">' + ZONES[5].label + ':</strong> ' + ZONES[5].desc;
+      try { playTooltipReveal(); } catch(e) {}
+    });
+    boundary.addEventListener('mouseleave', () => {
+      caption.style.opacity = '.6';
+      caption.style.fontStyle = 'normal';
+      caption.style.color = '#7a8a99';
+      caption.style.borderLeftColor = 'transparent';
+      caption.textContent = 'Hover or tap each area to explore the model.';
+    });
+    hits.appendChild(boundary);
+  }, 250);
+
+  return wrap;
+}
+
+function buildDependencyInterdependencyVisual() {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;opacity:0;transition:opacity .5s ease';
+
+  const STAGES = [
+    { n:'1', label:'Dependency',
+      brief:'Being directed and sustained by others.',
+      desc:'Comfortable being told, guided, and supported. People in this stage rely on others for direction, decisions, and resources, and may find it hard to act without explicit instruction. A familiar habit when management has been heavily directive over a long period.' },
+    { n:'2', label:'Counter-Dependency',
+      brief:'Rebellious; preoccupied with self.',
+      desc:'A reaction against being directed. People take initiative, but often irresponsibly. Energy goes into pushing back rather than building forward, and self-interest can crowd out the wider team. A common stop-off on the way to genuine independence.' },
+    { n:'3', label:'Independency',
+      brief:'Self-directed; thinking for oneself.',
+      desc:'Taking care of self. Becoming inner-directed and self-reliant. Thinking your own thoughts, making your own decisions, and carrying the consequences. Solid ground, but potentially solitary if it stops here.' },
+    { n:'4', label:'Interdependency',
+      brief:'Self-reliant, and able to join with others.',
+      desc:'The destination. Self-reliant and proactive, but also able to join with other people and share resources productively. The leader\'s aim is to help every team member move along this arc, not to leave them stuck in the earlier stages.' }
+  ];
+
+  const colours = ['#1A3A5C', '#36527A', '#0061AD', '#0079D6'];
+
+  let cardsHTML = '';
+  STAGES.forEach((s, i) => {
+    cardsHTML += `
+      <div class="di-card" data-i="${i}" style="
+        flex:1 1 0;min-width:108px;background:#fff;border:1.5px solid #e3ecf5;border-radius:14px;
+        padding:16px 10px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;
+        cursor:pointer;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+        position:relative;opacity:0;transform:translateY(8px);animation:diRise .55s ${0.25 + i * 0.13}s ease forwards">
+        <div style="
+          width:38px;height:38px;border-radius:50%;background:${colours[i]};color:#fff;
+          display:flex;align-items:center;justify-content:center;
+          font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:18px;font-weight:800;
+          margin-bottom:10px;box-shadow:0 4px 12px rgba(0,97,173,.18)">${s.n}</div>
+        <div style="
+          font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-size:15px;font-weight:800;
+          color:#1A3A5C;line-height:1.15;margin-bottom:6px">${s.label}</div>
+        <div style="font-size:11px;color:#5a6878;line-height:1.45">${s.brief}</div>
+      </div>`;
+  });
+
+  wrap.innerHTML = `
+    <style>
+      @keyframes diRise{to{opacity:1;transform:translateY(0)}}
+      @keyframes diArrowDraw{from{stroke-dashoffset:600}to{stroke-dashoffset:0}}
+      .di-card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(0,97,173,.13);border-color:#0061AD}
+      .di-card.active{border-color:#0061AD;background:#f7fbff;box-shadow:0 8px 22px rgba(0,97,173,.16);transform:translateY(-3px)}
+    </style>
+    <div style="position:relative;max-width:680px;margin:0 auto">
+      <svg viewBox="0 0 680 22" style="width:100%;height:18px;display:block;margin-bottom:-9px;position:relative;z-index:0;overflow:visible" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="diArrowMarker" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#0079D6"/>
+          </marker>
+          <linearGradient id="diLineGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#1A3A5C"/>
+            <stop offset="100%" stop-color="#0079D6"/>
+          </linearGradient>
+        </defs>
+        <line x1="40" y1="11" x2="635" y2="11" stroke="url(#diLineGrad)" stroke-width="2" stroke-dasharray="600" stroke-dashoffset="600" marker-end="url(#diArrowMarker)" style="animation:diArrowDraw 1.6s 1.1s ease forwards"/>
+      </svg>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:1">
+        ${cardsHTML}
+      </div>
+    </div>
+  `;
+
+  // Caption strip
+  const caption = document.createElement('div');
+  caption.style.cssText = 'min-height:54px;margin:18px auto 0;padding:12px 18px;border-radius:12px;background:#f0f6fc;font-size:13px;color:#7a8a99;line-height:1.6;text-align:center;transition:opacity .2s ease, color .2s ease;opacity:.6;font-style:normal;max-width:600px;border-left:3px solid transparent';
+  caption.textContent = 'Tap or hover each stage to read more.';
+  wrap.appendChild(caption);
+
+  setTimeout(() => {
+    wrap.style.opacity = '1';
+    const cards = wrap.querySelectorAll('.di-card');
+
+    function showStage(card, stage, colour, withClickSound) {
+      cards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      caption.style.opacity = '1';
+      caption.style.fontStyle = 'italic';
+      caption.style.color = colour;
+      caption.style.borderLeftColor = colour;
+      caption.innerHTML = '<strong style="font-style:normal">' + stage.label + ':</strong> ' + stage.desc;
+      try { withClickSound ? playCardFlip() : playTooltipReveal(); } catch(e) {}
+    }
+
+    function clearStage() {
+      cards.forEach(c => c.classList.remove('active'));
+      caption.style.opacity = '.6';
+      caption.style.fontStyle = 'normal';
+      caption.style.color = '#7a8a99';
+      caption.style.borderLeftColor = 'transparent';
+      caption.textContent = 'Tap or hover each stage to read more.';
+    }
+
+    cards.forEach(card => {
+      const i = parseInt(card.getAttribute('data-i'), 10);
+      const stage = STAGES[i];
+      const colour = colours[i];
+
+      card.addEventListener('mouseenter', () => showStage(card, stage, colour, false));
+      card.addEventListener('mouseleave', () => clearStage());
+      card.addEventListener('click', () => showStage(card, stage, colour, true));
+    });
+  }, 250);
+
+  return wrap;
 }
 
 function buildSpectrumVisual() {
@@ -5713,6 +6390,48 @@ function buildOverlaySVG(onHover, onClick, onHoverHub, onClickHub) {
 }
 
 // ============================================================
+//  PRINTABLE RESOURCE DOWNLOAD CARD
+//  Reusable orange-accented card linking to a PDF in /resources/.
+//  Used on the home page, segment pages, and Cog sub-pages.
+// ============================================================
+function buildResourceDownloadCard(opts) {
+  const eyebrow = opts.eyebrow || 'Printable resource';
+  const title = opts.title || '';
+  const description = opts.description || '';
+  const filename = opts.filename || '';
+  const card = document.createElement('a');
+  card.className = 'rsc-card slide-up delay4';
+  card.href = 'resources/' + filename;
+  card.setAttribute('download', '');
+  card.setAttribute('rel', 'noopener');
+  card.setAttribute('aria-label', 'Download ' + title + ' as PDF');
+  card.innerHTML =
+    '<div class="rsc-icon" aria-hidden="true">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
+        '<polyline points="14 2 14 8 20 8"/>' +
+      '</svg>' +
+      'PDF' +
+    '</div>' +
+    '<div class="rsc-body">' +
+      '<div class="rsc-eyebrow">' + eyebrow + '</div>' +
+      '<div class="rsc-title">' + title + '</div>' +
+      '<p class="rsc-desc">' + description + '</p>' +
+    '</div>' +
+    '<div class="rsc-arrow" aria-hidden="true">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>' +
+        '<polyline points="7 10 12 15 17 10"/>' +
+        '<line x1="12" y1="15" x2="12" y2="3"/>' +
+      '</svg>' +
+    '</div>';
+  card.addEventListener('click', () => {
+    try { playMINext(); } catch(e) {}
+  });
+  return card;
+}
+
+// ============================================================
 //  WHEEL PAGE
 // ============================================================
 function buildWheelPage(onOpen) {
@@ -5856,6 +6575,14 @@ function buildWheelPage(onOpen) {
   cont.className = 'container';
   cont.appendChild(centerBlock);
   cont.appendChild(layout);
+
+  // Whole-programme self-assessment download (covers all 15 skills)
+  cont.appendChild(buildResourceDownloadCard({
+    eyebrow: 'Programme self-assessment',
+    title: 'The Skills: Self-Assessment',
+    description: 'A printable scorecard covering all fifteen leadership skills across the wheel. Rate yourself from 1 to 5 on each, with space for evidence and examples. Useful before or after working through the wheel to track your own development.',
+    filename: 'TL05_TheSkills_Self-Assessment.pdf'
+  }));
 
   page.appendChild(buildHeader());
   page.appendChild(cont);
@@ -6428,12 +7155,13 @@ function buildDetailPage(seg, onBack) {
   const rightCourseCallout = seg.hasRightCourseTools ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7"/><path d="M2 12s4 7 10 7 10-7 10-7"/><circle cx="12" cy="12" r="2"/></svg> This section includes three interactive tools below: a Sensation and Intuition self-check, an Insights Decision Making reflection, and a Skill and Will Course of Action planner.</div>' : '';
   const styleToolsCallout = seg.hasStyleTools ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg> This section includes a Maturity Matrix and a Situational Style Planner below. Diagnose a real situation, plan your style shift, and download your reflection.</div>' : '';
   const lossReflectionCallout = seg.hasLossCurveReflection ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> This section includes a personal reflection deck below. Work through four prompts on how you lead people through change.</div>' : '';
+  const empowermentMapCallout = seg.hasEmpowermentMap ? '<div class="hero-ws-callout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg> This section includes an Empowerment Map below. Map a real team member onto the model, plan the journey, and download it as a PDF.</div>' : '';
   hero.innerHTML = `
     <div class="hero-blob1"></div><div class="hero-blob2"></div>
     <p class="hero-eyebrow">${seg.quadrant}</p>
     <h1>${seg.label}</h1>
     <p>${seg.desc}</p>
-    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}${rehearsalCallout}${checkinCallout}${rightCourseCallout}${styleToolsCallout}${lossReflectionCallout}
+    ${worksheetCallout}${plannerCallout}${flightPlanCallout}${actionPlannerCallout}${rehearsalCallout}${checkinCallout}${rightCourseCallout}${styleToolsCallout}${lossReflectionCallout}${empowermentMapCallout}
   `;
 
   const modelCard = document.createElement('div');
@@ -7022,6 +7750,14 @@ function buildDetailPage(seg, onBack) {
     cont.appendChild(wsCard);
     cont.appendChild(wsBookCard);
 
+    // Printable PDF version of the Change Sheet (alongside the interactive one above)
+    cont.appendChild(buildResourceDownloadCard({
+      eyebrow: 'Printable version',
+      title: 'Change Sheet',
+      description: 'A blank, printable PDF of the Change Sheet for paper-based work or for taking into a one-to-one. Same fields as the interactive version above.',
+      filename: 'TL07_ChangeSheet.pdf'
+    }));
+
     // Wire up PDF download
     setTimeout(() => {
       const pdfBtn = cont.querySelector('#ws-pdf-btn');
@@ -7050,6 +7786,14 @@ function buildDetailPage(seg, onBack) {
     apCard.appendChild(apWrap);
     cont.appendChild(apDivider);
     cont.appendChild(apCard);
+
+    // Printable PDF version of the Performance Navigator flow chart
+    cont.appendChild(buildResourceDownloadCard({
+      eyebrow: 'Printable version',
+      title: 'Performance Navigator',
+      description: 'The full Performance Navigator decision flow as a one-page printable PDF. Useful as a wall reference, or to walk through with another leader during a diagnosis conversation.',
+      filename: 'TL08_PerformanceNavigator.pdf'
+    }));
   }
 
   // Inline Flight Plan Sheet
@@ -7078,6 +7822,144 @@ function buildDetailPage(seg, onBack) {
     cont.appendChild(fpsDivider);
     cont.appendChild(fpsCard);
     cont.appendChild(fpsBook);
+  }
+
+  // Wider Connections (E3: Provide continued support): Sapped vs Zapped
+  // reference plus cross-links back to the High Support and High Challenge
+  // matrix and the Two Concepts and Two Attitudes page where Positive Regard sits.
+  if (seg.hasContinuedSupportExtras) {
+    const csDivider = document.createElement('div');
+    csDivider.className = 'ws-divider slide-up delay4';
+    csDivider.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Wider Connections</div><div class="ws-divider-line"></div>';
+    cont.appendChild(csDivider);
+
+    // Sapped or Zapped? card
+    const szCard = document.createElement('div');
+    szCard.className = 'ws-card slide-up delay4';
+    szCard.innerHTML =
+      '<h2>Sapped or Zapped?</h2>' +
+      '<p class="ws-subtitle">William C Byham, in <em>Zapp! The Lightning of Empowerment</em> (1999), put words to the felt experience of two very different leadership cultures. Read down each column and the contrast lands quickly: one culture drains people, the other powers them up. Continued support, given consistently and in the moment, is the daily, deliberate work of moving each individual from the left column to the right.</p>' +
+      '<div class="sz-grid">' +
+        '<div class="sz-col sz-sapped">' +
+          '<div class="sz-col-header">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>' +
+            'Sapped' +
+          '</div>' +
+          '<ul class="sz-col-list">' +
+            '<li>Your job belongs to the company</li>' +
+            '<li>You are just doing whatever you are told</li>' +
+            '<li>Your job does not really matter</li>' +
+            '<li>You do not know how well you are doing</li>' +
+            '<li>You always have to keep your mouth shut</li>' +
+            '<li>Your job is something different from who you are</li>' +
+            '<li>You have little or no control over your work</li>' +
+          '</ul>' +
+        '</div>' +
+        '<div class="sz-col sz-zapped">' +
+          '<div class="sz-col-header">' +
+            '<svg class="sz-bolt-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>' +
+            'Zapped' +
+          '</div>' +
+          '<ul class="sz-col-list">' +
+            '<li>Your job belongs to you</li>' +
+            '<li>You are responsible</li>' +
+            '<li>Your job counts for something</li>' +
+            '<li>You know where you stand</li>' +
+            '<li>You have some say in how things are done</li>' +
+            '<li>Your job is just part of who you are</li>' +
+            '<li>You have some control over your work</li>' +
+          '</ul>' +
+        '</div>' +
+      '</div>' +
+      '<p class="sz-attribution">Adapted from William C Byham, <em>Zapp! The Lightning of Empowerment</em>, pp 55-56</p>';
+    cont.appendChild(szCard);
+
+    // Two cross-link cards: High Support and High Challenge matrix + Two Concepts and Two Attitudes
+    const csConnGrid = document.createElement('div');
+    csConnGrid.className = 'cs-conn-grid slide-up delay4';
+    csConnGrid.innerHTML =
+      // Card 1: Cog hub (High Support / High Challenge matrix)
+      '<button class="cs-conn-card" data-go-cog="hub" type="button">' +
+        '<div class="cs-conn-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<rect x="3" y="3" width="8" height="8" rx="1"/>' +
+            '<rect x="13" y="3" width="8" height="8" rx="1"/>' +
+            '<rect x="3" y="13" width="8" height="8" rx="1"/>' +
+            '<rect x="13" y="13" width="8" height="8" rx="1"/>' +
+            '<circle cx="12" cy="12" r="1.6" fill="currentColor"/>' +
+          '</svg>' +
+        '</div>' +
+        '<div class="cs-conn-body">' +
+          '<div class="cs-conn-eyebrow">Revisit the foundation</div>' +
+          '<div class="cs-conn-title">High Support &amp; High Challenge</div>' +
+          '<p class="cs-conn-desc">The High Support and High Challenge matrix at the heart of the Cog. The Zapped column above is the lived reality of the Commitment quadrant. Step back into it and see how all four positions land.</p>' +
+        '</div>' +
+        '<div class="cs-conn-arrow">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+        '</div>' +
+      '</button>' +
+      // Card 2: Two Concepts and Two Attitudes (Positive Regard)
+      '<button class="cs-conn-card" data-go-cog="concepts-attitudes" type="button">' +
+        '<div class="cs-conn-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' +
+          '</svg>' +
+        '</div>' +
+        '<div class="cs-conn-body">' +
+          '<div class="cs-conn-eyebrow">Go deeper</div>' +
+          '<div class="cs-conn-title">Positive Regard &amp; Genuineness</div>' +
+          '<p class="cs-conn-desc">The two attitudes that hold the Cog together. Catching someone doing something right only carries weight when the regard underneath it is real. The Two Concepts and Two Attitudes page sets out the full picture.</p>' +
+        '</div>' +
+        '<div class="cs-conn-arrow">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+        '</div>' +
+      '</button>';
+
+    // Wire up the click handlers
+    const cogHubBtn = csConnGrid.querySelector('[data-go-cog="hub"]');
+    if (cogHubBtn) {
+      cogHubBtn.addEventListener('click', () => {
+        try { playMINext(); } catch(e) {}
+        if (typeof goCog === 'function') goCog();
+      });
+    }
+    const cogSubBtn = csConnGrid.querySelector('[data-go-cog="concepts-attitudes"]');
+    if (cogSubBtn) {
+      cogSubBtn.addEventListener('click', () => {
+        try { playMINext(); } catch(e) {}
+        if (typeof goCogSub === 'function') goCogSub('concepts-attitudes');
+      });
+    }
+
+    cont.appendChild(csConnGrid);
+  }
+
+  // Inline Empowerment Map (E1: Empower team members)
+  if (seg.hasEmpowermentMap) {
+    const emDiv = document.createElement('div');
+    emDiv.className = 'ws-divider slide-up delay4';
+    emDiv.innerHTML = '<div class="ws-divider-line"></div><div class="ws-divider-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg> Empowerment Map</div><div class="ws-divider-line"></div>';
+    const emCard = document.createElement('div');
+    emCard.className = 'ws-card slide-up delay4';
+    emCard.innerHTML = '<h2>The Empowerment Map</h2><p class="ws-subtitle">Pick one person you are working to empower. Map their firm ground and their swampy ground, identify the boundary where their next growth lives, place them on the dependency arc today and where you would like them to be, and plan the support and the letting go that will get them there. Drawn from pages 97 and 99 of the Liberator book.</p>';
+    const emWrap = document.createElement('div');
+    emWrap.style.marginTop = '18px';
+    emWrap.appendChild(buildEmpowermentMap());
+    emCard.appendChild(emWrap);
+    const emBook = document.createElement('div');
+    emBook.className = 'book-card slide-up delay4';
+    emBook.style.cssText = 'max-width:800px;margin:20px auto 0';
+    const emBookIcon = document.createElement('div');
+    emBookIcon.className = 'book-icon';
+    emBookIcon.innerHTML = `<div class="book-spine" style="background:${qColour}"></div><div class="book-body" style="background:${qColour}"><div class="book-pages" style="margin-top:10px"><span></span><span></span><span></span><span></span><span></span></div></div>`;
+    const emBookInfo = document.createElement('div');
+    emBookInfo.className = 'book-info';
+    emBookInfo.innerHTML = '<div class="book-label">Liberator Book</div><div class="book-pages-text">Page/s: 97-99</div>';
+    emBook.appendChild(emBookIcon);
+    emBook.appendChild(emBookInfo);
+    cont.appendChild(emDiv);
+    cont.appendChild(emCard);
+    cont.appendChild(emBook);
   }
 
   // Inline Right Course tools (V3: Decide the right course of action)
@@ -8339,7 +9221,7 @@ function buildCogMatrixVisual(){
   if (svg) {
     svg.setAttribute('role', 'img');
     svg.setAttribute('aria-label',
-      'The Cog Matrix: a hexagon split into four quadrants. ' +
+      'The High Support and High Challenge matrix: a hexagon split into four quadrants. ' +
       'Comfort sits at high support and low challenge. ' +
       'Commitment sits at high support and high challenge. ' +
       'Apathy sits at low support and low challenge. ' +
@@ -8626,7 +9508,7 @@ function downloadCogExplorationPDF(state){
       s += `${blueD} rg\n${M} ${H-M-48} ${W-2*M} 4 re f\n`;
       s += `${white} rg\n`;
       s += `BT /F1 16 Tf ${M+14} ${H-M-28} Td (${escPDF('Story Liberator - Personal Exploration')}) Tj ET\n`;
-      s += `BT /F2 9 Tf ${W-M-150} ${H-M-28} Td (${escPDF('The Cog Matrix | p.33-35')}) Tj ET\n`;
+      s += `BT /F2 9 Tf ${W-M-150} ${H-M-28} Td (${escPDF('High Support and High Challenge Matrix | p.33-35')}) Tj ET\n`;
 
       let y = H - M - 70;
 
@@ -8703,7 +9585,7 @@ function downloadCogExplorationPDF(state){
       s += `${blueD} rg\n${M} ${H-M-48} ${W-2*M} 4 re f\n`;
       s += `${white} rg\n`;
       s += `BT /F1 16 Tf ${M+14} ${H-M-28} Td (${escPDF('Story Liberator - Personal Exploration')}) Tj ET\n`;
-      s += `BT /F2 9 Tf ${W-M-150} ${H-M-28} Td (${escPDF('The Cog Matrix | p.33-35')}) Tj ET\n`;
+      s += `BT /F2 9 Tf ${W-M-150} ${H-M-28} Td (${escPDF('High Support and High Challenge Matrix | p.33-35')}) Tj ET\n`;
 
       let y = H - M - 70;
       s += `${dark} rg\n`;
@@ -8887,7 +9769,7 @@ function buildCogHubPage(){
   modelCard.className = 'model-card slide-up delay3';
   modelCard.innerHTML = `
     <p class="model-eyebrow">Headline visual</p>
-    <h2>The Cog Matrix</h2>
+    <h2>The High Support and High Challenge Matrix</h2>
     <p class="desc">If the emphasis placed on both Challenge and Support varies from low to high, then there are four possible mindsets a Leader-Developer can operate from at any given time. The matrix is the visual shorthand for this both/and choice. It is not a personality test, but a description of the position a leader operates from in the moment, and the consequences that follow.</p>
   `;
   modelCard.appendChild(buildCogMatrixVisual());
@@ -8954,6 +9836,15 @@ function buildCogHubPage(){
   cont.appendChild(exploration.divider);
   cont.appendChild(exploration.card);
   cont.appendChild(exploration.book);
+
+  // Printable PDF version of the High Challenge-High Support Personal Exploration
+  cont.appendChild(buildResourceDownloadCard({
+    eyebrow: 'Printable version',
+    title: 'High Challenge-High Support: Personal Exploration',
+    description: 'A four-page printable workbook for exploring your own experience of each quadrant of the matrix, in either a leader or follower role. Same prompts as the interactive worksheet above.',
+    filename: 'TL02_HighChallenge-HighSupport_PersonalExploration.pdf'
+  }));
+
   cont.appendChild(foundations);
   cont.appendChild(buildBackToTopButton('Back to top'));
 
@@ -8990,7 +9881,7 @@ function buildOkPuzzleInteractive(){
 
   const empty = document.createElement('div');
   empty.className = 'ok-detail-empty';
-  empty.innerHTML = '<div class="ok-detail-empty-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M9 16l-4 4V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z"/></svg></div><p>Tap a position above to reveal the description, the behaviours it provokes, and how it maps onto the Cog matrix.</p>';
+  empty.innerHTML = '<div class="ok-detail-empty-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M9 16l-4 4V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2z"/></svg></div><p>Tap a position above to reveal the description, the behaviours it provokes, and how it maps onto the High Support and High Challenge matrix.</p>';
   detail.appendChild(empty);
 
   const content = document.createElement('div');
@@ -10716,6 +11607,15 @@ function buildChangeCurvePage(sp, idx){
   cont.appendChild(marathon);
   cont.appendChild(summaryGrid);
   cont.appendChild(reflectCard);
+
+  // Printable PDF: How I Deal With Change Checklist
+  cont.appendChild(buildResourceDownloadCard({
+    eyebrow: 'Printable checklist',
+    title: 'How I Deal with Change',
+    description: 'A fifteen-statement checklist that helps you take an honest look at your own approach to leading change. Tick how often each statement applies, then use your answers to decide where to focus.',
+    filename: 'TL12_HowIDealwithChange_Checklist.pdf'
+  }));
+
   cont.appendChild(otherSection);
   cont.appendChild(buildBackToTopButton('Back to top'));
 
@@ -13867,6 +14767,431 @@ function buildFlightPlanSheet() {
 
   render();
   return wrap;
+}
+
+function buildEmpowermentMap() {
+  const uid = 'em' + Math.random().toString(36).slice(2, 7);
+  let step = 1;
+  const TOTAL = 3;
+  const STAGES = [
+    { key:'dependency',         label:'Dependency',         brief:'Being directed and sustained by others.',                     colour:'#1A3A5C' },
+    { key:'counter-dependency', label:'Counter-Dependency', brief:'Rebellious; preoccupied with self.',                          colour:'#36527A' },
+    { key:'independency',       label:'Independency',       brief:'Self-directed; thinking for oneself.',                        colour:'#0061AD' },
+    { key:'interdependency',    label:'Interdependency',    brief:'Self-reliant, and able to join with others.',                 colour:'#0079D6' }
+  ];
+  const state = {
+    name: '', context: '',
+    firm: '', swamp: '',
+    opportunity: '',
+    stageNow: '', stageGoal: '',
+    support: '', letgo: '',
+    firstStep: ''
+  };
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'font-family:"Barlow",sans-serif;width:100%';
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `
+    .${uid}-prog{display:flex;align-items:center;gap:0;margin-bottom:22px}
+    .${uid}-pseg{flex:1;height:4px;border-radius:2px;background:#e4edf5;transition:background .35s}
+    .${uid}-pseg.done{background:#004B86}
+    .${uid}-pseg.active{background:#0061AD}
+    .${uid}-pgap{width:6px;flex:0 0 6px}
+
+    .${uid}-hd{margin-bottom:18px}
+    .${uid}-hnum{font-size:11px;font-weight:700;color:#8fa0b0;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+    .${uid}-htitle{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;color:#004B86;line-height:1.2}
+    .${uid}-hsub{font-size:13px;color:#667788;margin-top:6px;line-height:1.6}
+
+    .${uid}-lbl{font-size:12px;font-weight:600;color:#445566;margin-bottom:6px;margin-top:14px;letter-spacing:.04em;display:block}
+    .${uid}-inp{width:100%;border:2px solid #d4e3f0;border-radius:10px;padding:10px 14px;font-family:"Barlow",sans-serif;font-size:14px;color:#222;resize:vertical;transition:border-color .2s;outline:none;background:white;box-sizing:border-box}
+    .${uid}-inp:focus{border-color:#0061AD}
+    .${uid}-ta{min-height:80px;line-height:1.6}
+    .${uid}-hint{font-size:11.5px;color:#99aabb;margin-top:4px;font-style:italic;line-height:1.5}
+
+    .${uid}-zone{padding:14px 16px;border-radius:12px;margin-top:14px;border-left:4px solid transparent}
+    .${uid}-zone-firm{background:#EAF4FB;border-left-color:#0061AD}
+    .${uid}-zone-swamp{background:#f3f7fb;border-left-color:#5683B3}
+    .${uid}-zone-opp{background:#fff5ec;border-left-color:#fa6b02}
+    .${uid}-zone-hd{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+    .${uid}-zone-firm .${uid}-zone-hd{color:#0061AD}
+    .${uid}-zone-swamp .${uid}-zone-hd{color:#345A85}
+    .${uid}-zone-opp .${uid}-zone-hd{color:#fa6b02}
+    .${uid}-zone-sub{font-size:12px;color:#667788;font-style:italic;line-height:1.55;margin-bottom:8px}
+
+    .${uid}-stages{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .${uid}-stage{flex:1 1 0;min-width:108px;background:#fff;border:1.5px solid #e3ecf5;border-radius:12px;padding:12px 10px 11px;text-align:center;cursor:pointer;transition:all .15s ease;position:relative}
+    .${uid}-stage:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,97,173,.10);border-color:#0061AD}
+    .${uid}-stage.selected{box-shadow:0 8px 22px rgba(0,97,173,.20);transform:translateY(-2px)}
+    .${uid}-stage-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:14px;color:#fff;margin:0 auto 8px;transition:transform .2s}
+    .${uid}-stage.selected .${uid}-stage-dot{transform:scale(1.08)}
+    .${uid}-stage-lab{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:800;color:#1A3A5C;line-height:1.15;margin-bottom:4px}
+    .${uid}-stage-brf{font-size:10.5px;color:#5a6878;line-height:1.4}
+    .${uid}-stage-tick{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:#0061AD;color:#fff;display:none;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+    .${uid}-stage.selected .${uid}-stage-tick{display:flex}
+
+    .${uid}-arrow{display:flex;align-items:center;justify-content:center;color:#0061AD;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:13px;letter-spacing:.05em;margin:14px 0 4px;gap:10px}
+    .${uid}-arrow svg{flex:0 0 auto}
+
+    .${uid}-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+    .${uid}-navl{display:flex;gap:8px;flex-wrap:wrap}
+    .${uid}-btn{border:none;border-radius:20px;padding:10px 22px;font-family:"Barlow",sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s ease}
+    .${uid}-ghost{background:#f0f5fa;color:#556677}
+    .${uid}-ghost:hover{background:#e0ecf5}
+    .${uid}-primary{background:#004B86;color:white;box-shadow:0 4px 16px rgba(0,75,134,.22)}
+    .${uid}-primary:hover{background:#0061AD;transform:translateY(-1px)}
+    .${uid}-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .${uid}-dl{background:#0061AD;color:white;box-shadow:0 6px 20px rgba(0,97,173,.28);display:flex;align-items:center;gap:7px}
+    .${uid}-dl:hover{background:#004B86;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,97,173,.4)}
+
+    @keyframes ${uid}Fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .${uid}-step{animation:${uid}Fi .35s ease both}
+  `;
+  wrap.appendChild(styleEl);
+
+  function buildProg() {
+    const prog = document.createElement('div');
+    prog.className = uid + '-prog';
+    for (let i = 1; i <= TOTAL; i++) {
+      const seg = document.createElement('div');
+      seg.className = uid + '-pseg';
+      if (i < step) seg.classList.add('done');
+      else if (i === step) seg.classList.add('active');
+      prog.appendChild(seg);
+      if (i < TOTAL) {
+        const gap = document.createElement('div');
+        gap.className = uid + '-pgap';
+        prog.appendChild(gap);
+      }
+    }
+    return prog;
+  }
+
+  function mkHd(num, title, sub) {
+    const hd = document.createElement('div'); hd.className = uid + '-hd';
+    const hn = document.createElement('div'); hn.className = uid + '-hnum'; hn.textContent = 'Step ' + num + ' of ' + TOTAL;
+    const ht = document.createElement('div'); ht.className = uid + '-htitle'; ht.textContent = title;
+    const hs = document.createElement('div'); hs.className = uid + '-hsub'; hs.textContent = sub;
+    hd.appendChild(hn); hd.appendChild(ht); hd.appendChild(hs);
+    return hd;
+  }
+
+  function mkInp(placeholder, val, rows, onInput) {
+    const el = rows ? document.createElement('textarea') : document.createElement('input');
+    el.className = uid + '-inp' + (rows ? ' ' + uid + '-ta' : '');
+    if (!rows) el.type = 'text';
+    if (rows) el.rows = rows;
+    el.placeholder = placeholder;
+    el.value = val || '';
+    el.addEventListener('input', onInput);
+    return el;
+  }
+
+  function buildStageRow(currentValue, onPick) {
+    const row = document.createElement('div'); row.className = uid + '-stages';
+    STAGES.forEach((s, i) => {
+      const card = document.createElement('div'); card.className = uid + '-stage';
+      if (currentValue === s.key) card.classList.add('selected');
+      card.style.borderColor = currentValue === s.key ? s.colour : '';
+
+      const dot = document.createElement('div'); dot.className = uid + '-stage-dot';
+      dot.style.background = s.colour;
+      dot.textContent = String(i + 1);
+
+      const lab = document.createElement('div'); lab.className = uid + '-stage-lab'; lab.textContent = s.label;
+      const brf = document.createElement('div'); brf.className = uid + '-stage-brf'; brf.textContent = s.brief;
+      const tick = document.createElement('div'); tick.className = uid + '-stage-tick';
+      tick.style.background = s.colour;
+      tick.innerHTML = '\u2713';
+
+      card.appendChild(dot); card.appendChild(lab); card.appendChild(brf); card.appendChild(tick);
+      card.addEventListener('click', () => {
+        try { playCardFlip(); } catch(e) {}
+        onPick(s.key);
+      });
+      row.appendChild(card);
+    });
+    return row;
+  }
+
+  function s1(c) {
+    c.appendChild(mkHd(1, 'Pick the person, map the territory', 'Empowerment is always for one specific person. Choose them, then map where their ground is firm and where it gets uncertain.'));
+
+    const ln = document.createElement('label'); ln.className = uid + '-lbl'; ln.textContent = 'Who are you empowering?'; c.appendChild(ln);
+    const iName = mkInp('Name or initials', state.name, 0, e => { state.name = e.target.value; const nx = c.querySelector('[data-em-next]'); if (nx) nx.disabled = !state.name.trim(); });
+    c.appendChild(iName);
+    const hint0 = document.createElement('div'); hint0.className = uid + '-hint';
+    hint0.textContent = 'A specific person, not a generic role. The map only works for one person at a time.';
+    c.appendChild(hint0);
+
+    const lc = document.createElement('label'); lc.className = uid + '-lbl'; lc.textContent = 'Their role or context (optional)'; c.appendChild(lc);
+    const iCtx = mkInp('e.g. New project lead taking on first cross-team handover', state.context, 0, e => { state.context = e.target.value; });
+    c.appendChild(iCtx);
+
+    const firmZone = document.createElement('div'); firmZone.className = uid + '-zone ' + uid + '-zone-firm';
+    firmZone.innerHTML = '<div class="' + uid + '-zone-hd"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0061AD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg>Firm Ground today</div><div class="' + uid + '-zone-sub">What can they do confidently and well right now? What is their proven, settled territory?</div>';
+    const iFirm = mkInp('e.g. Quoting standard jobs, managing the day-to-day rota, holding their crew to safety standards...', state.firm, 3, e => { state.firm = e.target.value; });
+    firmZone.appendChild(iFirm);
+    c.appendChild(firmZone);
+
+    const swampZone = document.createElement('div'); swampZone.className = uid + '-zone ' + uid + '-zone-swamp';
+    swampZone.innerHTML = '<div class="' + uid + '-zone-hd"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5683B3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 3"><circle cx="12" cy="12" r="9"/></svg>Swampy Ground</div><div class="' + uid + '-zone-sub">What is uncertain, new, changing, or undefined for them at the moment? Where does the ground get less stable?</div>';
+    const iSwamp = mkInp('e.g. Holding a difficult conversation with an underperforming peer, leading the new client meeting, owning the budget conversation...', state.swamp, 3, e => { state.swamp = e.target.value; });
+    swampZone.appendChild(iSwamp);
+    c.appendChild(swampZone);
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const spacer = document.createElement('span'); navRow.appendChild(spacer);
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.textContent = 'Next: The opportunity \u2192'; nxt.disabled = !state.name.trim();
+    nxt.setAttribute('data-em-next', '1');
+    nxt.addEventListener('click', () => { try { playMINext(); } catch(e) {} step = 2; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s2(c) {
+    c.appendChild(mkHd(2, 'The boundary, and the arc', 'Out of all the swampy ground, what is the one stretch worth empowering? And where do they sit on the developmental arc, today and where you would like them to be?'));
+
+    const oppZone = document.createElement('div'); oppZone.className = uid + '-zone ' + uid + '-zone-opp';
+    oppZone.innerHTML = '<div class="' + uid + '-zone-hd"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fa6b02" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.5 17 14.5 18 22 12 18 6 22 7 14.5 2 9.5 9 8.5 12 2"/></svg>Greatest Opportunity</div><div class="' + uid + '-zone-sub">The single piece of growing they could do that would matter most. Be precise: this is where empowerment will live.</div>';
+    const iOpp = mkInp('e.g. Owning the supplier negotiation end to end, including walking away if the price is wrong...', state.opportunity, 3, e => { state.opportunity = e.target.value; });
+    oppZone.appendChild(iOpp);
+    c.appendChild(oppZone);
+
+    const lblNow = document.createElement('label'); lblNow.className = uid + '-lbl'; lblNow.textContent = 'Where they sit on the dependency arc today'; lblNow.style.marginTop = '20px'; c.appendChild(lblNow);
+    let nowRow = buildStageRow(state.stageNow, key => { state.stageNow = key; render(); });
+    c.appendChild(nowRow);
+
+    const arrow = document.createElement('div'); arrow.className = uid + '-arrow';
+    arrow.innerHTML = 'MOVING TOWARDS <svg width="22" height="14" viewBox="0 0 22 14" fill="none"><path d="M1 7h18m0 0l-5-5m5 5l-5 5" stroke="#0061AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    c.appendChild(arrow);
+
+    const lblGoal = document.createElement('label'); lblGoal.className = uid + '-lbl'; lblGoal.textContent = 'Where you would like them to be in the medium term'; lblGoal.style.marginTop = '4px'; c.appendChild(lblGoal);
+    let goalRow = buildStageRow(state.stageGoal, key => { state.stageGoal = key; render(); });
+    c.appendChild(goalRow);
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back';
+    back.addEventListener('click', () => { try { playMIBack(); } catch(e) {} step = 1; render(); });
+    navRow.appendChild(back);
+    const nxt = document.createElement('button'); nxt.className = uid + '-btn ' + uid + '-primary';
+    nxt.textContent = 'Next: Your plan \u2192';
+    nxt.addEventListener('click', () => { try { playMINext(); } catch(e) {} step = 3; render(); });
+    navRow.appendChild(nxt); c.appendChild(navRow);
+  }
+
+  function s3(c) {
+    c.appendChild(mkHd(3, 'The leader\u2019s plan: support, letting go, first step', 'Empowerment is not a moment of handover; it is a sequence of small ones. Plan what you will do alongside them, what you will deliberately stop doing, and what happens first.'));
+
+    const lblSup = document.createElement('label'); lblSup.className = uid + '-lbl'; lblSup.textContent = 'What support, scaffolding, or feedback will you provide?'; c.appendChild(lblSup);
+    const iSup = mkInp('e.g. Two prep sessions on the negotiation, role-play the walk-away, sit in on the first meeting and debrief afterwards...', state.support, 3, e => { state.support = e.target.value; });
+    c.appendChild(iSup);
+    const hintSup = document.createElement('div'); hintSup.className = uid + '-hint';
+    hintSup.textContent = 'Skills, knowledge, will, and confidence-building. What will you do alongside them, not for them?';
+    c.appendChild(hintSup);
+
+    const lblLg = document.createElement('label'); lblLg.className = uid + '-lbl'; lblLg.textContent = 'What will \u2018letting go\u2019 look like?'; c.appendChild(lblLg);
+    const iLg = mkInp('e.g. Stop reviewing every supplier email, hand over signing authority up to the agreed limit, do not attend the second meeting...', state.letgo, 3, e => { state.letgo = e.target.value; });
+    c.appendChild(iLg);
+    const hintLg = document.createElement('div'); hintLg.className = uid + '-hint';
+    hintLg.textContent = 'Which controls do you currently hold that you will deliberately put down? What will you stop doing once they are ready?';
+    c.appendChild(hintLg);
+
+    const lblFs = document.createElement('label'); lblFs.className = uid + '-lbl'; lblFs.textContent = 'First step, with a date or trigger'; c.appendChild(lblFs);
+    const iFs = mkInp('e.g. Book the first prep session in the diary by Friday this week...', state.firstStep, 2, e => { state.firstStep = e.target.value; });
+    c.appendChild(iFs);
+    const hintFs = document.createElement('div'); hintFs.className = uid + '-hint';
+    hintFs.textContent = 'One concrete action you will take. Empowerment that does not start in the diary stays a good intention.';
+    c.appendChild(hintFs);
+
+    const navRow = document.createElement('div'); navRow.className = uid + '-nav';
+    const leftBtns = document.createElement('div'); leftBtns.className = uid + '-navl';
+    const back = document.createElement('button'); back.className = uid + '-btn ' + uid + '-ghost';
+    back.innerHTML = '\u2190 Back';
+    back.addEventListener('click', () => { try { playMIBack(); } catch(e) {} step = 2; render(); });
+    const restart = document.createElement('button'); restart.className = uid + '-btn ' + uid + '-ghost';
+    restart.innerHTML = '\u21BA Start again';
+    restart.addEventListener('click', () => {
+      try { playMIBack(); } catch(e) {}
+      state.name = ''; state.context = ''; state.firm = ''; state.swamp = '';
+      state.opportunity = ''; state.stageNow = ''; state.stageGoal = '';
+      state.support = ''; state.letgo = ''; state.firstStep = '';
+      step = 1; render();
+    });
+    leftBtns.appendChild(back); leftBtns.appendChild(restart);
+    const dlBtn = document.createElement('button'); dlBtn.className = uid + '-btn ' + uid + '-dl';
+    dlBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download Empowerment Map';
+    dlBtn.addEventListener('click', () => { try { playMIDownload(); } catch(e) {} downloadEmpowermentMapPDF(state); });
+    navRow.appendChild(leftBtns); navRow.appendChild(dlBtn); c.appendChild(navRow);
+  }
+
+  function render() {
+    wrap.innerHTML = '';
+    wrap.appendChild(styleEl);
+    wrap.appendChild(buildProg());
+    const c = document.createElement('div'); c.className = uid + '-step';
+    if (step === 1) s1(c);
+    else if (step === 2) s2(c);
+    else s3(c);
+    wrap.appendChild(c);
+  }
+
+  render();
+  return wrap;
+}
+
+function downloadEmpowermentMapPDF(state) {
+  try {
+    const W = 595.28, H = 841.89, M = 50;
+    let objCount = 0;
+    const objects = [];
+    function addObj(data) { objCount++; objects.push({ id: objCount, data }); return objCount; }
+    function escPDF(str) { return String(str).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+    function sanitize(str) {
+      if (!str) return '';
+      return String(str).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2013|\u2014/g,'-').replace(/\u2026/g,'...').replace(/[^\x00-\x7F]/g,'');
+    }
+    function wrapText(text, maxChars) {
+      if (!text) return [''];
+      const words = sanitize(text).split(/\s+/); const lines = []; let line = '';
+      words.forEach(w => { if ((line+' '+w).trim().length > maxChars) { lines.push(line.trim()); line = w; } else { line = (line+' '+w).trim(); } });
+      if (line) lines.push(line.trim());
+      return lines.length ? lines : [''];
+    }
+    const STAGE_LABELS = {
+      'dependency':         '1. Dependency',
+      'counter-dependency': '2. Counter-Dependency',
+      'independency':       '3. Independency',
+      'interdependency':    '4. Interdependency'
+    };
+
+    const navy   = '0.10 0.23 0.36';
+    const blue   = '0.00 0.38 0.68';
+    const orange = '0.98 0.42 0.01';
+    const swamp  = '0.34 0.51 0.70';
+    const white  = '1 1 1';
+    const grey   = '0.45 0.45 0.45';
+    const light  = '0.93 0.96 0.99';
+    const lightOrange = '1.00 0.96 0.92';
+    const lightSwamp  = '0.95 0.97 0.98';
+    const lh = 14;
+    let s = ''; let y = H - M;
+
+    // Header bar
+    s += `${blue} rg\n${M} ${H-M-48} ${W-2*M} 48 re f\n${white} rg\n`;
+    s += `BT /F1 16 Tf ${M+12} ${H-M-30} Td (${escPDF('Story Liberator - Empowerment Map')}) Tj ET\n`;
+    s += `BT /F2 8 Tf ${W-M-168} ${H-M-30} Td (${escPDF('Liberator Programme | p.97-99')}) Tj ET\n`;
+    s += `${blue} rg\n${M} ${H-M-58} ${W-2*M} 10 re f\n`;
+    y = H - M - 76;
+
+    // Person block
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('EMPOWERMENT MAP FOR')}) Tj ET\n`; y -= 7;
+    s += `${light} rg\n${M} ${y-32} ${W-2*M} 32 re f\n${navy} rg\n`;
+    s += `BT /F1 14 Tf ${M+10} ${y-21} Td (${escPDF(sanitize(state.name) || '(No name given)')}) Tj ET\n`; y -= 44;
+
+    if (state.context) {
+      const cl = wrapText(state.context, 90); const ch = Math.max(22, cl.length*lh+10);
+      s += `${light} rg\n${M} ${y-ch} ${W-2*M} ${ch} re f\n0.2 0.2 0.2 rg\n`;
+      let cy = y-14; cl.forEach(l => { s += `BT /F2 9 Tf ${M+10} ${cy} Td (${escPDF(l)}) Tj ET\n`; cy-=lh; }); y -= ch+10;
+    }
+
+    // Two-column: Firm Ground + Swampy Ground
+    const colW = (W - 2*M - 10) / 2;
+    const firmLines = wrapText(state.firm || '(Not completed)', 50);
+    const swampLines = wrapText(state.swamp || '(Not completed)', 50);
+    const colH = Math.max(80, Math.max(firmLines.length, swampLines.length) * lh + 32);
+
+    // Firm Ground column
+    s += `${light} rg\n${M} ${y-colH} ${colW} ${colH} re f\n`;
+    s += `${blue} rg\n${M} ${y-colH} 4 ${colH} re f\n`;
+    s += `${blue} rg\nBT /F1 9 Tf ${M+10} ${y-14} Td (${escPDF('FIRM GROUND TODAY')}) Tj ET\n`;
+    let fy = y-30; firmLines.forEach(l => { s += `0.2 0.2 0.2 rg\nBT /F2 9 Tf ${M+10} ${fy} Td (${escPDF(l)}) Tj ET\n`; fy-=lh; });
+
+    // Swampy Ground column
+    const sx = M + colW + 10;
+    s += `${lightSwamp} rg\n${sx} ${y-colH} ${colW} ${colH} re f\n`;
+    s += `${swamp} rg\n${sx} ${y-colH} 4 ${colH} re f\n`;
+    s += `${swamp} rg\nBT /F1 9 Tf ${sx+10} ${y-14} Td (${escPDF('SWAMPY GROUND')}) Tj ET\n`;
+    let swy = y-30; swampLines.forEach(l => { s += `0.2 0.2 0.2 rg\nBT /F2 9 Tf ${sx+10} ${swy} Td (${escPDF(l)}) Tj ET\n`; swy-=lh; });
+    y -= colH + 16;
+
+    // Greatest Opportunity (full width, orange)
+    if (state.opportunity || true) {
+      const oLines = wrapText(state.opportunity || '(Not completed)', 80);
+      const oH = Math.max(48, oLines.length*lh + 22);
+      s += `${lightOrange} rg\n${M} ${y-oH} ${W-2*M} ${oH} re f\n`;
+      s += `${orange} rg\n${M} ${y-oH} 4 ${oH} re f\n`;
+      s += `${orange} rg\nBT /F1 9 Tf ${M+10} ${y-14} Td (${escPDF('GREATEST OPPORTUNITY (THE BOUNDARY)')}) Tj ET\n`;
+      let oy = y-30; oLines.forEach(l => { s += `0.2 0.2 0.2 rg\nBT /F2 10 Tf ${M+10} ${oy} Td (${escPDF(l)}) Tj ET\n`; oy-=lh; });
+      y -= oH + 16;
+    }
+
+    // Stage today + goal
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('DEVELOPMENTAL ARC')}) Tj ET\n`; y -= 8;
+    const arcW = (W - 2*M - 30) / 2;
+    s += `${light} rg\n${M} ${y-44} ${arcW} 44 re f\n`;
+    s += `${navy} rg\nBT /F1 9 Tf ${M+10} ${y-14} Td (${escPDF('Today')}) Tj ET\n`;
+    s += `${blue} rg\nBT /F1 11 Tf ${M+10} ${y-32} Td (${escPDF(STAGE_LABELS[state.stageNow] || '(Not selected)')}) Tj ET\n`;
+    // Arrow
+    s += `${blue} rg\nBT /F1 13 Tf ${M+arcW+8} ${y-26} Td (${escPDF('->')}) Tj ET\n`;
+    // Goal
+    const gx = M + arcW + 30;
+    s += `${light} rg\n${gx} ${y-44} ${arcW} 44 re f\n`;
+    s += `${navy} rg\nBT /F1 9 Tf ${gx+10} ${y-14} Td (${escPDF('Moving towards')}) Tj ET\n`;
+    s += `${blue} rg\nBT /F1 11 Tf ${gx+10} ${y-32} Td (${escPDF(STAGE_LABELS[state.stageGoal] || '(Not selected)')}) Tj ET\n`;
+    y -= 60;
+
+    // Support
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('SUPPORT, SCAFFOLDING, AND FEEDBACK')}) Tj ET\n`; y -= 7;
+    const supLines = wrapText(state.support || '(Not completed)', 80);
+    const supH = Math.max(40, supLines.length*lh + 18);
+    s += `${light} rg\n${M} ${y-supH} ${W-2*M} ${supH} re f\n`;
+    s += `${blue} rg\n${M} ${y-supH} 4 ${supH} re f\n0.2 0.2 0.2 rg\n`;
+    let supy = y-14; supLines.forEach(l => { s += `BT /F2 10 Tf ${M+10} ${supy} Td (${escPDF(l)}) Tj ET\n`; supy-=lh; }); y -= supH + 12;
+
+    // Letting go
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('WHAT LETTING GO LOOKS LIKE')}) Tj ET\n`; y -= 7;
+    const lgLines = wrapText(state.letgo || '(Not completed)', 80);
+    const lgH = Math.max(40, lgLines.length*lh + 18);
+    s += `${light} rg\n${M} ${y-lgH} ${W-2*M} ${lgH} re f\n`;
+    s += `${blue} rg\n${M} ${y-lgH} 4 ${lgH} re f\n0.2 0.2 0.2 rg\n`;
+    let lgy = y-14; lgLines.forEach(l => { s += `BT /F2 10 Tf ${M+10} ${lgy} Td (${escPDF(l)}) Tj ET\n`; lgy-=lh; }); y -= lgH + 12;
+
+    // First step
+    s += `${grey} rg\nBT /F1 9 Tf ${M} ${y} Td (${escPDF('FIRST STEP, WITH A DATE OR TRIGGER')}) Tj ET\n`; y -= 7;
+    const fsLines = wrapText(state.firstStep || '(Not completed)', 80);
+    const fsH = Math.max(36, fsLines.length*lh + 18);
+    s += `${blue} rg\n${M} ${y-fsH} ${W-2*M} ${fsH} re f\n${white} rg\n`;
+    let fsy = y-14; fsLines.forEach(l => { s += `BT /F1 11 Tf ${M+10} ${fsy} Td (${escPDF(l)}) Tj ET\n`; fsy-=lh; });
+
+    // Footer
+    s += `${grey} rg\nBT /F2 8 Tf ${M} ${M-10} Td (${escPDF('Story Contracting - Liberator Programme - Empowerment Map - Generated ' + new Date().toLocaleDateString('en-GB'))}) Tj ET\n`;
+
+    const catalogId = addObj('<< /Type /Catalog /Pages 2 0 R >>');
+    const pagesId   = addObj('');
+    const font1Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const font2Id   = addObj('<<  /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const streamBytes = new TextEncoder().encode(s);
+    const streamId  = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${s}endstream`);
+    const pageId    = addObj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Contents ${streamId} 0 R /Resources << /Font << /F1 ${font1Id} 0 R /F2 ${font2Id} 0 R >> >> >>`);
+    objects[1].data = `<< /Type /Pages /Kids [${pageId} 0 R] /Count 1 >>`;
+
+    let pdf = '%PDF-1.4\n'; const offsets = [];
+    objects.forEach(obj => { offsets.push(pdf.length); pdf += `${obj.id} 0 obj\n${obj.data}\nendobj\n`; });
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objCount+1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => { pdf += String(off).padStart(10,'0') + ' 00000 n \n'; });
+    pdf += `trailer\n<< /Size ${objCount+1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    const blob = new Blob([pdf], { type:'application/pdf' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href = url;
+    const safeName = sanitize(state.name || 'team-member').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'team-member';
+    a.download = 'Empowerment-Map-' + safeName + '-' + new Date().toISOString().slice(0,10) + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  } catch(e) { console.error('Empowerment Map PDF error', e); }
 }
 
 function downloadFlightPlanPDF(state) {
