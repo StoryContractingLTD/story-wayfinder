@@ -1192,7 +1192,7 @@ html,body{min-height:100vh;background:#EAF4FB;font-family:'Barlow',system-ui,san
   .sz-grid{grid-template-columns:1fr}
 }
 
-/* Printable resource download cards (PDFs from /resources/ folder).
+/* Printable resource download cards (PDFs stored in repo root).
    Orange-accented to distinguish "downloadable resource" from navigation
    cards. Used across home, segment pages and Cog sub-pages. */
 .rsc-card{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#fff7ee 0%,#ffefdc 100%);border:1.5px solid #fcd5b3;border-radius:14px;padding:18px 22px;text-decoration:none;color:inherit;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;font-family:'Barlow',sans-serif;max-width:800px;margin:18px auto 0;cursor:pointer;position:relative}
@@ -6391,8 +6391,8 @@ function buildOverlaySVG(onHover, onClick, onHoverHub, onClickHub) {
 
 // ============================================================
 //  PRINTABLE RESOURCE DOWNLOAD CARD
-//  Reusable orange-accented card linking to a PDF in /resources/.
-//  Used on the home page, segment pages, and Cog sub-pages.
+//  Reusable orange-accented card linking to a PDF stored in the
+//  repo root. Used on the home page, segment pages, and Cog sub-pages.
 // ============================================================
 function buildResourceDownloadCard(opts) {
   const eyebrow = opts.eyebrow || 'Printable resource';
@@ -6401,7 +6401,7 @@ function buildResourceDownloadCard(opts) {
   const filename = opts.filename || '';
   const card = document.createElement('a');
   card.className = 'rsc-card slide-up delay4';
-  card.href = 'resources/' + filename;
+  card.href = filename;
   card.setAttribute('download', '');
   card.setAttribute('rel', 'noopener');
   card.setAttribute('aria-label', 'Download ' + title + ' as PDF');
